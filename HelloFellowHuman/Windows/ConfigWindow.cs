@@ -108,7 +108,8 @@ public class ConfigWindow : Window, IDisposable
             var isSelected = i == selectedPresetIndex;
             var isActive = i == config.SelectedPresetIndex;
             
-            var displayName = $"[{i}] {preset.Name}";
+            var presetName = config.KrangleEnabled ? KrangleService.KrangleName(preset.Name) : preset.Name;
+            var displayName = $"[{i}] {presetName}";
             if (isActive)
                 displayName += " (ACTIVE)";
             
@@ -134,7 +135,8 @@ public class ConfigWindow : Window, IDisposable
         
         var preset = config.Presets[selectedPresetIndex];
         
-        ImGui.Text($"Editing: {preset.Name}");
+        var editingName = config.KrangleEnabled ? KrangleService.KrangleName(preset.Name) : preset.Name;
+        ImGui.Text($"Editing: {editingName}");
         ImGui.Separator();
         
         var enabled = config.Enabled;
@@ -160,14 +162,16 @@ public class ConfigWindow : Window, IDisposable
         
         ImGui.SameLine();
         
-        var dtrIcon = config.DtrBarIconMode;
-        if (ImGui.Checkbox("DTR Icon", ref dtrIcon))
+        var dtrMode = config.DtrBarMode;
+        var dtrModes = new[] { "Text Only", "Icon+Text", "Icon Only" };
+        ImGui.SetNextItemWidth(120);
+        if (ImGui.Combo("DTR Mode", ref dtrMode, dtrModes, dtrModes.Length))
         {
-            config.DtrBarIconMode = dtrIcon;
+            config.DtrBarMode = dtrMode;
             plugin.SaveConfig();
         }
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Use icons instead of text in the DTR bar.\nDTRicon0.png = enabled, DTRicon1.png = disabled.");
+            ImGui.SetTooltip("DTR bar display mode:\nText Only: 'HFH: ON/OFF [preset]'\nIcon+Text: '⚫ HFH'\nIcon Only: '⚫'");
         
         ImGui.SameLine();
         

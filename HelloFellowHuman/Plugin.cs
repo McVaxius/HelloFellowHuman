@@ -80,18 +80,23 @@ public sealed class Plugin : IDalamudPlugin
         
         if (!Configuration.DtrBarEnabled) return;
         
-        if (Configuration.DtrBarIconMode)
+        // DTR modes: 0=text-only, 1=icon+text, 2=icon-only
+        switch (Configuration.DtrBarMode)
         {
-            // Compact icon-style indicators
-            var icon = Configuration.Enabled ? "\uE03C" : "\uE03D";
-            DtrEntry.Text = $"{icon} HFH";
-        }
-        else
-        {
-            var status = Configuration.Enabled ? "ON" : "OFF";
-            var activePreset = Configuration.GetActivePreset();
-            var presetName = activePreset?.Name ?? "None";
-            DtrEntry.Text = $"HFH: {status} [{presetName}]";
+            case 1: // icon+text
+                var icon1 = Configuration.Enabled ? "\uE03C" : "\uE03D";
+                DtrEntry.Text = $"{icon1} HFH";
+                break;
+            case 2: // icon-only
+                var icon2 = Configuration.Enabled ? "\uE03C" : "\uE03D";
+                DtrEntry.Text = icon2;
+                break;
+            default: // text-only
+                var status = Configuration.Enabled ? "ON" : "OFF";
+                var activePreset = Configuration.GetActivePreset();
+                var presetName = activePreset?.Name ?? "None";
+                DtrEntry.Text = $"HFH: {status} [{presetName}]";
+                break;
         }
     }
 
