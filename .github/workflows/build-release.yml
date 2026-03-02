@@ -11,7 +11,7 @@ env:
   PLUGIN_NAME: HelloFellowHuman
   SOLUTION_NAME: HelloFellowHuman
   INTERNAL_NAME: HelloFellowHuman
-  RELEASE_DIR: HelloFellowHuman\HelloFellowHuman\bin\x64\Release\HelloFellowHuman
+  RELEASE_DIR: HelloFellowHuman\bin\x64\Release\HelloFellowHuman
 
 jobs:
   build:
