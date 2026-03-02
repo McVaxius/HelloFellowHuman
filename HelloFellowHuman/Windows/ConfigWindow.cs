@@ -75,6 +75,7 @@ public class ConfigWindow : Window, IDisposable
             {
                 newPresetName = string.Empty;
                 ImGui.CloseCurrentPopup();
+                ImGui.EndTooltip();
             }
             ImGui.EndPopup();
         }
@@ -173,8 +174,31 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("DTR bar display mode:\nText Only: 'HFH: ON/OFF [preset]'\nIcon+Text: '⚫ HFH'\nIcon Only: '⚫'");
         
+        ImGui.Spacing();
+        ImGui.Text("DTR Icons (max 3 characters)");
         ImGui.SameLine();
-        
+        HelpMarker("Customize the glyphs shown in icon modes when HFH is enabled/disabled.");
+
+        var iconEnabled = config.DtrIconEnabled;
+        ImGui.SetNextItemWidth(80);
+        if (ImGui.InputText("Enabled Icon", ref iconEnabled, 8))
+        {
+            config.DtrIconEnabled = SanitizeIconInput(iconEnabled, "\uE03C");
+            plugin.SaveConfig();
+        }
+        ImGui.SameLine();
+        ImGui.TextDisabled("Shown when HFH is enabled");
+
+        var iconDisabled = config.DtrIconDisabled;
+        ImGui.SetNextItemWidth(80);
+        if (ImGui.InputText("Disabled Icon", ref iconDisabled, 8))
+        {
+            config.DtrIconDisabled = SanitizeIconInput(iconDisabled, "\uE03D");
+            plugin.SaveConfig();
+        }
+        ImGui.SameLine();
+        ImGui.TextDisabled("Shown when HFH is disabled");
+
         var krangleEnabled = config.KrangleEnabled;
         if (ImGui.Checkbox("Krangle", ref krangleEnabled))
         {
