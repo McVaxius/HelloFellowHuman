@@ -63,20 +63,32 @@ jobs:
           name: ${{ env.PLUGIN_NAME }}-artifact
           path: artifact
 
-      - name: Get version from tag
+      - name: Determine version from project
         id: get_version
         run: |
-          if [ "${{ github.ref_type }}" == "tag" ]; then
-            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          VERSION=$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' HelloFellowHuman/HelloFellowHuman.csproj | head -n 1)
+          if [ -z "$VERSION" ]; then
+            echo "Failed to read <Version> from HelloFellowHuman.csproj"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if tag exists
+        id: tag_check
+        run: |
+          git fetch --tags
+          if git rev-parse "v${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
           else
-            echo "version=v0.0.0.12" >> $GITHUB_OUTPUT
+            echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Create Release
+        if: steps.tag_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          name: Release ${{ steps.get_version.outputs.version }}
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
           files: |
