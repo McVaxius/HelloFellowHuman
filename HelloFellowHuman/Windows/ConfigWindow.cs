@@ -3,7 +3,9 @@ using Dalamud.Interface.Windowing;
 using HelloFellowHuman.Models;
 using HelloFellowHuman.Services;
 using System;
+using System.Globalization;
 using System.Numerics;
+using System.Text;
 
 namespace HelloFellowHuman.Windows;
 
@@ -178,26 +180,28 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("DTR Icons (max 3 characters)");
         ImGui.SameLine();
         HelpMarker("Customize the glyphs shown in icon modes when HFH is enabled/disabled.");
-
-        var iconEnabled = config.DtrIconEnabled;
-        ImGui.SetNextItemWidth(80);
-        if (ImGui.InputText("Enabled Icon", ref iconEnabled, 8))
+        ImGui.SameLine();
+        if (ImGui.SmallButton("Copy Icon Guide Link##hfh"))
         {
-            config.DtrIconEnabled = SanitizeIconInput(iconEnabled, "\uE03C");
+            ImGui.SetClipboardText(IconGuideUrl);
+            Plugin.Log.Info("Copied icon guide link to clipboard");
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Copies the Lodestone blog link with suggested glyphs");
+
+        var enabledIcon = config.DtrIconEnabled;
+        if (DrawIconInputs("Enabled", ref enabledIcon, "\uE03C"))
+        {
+            config.DtrIconEnabled = enabledIcon;
             plugin.SaveConfig();
         }
-        ImGui.SameLine();
-        ImGui.TextDisabled("Shown when HFH is enabled");
 
-        var iconDisabled = config.DtrIconDisabled;
-        ImGui.SetNextItemWidth(80);
-        if (ImGui.InputText("Disabled Icon", ref iconDisabled, 8))
+        var disabledIcon = config.DtrIconDisabled;
+        if (DrawIconInputs("Disabled", ref disabledIcon, "\uE03D"))
         {
-            config.DtrIconDisabled = SanitizeIconInput(iconDisabled, "\uE03D");
+            config.DtrIconDisabled = disabledIcon;
             plugin.SaveConfig();
         }
-        ImGui.SameLine();
-        ImGui.TextDisabled("Shown when HFH is disabled");
 
         var krangleEnabled = config.KrangleEnabled;
         if (ImGui.Checkbox("Krangle", ref krangleEnabled))
@@ -414,6 +418,31 @@ public class ConfigWindow : Window, IDisposable
         }
     }
 
+    private bool DrawIconInputs(string label, ref string value, string fallback)
+    {
+        var updated = false;
+        var glyph = value;
+        ImGui.SetNextItemWidth(80);
+        if (ImGui.InputText($"{label} Icon##hfh", ref glyph, 8))
+        {
+            value = SanitizeIconInput(glyph, fallback);
+            updated = true;
+        }
+        ImGui.SameLine();
+        ImGui.TextDisabled($"Shown when HFH is {label.ToLowerInvariant()}");
+
+        var code = FormatIconCode(value);
+        ImGui.SetNextItemWidth(160);
+        if (ImGui.InputText($"{label} Icon Code##hfh", ref code, 64))
+        {
+            var parsed = ParseIconCode(code, value);
+            value = SanitizeIconInput(parsed, fallback);
+            updated = true;
+        }
+
+        return updated;
+    }
+
     private static string SanitizeIconInput(string value, string fallback)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -422,4 +451,49 @@ public class ConfigWindow : Window, IDisposable
         var trimmed = value.Trim();
         return trimmed.Length > 3 ? trimmed[..3] : trimmed;
     }
+
+    private static string FormatIconCode(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return string.Empty;
+
+        var sb = new StringBuilder();
+        foreach (var rune in value.EnumerateRunes())
+        {
+            if (sb.Length > 0) sb.Append(' ');
+            sb.Append("\\u");
+            sb.Append(rune.Value.ToString("X4", CultureInfo.InvariantCulture));
+        }
+
+        return sb.ToString();
+    }
+
+    private static string ParseIconCode(string input, string fallback)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return fallback;
+
+        var parts = input.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+        var sb = new StringBuilder();
+        foreach (var part in parts)
+        {
+            if (sb.Length >= 3) break;
+
+            var token = part.Trim();
+            if (token.StartsWith("\\u", StringComparison.OrdinalIgnoreCase))
+                token = token[2..];
+            else if (token.StartsWith("u", StringComparison.OrdinalIgnoreCase))
+                token = token[1..];
+            else if (token.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                token = token[2..];
+
+            if (int.TryParse(token, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var codepoint))
+            {
+                sb.Append(char.ConvertFromUtf32(codepoint));
+            }
+        }
+
+        return sb.Length == 0 ? fallback : sb.ToString();
+    }
+
+    private const string IconGuideUrl = "https://na.finalfantasyxiv.com/lodestone/character/22423564/blog/4393835";
 }
