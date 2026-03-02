@@ -43,7 +43,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PLUGIN_NAME }}-artifact
-          path: ${{ env.RELEASE_DIR }}
+          path: |
+            ${{ env.RELEASE_DIR }}\latest.zip
+            ${{ env.RELEASE_DIR }}\${{ env.INTERNAL_NAME }}.json
           if-no-files-found: error
 
   release:
@@ -61,43 +63,24 @@ jobs:
           name: ${{ env.PLUGIN_NAME }}-artifact
           path: artifact
 
-      - name: Create latest.zip
-        run: |
-          cd artifact
-          zip -r ../latest.zip .
-          cd ..
-
-      - name: Read version from csproj
+      - name: Get version from tag
         id: get_version
         run: |
-          VERSION=$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' HelloFellowHuman/HelloFellowHuman.csproj | head -n 1)
-          if [ -z "$VERSION" ]; then
-            echo "Failed to read <Version> from HelloFellowHuman.csproj"
-            exit 1
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Ensure tag exists
-        env:
-          VERSION: ${{ steps.get_version.outputs.version }}
-        run: |
-          git fetch --tags
-          if ! git rev-parse "v$VERSION" >/dev/null 2>&1; then
-            git config user.name "github-actions"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git tag "v$VERSION"
-            git push origin "v$VERSION"
+          if [ "${{ github.ref_type }}" == "tag" ]; then
+            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=v0.0.0.4" >> $GITHUB_OUTPUT
           fi
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
           files: |
-            latest.zip
+            artifact/latest.zip
             artifact/${{ env.INTERNAL_NAME }}.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
