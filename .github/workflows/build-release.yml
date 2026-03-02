@@ -43,7 +43,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PLUGIN_NAME }}-artifact
-          path: ${{ env.RELEASE_DIR }}
+          path: |
+            ${{ env.RELEASE_DIR }}\latest.zip
+            ${{ env.RELEASE_DIR }}\${{ env.INTERNAL_NAME }}.json
           if-no-files-found: error
 
   release:
@@ -83,12 +85,6 @@ jobs:
             git push origin "v$VERSION"
           fi
 
-      - name: Create latest.zip
-        run: |
-          cd artifact
-          zip -r ../latest.zip .
-          cd ..
-
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -97,7 +93,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            latest.zip
+            artifact/latest.zip
             artifact/${{ env.INTERNAL_NAME }}.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
