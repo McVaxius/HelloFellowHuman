@@ -262,7 +262,11 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Emote Lines:");
         ImGui.Separator();
         
-        ImGui.Columns(6, "EmoteColumns");
+        ImGui.Columns(7, "EmoteColumns");
+        ImGui.Text("ALL");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Check to target all nearby players");
+        ImGui.NextColumn();
         ImGui.Text("Name");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Target player name (without @server)");
@@ -294,20 +298,39 @@ public class ConfigWindow : Window, IDisposable
             if (!isValid)
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
             
+            // ALL checkbox column
+            var isAllTargets = line.TargetName == "*";
+            if (ImGui.Checkbox($"##all{i}", ref isAllTargets))
+            {
+                line.TargetName = isAllTargets ? "*" : "";
+                plugin.SaveConfig();
+            }
+            ImGui.NextColumn();
+            
             var name = line.TargetName;
             var displayName = config.KrangleEnabled && name != "*" && !string.IsNullOrWhiteSpace(name)
                 ? KrangleService.KrangleName(name) : name;
             ImGui.SetNextItemWidth(220);
+            
+            var inputFlags = isAllTargets ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None;
             if (config.KrangleEnabled && name != "*")
             {
-                ImGui.InputText($"##name{i}", ref displayName, 100, ImGuiInputTextFlags.ReadOnly);
+                inputFlags |= ImGuiInputTextFlags.ReadOnly;
+            }
+            
+            if (config.KrangleEnabled && name != "*")
+            {
+                ImGui.InputText($"##name{i}", ref displayName, 100, inputFlags);
             }
             else
             {
-                if (ImGui.InputText($"##name{i}", ref name, 100))
+                if (ImGui.InputText($"##name{i}", ref name, 100, inputFlags))
                 {
-                    line.TargetName = name;
-                    plugin.SaveConfig();
+                    if (!isAllTargets)
+                    {
+                        line.TargetName = name;
+                        plugin.SaveConfig();
+                    }
                 }
             }
             ImGui.SameLine();
@@ -321,14 +344,6 @@ public class ConfigWindow : Window, IDisposable
             }
             if (ImGui.IsItemHovered())
                 ImGui.SetTooltip("Krangle this name (permanent obfuscation)");
-            ImGui.SameLine();
-            if (ImGui.SmallButton($"*##all{i}"))
-            {
-                line.TargetName = "*";
-                plugin.SaveConfig();
-            }
-            if (ImGui.IsItemHovered())
-                ImGui.SetTooltip("Set to '*' for all nearby players");
             ImGui.NextColumn();
             
             var cmd = line.SlashCommand;
