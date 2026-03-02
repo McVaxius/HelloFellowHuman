@@ -2,7 +2,7 @@ name: Build and Release
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master ]
     tags:
       - 'v*'
   workflow_dispatch:
@@ -63,32 +63,20 @@ jobs:
           name: ${{ env.PLUGIN_NAME }}-artifact
           path: artifact
 
-      - name: Determine version from project
+      - name: Get version from tag
         id: get_version
         run: |
-          VERSION=$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' HelloFellowHuman/HelloFellowHuman.csproj | head -n 1)
-          if [ -z "$VERSION" ]; then
-            echo "Failed to read <Version> from HelloFellowHuman.csproj"
-            exit 1
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Check if tag exists
-        id: tag_check
-        run: |
-          git fetch --tags
-          if git rev-parse "v${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
+          if [ "${{ github.ref_type }}" == "tag" ]; then
+            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           else
-            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "version=v0.0.0.12" >> $GITHUB_OUTPUT
           fi
 
       - name: Create Release
-        if: steps.tag_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
           files: |
