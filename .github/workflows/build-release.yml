@@ -2,7 +2,7 @@ name: Build and Release
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main, master ]
     tags:
       - 'v*'
   workflow_dispatch:
@@ -11,7 +11,7 @@ env:
   PLUGIN_NAME: HelloFellowHuman
   SOLUTION_NAME: HelloFellowHuman
   INTERNAL_NAME: HelloFellowHuman
-  RELEASE_DIR: HelloFellowHuman\bin\x64\Release\HelloFellowHuman
+  RELEASE_DIR: HelloFellowHuman\HelloFellowHuman\bin\x64\Release\HelloFellowHuman
 
 jobs:
   build:
@@ -63,20 +63,33 @@ jobs:
           name: ${{ env.PLUGIN_NAME }}-artifact
           path: artifact
 
-      - name: Get version from tag
+      - name: Read version from csproj
         id: get_version
         run: |
-          if [ "${{ github.ref_type }}" == "tag" ]; then
-            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          else
-            echo "version=v0.0.0.4" >> $GITHUB_OUTPUT
+          VERSION=$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' HelloFellowHuman/HelloFellowHuman.csproj | head -n 1)
+          if [ -z "$VERSION" ]; then
+            echo "Failed to read <Version> from HelloFellowHuman.csproj"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Ensure tag exists
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          git fetch --tags
+          if ! git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            git config user.name "github-actions"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag "v$VERSION"
+            git push origin "v$VERSION"
           fi
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          name: Release ${{ steps.get_version.outputs.version }}
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
           files: |
