@@ -48,6 +48,8 @@ public sealed class Plugin : IDalamudPlugin
         EmoteEngine = new EmoteEngine(Framework, ClientState, ObjectTable, CommandManager, Configuration);
         
         SetupDtrBar();
+        
+        Framework.Update += OnFrameworkUpdate;
     }
 
     private void SetupDtrBar()
@@ -78,16 +80,30 @@ public sealed class Plugin : IDalamudPlugin
         
         if (!Configuration.DtrBarEnabled) return;
         
-        var status = Configuration.Enabled ? "ON" : "OFF";
-        var activePreset = Configuration.GetActivePreset();
-        var presetName = activePreset?.Name ?? "None";
-        
-        DtrEntry.Text = $"HFH: {status} [{presetName}]";
+        if (Configuration.DtrBarIconMode)
+        {
+            // Compact icon-style indicators
+            var icon = Configuration.Enabled ? "\uE03C" : "\uE03D";
+            DtrEntry.Text = $"{icon} HFH";
+        }
+        else
+        {
+            var status = Configuration.Enabled ? "ON" : "OFF";
+            var activePreset = Configuration.GetActivePreset();
+            var presetName = activePreset?.Name ?? "None";
+            DtrEntry.Text = $"HFH: {status} [{presetName}]";
+        }
+    }
+
+    private void OnFrameworkUpdate(IFramework fw)
+    {
+        UpdateDtrBar();
     }
 
 
     public void Dispose()
     {
+        Framework.Update -= OnFrameworkUpdate;
         WindowSystem.RemoveAllWindows();
         ConfigWindow.Dispose();
         EmoteEngine.Dispose();

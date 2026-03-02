@@ -13,6 +13,8 @@ public class Configuration : IPluginConfiguration
     
     public bool Enabled { get; set; } = false;
     public bool DtrBarEnabled { get; set; } = true;
+    public bool DtrBarIconMode { get; set; } = false;
+    public bool KrangleEnabled { get; set; } = false;
     public int SelectedPresetIndex { get; set; } = 0;
     public List<EmotePreset> Presets { get; set; } = new();
     

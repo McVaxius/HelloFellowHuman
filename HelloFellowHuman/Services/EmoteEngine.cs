@@ -84,6 +84,21 @@ public class EmoteEngine : IDisposable
                 continue;
             }
             
+            // "*" means all nearby players
+            if (line.TargetName.Trim() == "*")
+            {
+                var nearbyPlayer = FindNearestPlayer(playerPos, line.DistanceThreshold);
+                if (nearbyPlayer != null)
+                {
+                    var dist = Vector3.Distance(playerPos, nearbyPlayer.Position);
+                    Plugin.Log.Info($"[HFH] Wildcard line VALID: {nearbyPlayer.Name.TextValue} @ {dist:F2}y, cmd: {line.SlashCommand}");
+                    // Temporarily set the target name for execution
+                    line.ResolvedTargetName = nearbyPlayer.Name.TextValue;
+                    validLines.Add(line);
+                }
+                continue;
+            }
+            
             var target = FindPlayerByName(line.TargetName);
             if (target == null)
             {
@@ -96,6 +111,7 @@ public class EmoteEngine : IDisposable
             
             if (distance <= line.DistanceThreshold)
             {
+                line.ResolvedTargetName = null;
                 Plugin.Log.Info($"[HFH] Line VALID: {line.TargetName} @ {distance:F2}y, cmd: {line.SlashCommand}");
                 validLines.Add(line);
             }
@@ -138,12 +154,34 @@ public class EmoteEngine : IDisposable
         return null;
     }
     
+    private IGameObject? FindNearestPlayer(Vector3 playerPos, float maxDistance)
+    {
+        var localPlayer = objectTable.LocalPlayer;
+        IGameObject? nearest = null;
+        var nearestDist = float.MaxValue;
+        
+        foreach (var obj in objectTable)
+        {
+            if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player) continue;
+            if (obj.GameObjectId == localPlayer?.GameObjectId) continue;
+            
+            var dist = Vector3.Distance(playerPos, obj.Position);
+            if (dist <= maxDistance && dist < nearestDist)
+            {
+                nearest = obj;
+                nearestDist = dist;
+            }
+        }
+        return nearest;
+    }
+    
     private void ExecuteLine(EmoteLine line)
     {
         try
         {
             Plugin.Log.Info($"[HFH] Targeting: {line.TargetName}");
-            SendChatCommand($"/target {line.TargetName}");
+            var targetName = line.ResolvedTargetName ?? line.TargetName;
+            SendChatCommand($"/target {targetName}");
             System.Threading.Thread.Sleep(500);
             Plugin.Log.Info($"[HFH] Sending command: {line.SlashCommand}");
             SendChatCommand(line.SlashCommand);

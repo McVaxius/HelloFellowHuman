@@ -1,6 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 using HelloFellowHuman.Models;
+using HelloFellowHuman.Services;
 using System;
 using System.Numerics;
 
@@ -157,6 +158,29 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Show/hide the DTR bar entry (server info bar)");
         
+        ImGui.SameLine();
+        
+        var dtrIcon = config.DtrBarIconMode;
+        if (ImGui.Checkbox("DTR Icon", ref dtrIcon))
+        {
+            config.DtrBarIconMode = dtrIcon;
+            plugin.SaveConfig();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Use icons instead of text in the DTR bar.\nDTRicon0.png = enabled, DTRicon1.png = disabled.");
+        
+        ImGui.SameLine();
+        
+        var krangleEnabled = config.KrangleEnabled;
+        if (ImGui.Checkbox("Krangle", ref krangleEnabled))
+        {
+            config.KrangleEnabled = krangleEnabled;
+            plugin.SaveConfig();
+            KrangleService.ClearCache();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Obfuscate player names with military/exercise words.\nUseful for screenshots.");
+        
         ImGui.Separator();
         
         if (ImGui.Button("Export"))
@@ -239,14 +263,44 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
             
             var name = line.TargetName;
-            if (ImGui.InputText($"##name{i}", ref name, 100))
+            var displayName = config.KrangleEnabled && name != "*" && !string.IsNullOrWhiteSpace(name)
+                ? KrangleService.KrangleName(name) : name;
+            ImGui.SetNextItemWidth(220);
+            if (config.KrangleEnabled && name != "*")
             {
-                line.TargetName = name;
+                ImGui.InputText($"##name{i}", ref displayName, 100, ImGuiInputTextFlags.ReadOnly);
+            }
+            else
+            {
+                if (ImGui.InputText($"##name{i}", ref name, 100))
+                {
+                    line.TargetName = name;
+                    plugin.SaveConfig();
+                }
+            }
+            ImGui.SameLine();
+            if (ImGui.SmallButton($"K##kr{i}"))
+            {
+                if (name != "*" && !string.IsNullOrWhiteSpace(name))
+                {
+                    line.TargetName = KrangleService.KrangleName(name);
+                    plugin.SaveConfig();
+                }
+            }
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("Krangle this name (permanent obfuscation)");
+            ImGui.SameLine();
+            if (ImGui.SmallButton($"*##all{i}"))
+            {
+                line.TargetName = "*";
                 plugin.SaveConfig();
             }
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("Set to '*' for all nearby players");
             ImGui.NextColumn();
             
             var cmd = line.SlashCommand;
+            ImGui.SetNextItemWidth(220);
             if (ImGui.InputText($"##cmd{i}", ref cmd, 100))
             {
                 line.SlashCommand = cmd;

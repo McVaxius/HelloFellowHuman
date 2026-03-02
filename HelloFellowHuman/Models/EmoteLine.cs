@@ -14,6 +14,9 @@ public class EmoteLine
     [JsonIgnore]
     public DateTime LastExecuted { get; set; } = DateTime.MinValue;
     
+    [JsonIgnore]
+    public string? ResolvedTargetName { get; set; }
+    
     public bool IsValid()
     {
         return !string.IsNullOrWhiteSpace(TargetName) &&
