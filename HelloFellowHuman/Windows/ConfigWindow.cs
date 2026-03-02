@@ -399,4 +399,27 @@ public class ConfigWindow : Window, IDisposable
     public void Dispose()
     {
     }
+
+    private static void HelpMarker(string desc)
+    {
+        ImGui.SameLine();
+        ImGui.TextDisabled("(?)");
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.PushTextWrapPos(ImGui.GetFontSize() * 20.0f);
+            ImGui.TextUnformatted(desc);
+            ImGui.PopTextWrapPos();
+            ImGui.EndTooltip();
+        }
+    }
+
+    private static string SanitizeIconInput(string value, string fallback)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return fallback;
+
+        var trimmed = value.Trim();
+        return trimmed.Length > 3 ? trimmed[..3] : trimmed;
+    }
 }
