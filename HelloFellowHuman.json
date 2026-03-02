@@ -1,0 +1,17 @@
+{
+  "Author": "McVaxius",
+  "Name": "Hello Fellow Human",
+  "Punchline": "Automated proximity-based emote reactions.",
+  "Description": "Configure emote responses that trigger when specific players are nearby. Perfect for passive RP automation. Use /hfh to configure.",
+  "InternalName": "HelloFellowHuman",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "emote",
+    "automation",
+    "rp",
+    "proximity"
+  ],
+  "DalamudApiLevel": 14,
+  "LoadPriority": 0,
+  "IconUrl": "https://raw.githubusercontent.com/McVaxius/HelloFellowHuman/refs/heads/master/HelloFellowHuman/images/icon.png"
+}

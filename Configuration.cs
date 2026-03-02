@@ -1,0 +1,70 @@
+using Dalamud.Configuration;
+using HelloFellowHuman.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace HelloFellowHuman;
+
+[Serializable]
+public class Configuration : IPluginConfiguration
+{
+    public int Version { get; set; } = 0;
+    
+    public bool Enabled { get; set; } = false;
+    public bool DtrBarEnabled { get; set; } = true;
+    public int SelectedPresetIndex { get; set; } = 0;
+    public List<EmotePreset> Presets { get; set; } = new();
+    
+    public void Initialize()
+    {
+        if (Presets.Count == 0)
+        {
+            Presets.Add(new EmotePreset
+            {
+                Name = "DEFAULT PRESET",
+                Lines = new List<EmoteLine>
+                {
+                    new EmoteLine
+                    {
+                        TargetName = "Example Player",
+                        SlashCommand = "/wave",
+                        WaitTimeAfter = 3.0f,
+                        RepeatInterval = 5.0f,
+                        DistanceThreshold = 5.0f
+                    }
+                }
+            });
+        }
+    }
+    
+    public EmotePreset? GetActivePreset()
+    {
+        if (SelectedPresetIndex >= 0 && SelectedPresetIndex < Presets.Count)
+            return Presets[SelectedPresetIndex];
+        return null;
+    }
+    
+    public EmotePreset GetDefaultPreset()
+    {
+        return Presets.FirstOrDefault(p => p.Name == "DEFAULT PRESET") ?? Presets[0];
+    }
+    
+    public void AddPreset(string name)
+    {
+        var defaultPreset = GetDefaultPreset();
+        var newPreset = defaultPreset.Clone();
+        newPreset.Name = name;
+        Presets.Add(newPreset);
+    }
+    
+    public void DeletePreset(int index)
+    {
+        if (index > 0 && index < Presets.Count && Presets[index].Name != "DEFAULT PRESET")
+        {
+            Presets.RemoveAt(index);
+            if (SelectedPresetIndex >= Presets.Count)
+                SelectedPresetIndex = Presets.Count - 1;
+        }
+    }
+}

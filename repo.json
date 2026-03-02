@@ -1,0 +1,27 @@
+[
+  {
+    "Author": "DhogGPT",
+    "Name": "Hello Fellow Human",
+    "InternalName": "HelloFellowHuman",
+    "Punchline": "Proximity-based emote automation for FFXIV.",
+    "Description": "Automatically execute emotes when specific players are nearby. Configure distance thresholds, wait times, and repeat intervals. Perfect for roleplaying scenarios and automated greetings. Use /hfh to configure.",
+    "ApplicableVersion": "any",
+    "IconUrl": "https://raw.githubusercontent.com/McVaxius/HelloFellowHuman/refs/heads/master/images/icon.png",
+    "Tags": [
+      "emote",
+      "automation",
+      "roleplay",
+      "social",
+      "proximity"
+    ],
+    "RepoUrl": "https://github.com/McVaxius/HelloFellowHuman",
+    "AssemblyVersion": "0.0.0.1",
+    "DalamudApiLevel": 14,
+    "DownloadLinkInstall": "https://github.com/McVaxius/HelloFellowHuman/releases/latest/download/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/McVaxius/HelloFellowHuman/releases/latest/download/latest.zip",
+    "DownloadLinkTesting": "https://github.com/McVaxius/HelloFellowHuman/releases/latest/download/latest.zip",
+    "IsHide": false,
+    "IsTestingExclusive": false,
+    "LoadPriority": 0
+  }
+]
