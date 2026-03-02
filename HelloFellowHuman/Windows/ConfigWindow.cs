@@ -31,21 +31,114 @@ public class ConfigWindow : Window, IDisposable
     
     public override void Draw()
     {
-        var windowSize = ImGui.GetWindowSize();
+        if (ImGui.BeginTabBar("HFHTabBar"))
+        {
+            if (ImGui.BeginTabItem("Configuration"))
+            {
+                DrawConfigurationTab();
+                ImGui.EndTabItem();
+            }
+            
+            if (ImGui.BeginTabItem("Presets"))
+            {
+                DrawPresetsTab();
+                ImGui.EndTabItem();
+            }
+            
+            ImGui.EndTabBar();
+        }
+    }
+    
+    private void DrawConfigurationTab()
+    {
+        var enabled = config.Enabled;
+        if (ImGui.Checkbox("Enabled", ref enabled))
+        {
+            config.Enabled = enabled;
+            plugin.SaveConfig();
+            Plugin.Log.Info($"Hello Fellow Human {(enabled ? "enabled" : "disabled")}");
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Enable/disable the plugin's emote automation");
+        
+        ImGui.SameLine();
+        
+        var dtrEnabled = config.DtrBarEnabled;
+        if (ImGui.Checkbox("DTR ON", ref dtrEnabled))
+        {
+            config.DtrBarEnabled = dtrEnabled;
+            plugin.SaveConfig();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Show/hide the DTR bar entry (server info bar)");
+        
+        ImGui.SameLine();
+        
+        var dtrMode = config.DtrBarMode;
+        var dtrModes = new[] { "Text Only", "Icon+Text", "Icon Only" };
+        ImGui.SetNextItemWidth(120);
+        if (ImGui.Combo("DTR Mode", ref dtrMode, dtrModes, dtrModes.Length))
+        {
+            config.DtrBarMode = dtrMode;
+            plugin.SaveConfig();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("DTR bar display mode:\nText Only: 'HFH: ON/OFF [preset]'\nIcon+Text: '⚫ HFH'\nIcon Only: '⚫'");
+        
+        ImGui.Spacing();
+        ImGui.Text("DTR Icons (max 3 characters)");
+        ImGui.SameLine();
+        HelpMarker("Customize the glyphs shown in icon modes when HFH is enabled/disabled.");
+        ImGui.SameLine();
+        if (ImGui.SmallButton("Copy Icon Guide Link##hfh"))
+        {
+            ImGui.SetClipboardText(IconGuideUrl);
+            Plugin.Log.Info("Copied icon guide link to clipboard");
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Copies the Lodestone blog link with suggested glyphs");
+
+        var enabledIcon = config.DtrIconEnabled;
+        if (DrawIconInputs("Enabled", ref enabledIcon, "\uE03C"))
+        {
+            config.DtrIconEnabled = enabledIcon;
+            plugin.SaveConfig();
+        }
+
+        var disabledIcon = config.DtrIconDisabled;
+        if (DrawIconInputs("Disabled", ref disabledIcon, "\uE03D"))
+        {
+            config.DtrIconDisabled = disabledIcon;
+            plugin.SaveConfig();
+        }
+
+        var krangleEnabled = config.KrangleEnabled;
+        if (ImGui.Checkbox("Krangle", ref krangleEnabled))
+        {
+            config.KrangleEnabled = krangleEnabled;
+            plugin.SaveConfig();
+            KrangleService.ClearCache();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Obfuscate player names with military/exercise words.\nUseful for screenshots.");
+    }
+    
+    private void DrawPresetsTab()
+    {
         var leftPanelWidth = 200f;
         
-        ImGui.BeginChild("LeftPanel", new Vector2(leftPanelWidth, -1), true);
-        DrawLeftPanel();
+        ImGui.BeginChild("PresetList", new Vector2(leftPanelWidth, -1), true);
+        DrawPresetList();
         ImGui.EndChild();
         
         ImGui.SameLine();
         
-        ImGui.BeginChild("RightPanel", new Vector2(-1, -1), true);
-        DrawRightPanel();
+        ImGui.BeginChild("PresetEditor", new Vector2(-1, -1), true);
+        DrawPresetEditor();
         ImGui.EndChild();
     }
     
-    private void DrawLeftPanel()
+    private void DrawPresetList()
     {
         ImGui.Text("Presets");
         ImGui.Separator();
@@ -131,7 +224,7 @@ public class ConfigWindow : Window, IDisposable
         }
     }
     
-    private void DrawRightPanel()
+    private void DrawPresetEditor()
     {
         if (selectedPresetIndex < 0 || selectedPresetIndex >= config.Presets.Count)
             return;
@@ -140,79 +233,6 @@ public class ConfigWindow : Window, IDisposable
         
         var editingName = config.KrangleEnabled ? KrangleService.KrangleName(preset.Name) : preset.Name;
         ImGui.Text($"Editing: {editingName}");
-        ImGui.Separator();
-        
-        var enabled = config.Enabled;
-        if (ImGui.Checkbox("Enabled", ref enabled))
-        {
-            config.Enabled = enabled;
-            plugin.SaveConfig();
-            Plugin.Log.Info($"Hello Fellow Human {(enabled ? "enabled" : "disabled")}");
-        }
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Enable/disable the plugin's emote automation");
-        
-        ImGui.SameLine();
-        
-        var dtrEnabled = config.DtrBarEnabled;
-        if (ImGui.Checkbox("DTR ON", ref dtrEnabled))
-        {
-            config.DtrBarEnabled = dtrEnabled;
-            plugin.SaveConfig();
-        }
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Show/hide the DTR bar entry (server info bar)");
-        
-        ImGui.SameLine();
-        
-        var dtrMode = config.DtrBarMode;
-        var dtrModes = new[] { "Text Only", "Icon+Text", "Icon Only" };
-        ImGui.SetNextItemWidth(120);
-        if (ImGui.Combo("DTR Mode", ref dtrMode, dtrModes, dtrModes.Length))
-        {
-            config.DtrBarMode = dtrMode;
-            plugin.SaveConfig();
-        }
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("DTR bar display mode:\nText Only: 'HFH: ON/OFF [preset]'\nIcon+Text: '⚫ HFH'\nIcon Only: '⚫'");
-        
-        ImGui.Spacing();
-        ImGui.Text("DTR Icons (max 3 characters)");
-        ImGui.SameLine();
-        HelpMarker("Customize the glyphs shown in icon modes when HFH is enabled/disabled.");
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Copy Icon Guide Link##hfh"))
-        {
-            ImGui.SetClipboardText(IconGuideUrl);
-            Plugin.Log.Info("Copied icon guide link to clipboard");
-        }
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Copies the Lodestone blog link with suggested glyphs");
-
-        var enabledIcon = config.DtrIconEnabled;
-        if (DrawIconInputs("Enabled", ref enabledIcon, "\uE03C"))
-        {
-            config.DtrIconEnabled = enabledIcon;
-            plugin.SaveConfig();
-        }
-
-        var disabledIcon = config.DtrIconDisabled;
-        if (DrawIconInputs("Disabled", ref disabledIcon, "\uE03D"))
-        {
-            config.DtrIconDisabled = disabledIcon;
-            plugin.SaveConfig();
-        }
-
-        var krangleEnabled = config.KrangleEnabled;
-        if (ImGui.Checkbox("Krangle", ref krangleEnabled))
-        {
-            config.KrangleEnabled = krangleEnabled;
-            plugin.SaveConfig();
-            KrangleService.ClearCache();
-        }
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Obfuscate player names with military/exercise words.\nUseful for screenshots.");
-        
         ImGui.Separator();
         
         if (ImGui.Button("Export"))
