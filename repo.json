@@ -6,7 +6,7 @@
     "Punchline": "Proximity-based emote automation for FFXIV.",
     "Description": "Automatically execute emotes when specific players are nearby. Configure distance thresholds, wait times, and repeat intervals. Perfect for roleplaying scenarios and automated greetings. Use /hfh to configure.",
     "ApplicableVersion": "any",
-    "IconUrl": "https://raw.githubusercontent.com/McVaxius/HelloFellowHuman/refs/heads/master/images/icon.png",
+    "IconUrl": "https://raw.githubusercontent.com/McVaxius/HelloFellowHuman/refs/heads/main/HelloFellowHuman/images/icon.png",
     "Tags": [
       "emote",
       "automation",
