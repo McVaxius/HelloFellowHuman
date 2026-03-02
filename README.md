@@ -1,5 +1,7 @@
 # Hello Fellow Human
-
+   ```
+   https://raw.githubusercontent.com/McVaxius/TheDumpsterFire/refs/heads/master/repo.json
+   ```
 FFXIV Dalamud plugin for automated proximity-based emote reactions.
 
 ## Features
