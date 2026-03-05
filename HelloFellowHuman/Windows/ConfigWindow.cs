@@ -327,26 +327,21 @@ public class ConfigWindow : Window, IDisposable
             // Type dropdown column
             var triggerType = line.TriggerType;
             ImGui.SetNextItemWidth(-1);
-            if (ImGui.Combo($"##type{i}", ref triggerType, "Prox\0Emote\0"))
+            if (ImGui.Combo($"##type{i}", ref triggerType, "Proximity\0Emote\0"))
             {
                 line.TriggerType = triggerType;
                 plugin.SaveConfig();
             }
             ImGui.NextColumn();
             
-            // ALL checkbox column
+            // ALL checkbox column - now editable for all types
             var isEmoteType = line.TriggerType == 1;
-            if (isEmoteType) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.3f);
             var isAllTargets = line.TargetName == "*";
             if (ImGui.Checkbox($"##all{i}", ref isAllTargets))
             {
-                if (!isEmoteType)
-                {
-                    line.TargetName = isAllTargets ? "*" : "";
-                    plugin.SaveConfig();
-                }
+                line.TargetName = isAllTargets ? "*" : "";
+                plugin.SaveConfig();
             }
-            if (isEmoteType) ImGui.PopStyleVar();
             ImGui.NextColumn();
             
             var name = line.TargetName;
@@ -354,23 +349,28 @@ public class ConfigWindow : Window, IDisposable
                 ? KrangleService.KrangleName(name) : name;
             ImGui.SetNextItemWidth(220);
             
+            // Name field logic:
+            // - ALL targets: readonly (shows "*")
+            // - Specific targets: editable
             var inputFlags = isAllTargets ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None;
-            if (config.KrangleEnabled && name != "*")
+            
+            // Apply krangle readonly only for non-ALL, non-empty names
+            if (config.KrangleEnabled && name != "*" && !string.IsNullOrWhiteSpace(name))
             {
                 inputFlags |= ImGuiInputTextFlags.ReadOnly;
             }
             
-            if (config.KrangleEnabled && name != "*")
+            if (config.KrangleEnabled && name != "*" && !string.IsNullOrWhiteSpace(name))
             {
                 ImGui.InputText($"##name{i}", ref displayName, 100, inputFlags);
             }
             else
             {
-                if (ImGui.InputText($"##name{i}", ref name, 100, inputFlags))
+                if (ImGui.InputText($"##name{i}", ref displayName, 100, inputFlags))
                 {
                     if (!isAllTargets)
                     {
-                        line.TargetName = name;
+                        line.TargetName = displayName;
                         plugin.SaveConfig();
                     }
                 }
@@ -406,18 +406,14 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.NextColumn();
             
-            if (isEmoteType) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.3f);
+            // Repeat interval is editable for both proximity and emote types
             var repeat = line.RepeatInterval;
             ImGui.SetNextItemWidth(-1);
             if (ImGui.DragFloat($"##repeat{i}", ref repeat, 0.1f, 0.1f, 300f))
             {
-                if (!isEmoteType)
-                {
-                    line.RepeatInterval = repeat;
-                    plugin.SaveConfig();
-                }
+                line.RepeatInterval = repeat;
+                plugin.SaveConfig();
             }
-            if (isEmoteType) ImGui.PopStyleVar();
             ImGui.NextColumn();
             
             if (isEmoteType)

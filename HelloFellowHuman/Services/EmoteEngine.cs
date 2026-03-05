@@ -51,27 +51,89 @@ public class EmoteEngine : IDisposable
     
     private void OnEmoteReceived(string instigatorName, ushort emoteId)
     {
-        if (!config.Enabled) return;
+        Plugin.Log.Debug($"[HFH] OnEmoteReceived: {instigatorName} -> ID {emoteId}");
+        
+        var now = DateTime.Now;
+        if (!config.Enabled) 
+        {
+            Plugin.Log.Debug("[HFH] Plugin disabled, ignoring emote");
+            return;
+        }
         
         var cmdForEmote = emoteDetection?.GetCommandForEmoteId(emoteId);
-        if (cmdForEmote == null) return;
+        if (cmdForEmote == null) 
+        {
+            Plugin.Log.Debug($"[HFH] No command found for emote ID {emoteId}");
+            return;
+        }
         
         var activePreset = config.GetActivePreset();
-        if (activePreset == null) return;
+        if (activePreset == null) 
+        {
+            Plugin.Log.Debug("[HFH] No active preset, ignoring emote");
+            return;
+        }
+        
+        Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote: {cmdForEmote}");
         
         // Check if any emote-type lines match this emote
         foreach (var line in activePreset.Lines)
         {
             if (line.TriggerType != 1) continue; // Only emote-type lines
-            if (!line.IsValid()) continue;
+            if (!line.IsValid()) 
+            {
+                Plugin.Log.Debug($"[HFH] Emote line invalid: trigger='{line.TriggerEmote}', cmd='{line.SlashCommand}'");
+                continue;
+            }
             
             // Match the trigger emote command
             var triggerCmd = line.TriggerEmote.Trim().ToLowerInvariant();
             var receivedCmd = cmdForEmote.ToLowerInvariant();
+            Plugin.Log.Debug($"[HFH] Comparing: trigger='{triggerCmd}' vs received='{receivedCmd}'");
             if (triggerCmd != receivedCmd) continue;
             
-            // One-time per person check
-            if (line.EmoteFiredBy.Contains(instigatorName)) continue;
+            // Check name filtering - "*" or empty means match anyone
+            if (!string.IsNullOrWhiteSpace(line.TargetName) && line.TargetName != "*")
+            {
+                if (!line.TargetName.Equals(instigatorName, StringComparison.OrdinalIgnoreCase))
+                {
+                    Plugin.Log.Debug($"[HFH] Name filter failed: expected '{line.TargetName}', got '{instigatorName}'");
+                    continue;
+                }
+            }
+            
+            // Check per-line repeat cooldown (skip if RepeatInterval = 0)
+            Plugin.Log.Debug($"[HFH] Checking cooldown: RepeatInterval={line.RepeatInterval}, LastExecuted={line.LastExecuted}");
+            if (line.RepeatInterval > 0)
+            {
+                if (line.LastExecuted != DateTime.MinValue)
+                {
+                    // Reset LastExecuted if it's in the future (bug fix)
+                    if (line.LastExecuted > now)
+                    {
+                        Plugin.Log.Debug($"[HFH] LastExecuted is in future, resetting it");
+                        line.LastExecuted = DateTime.MinValue;
+                    }
+                    else
+                    {
+                        var timeSinceLast = now - line.LastExecuted;
+                        Plugin.Log.Debug($"[HFH] Time since last: {timeSinceLast.TotalSeconds:F1}s");
+                        if (timeSinceLast.TotalSeconds < line.RepeatInterval)
+                        {
+                            Plugin.Log.Debug($"[HFH] Repeat cooldown: {timeSinceLast.TotalSeconds:F1}s < {line.RepeatInterval}s");
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    Plugin.Log.Debug($"[HFH] Never executed before, allowing trigger");
+                }
+            }
+            else
+            {
+                Plugin.Log.Debug($"[HFH] RepeatInterval is 0, no cooldown check");
+            }
             
             // Queue the response
             pendingEmoteResponses.Enqueue((instigatorName, emoteId));
@@ -89,8 +151,10 @@ public class EmoteEngine : IDisposable
         
         var now = DateTime.UtcNow;
         
+        // Global WAIT blocking - if any line is in wait mode, block everything
         if (now < currentWaitUntil)
         {
+            Plugin.Log.Debug($"[HFH] In global wait mode until {currentWaitUntil:HH:mm:ss}");
             return;
         }
         
@@ -107,22 +171,61 @@ public class EmoteEngine : IDisposable
         // --- Process pending emote responses first ---
         if (pendingEmoteResponses.Count > 0)
         {
+            Plugin.Log.Debug($"[HFH] Processing {pendingEmoteResponses.Count} pending emote responses");
             var (emInstigator, emEmoteId) = pendingEmoteResponses.Dequeue();
             var emCmdForEmote = emoteDetection?.GetCommandForEmoteId(emEmoteId);
+            Plugin.Log.Debug($"[HFH] Dequeued emote: {emInstigator} -> {emCmdForEmote} (ID {emEmoteId})");
             
             if (activePreset != null && emCmdForEmote != null)
             {
+                Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote match: {emCmdForEmote}");
                 foreach (var line in activePreset.Lines)
                 {
                     if (line.TriggerType != 1) continue;
                     if (!line.IsValid()) continue;
                     
                     var triggerCmd = line.TriggerEmote.Trim().ToLowerInvariant();
+                    Plugin.Log.Debug($"[HFH] Checking emote line: trigger='{triggerCmd}' vs received='{emCmdForEmote.ToLowerInvariant()}'");
                     if (triggerCmd != emCmdForEmote.ToLowerInvariant()) continue;
-                    if (line.EmoteFiredBy.Contains(emInstigator)) continue;
                     
-                    // Mark as fired for this person
-                    line.EmoteFiredBy.Add(emInstigator);
+                    // Check name filtering - "*" or empty means match anyone
+                    if (!string.IsNullOrWhiteSpace(line.TargetName) && line.TargetName != "*")
+                    {
+                        if (!line.TargetName.Equals(emInstigator, StringComparison.OrdinalIgnoreCase))
+                        {
+                            Plugin.Log.Debug($"[HFH] Emote name mismatch: expected '{line.TargetName}', got '{emInstigator}'");
+                            continue;
+                        }
+                    }
+                    
+                    // Check per-line repeat cooldown (skip if RepeatInterval = 0)
+                    if (line.RepeatInterval > 0)
+                    {
+                        if (line.LastExecuted != DateTime.MinValue)
+                        {
+                            // Reset LastExecuted if it's in the future (bug fix)
+                            if (line.LastExecuted > now)
+                            {
+                                Plugin.Log.Debug($"[HFH] Emote line LastExecuted is in future, resetting: {line.TriggerEmote}");
+                                line.LastExecuted = DateTime.MinValue;
+                            }
+                            else
+                            {
+                                var timeSinceLast = now - line.LastExecuted;
+                                if (timeSinceLast.TotalSeconds < line.RepeatInterval)
+                                {
+                                    Plugin.Log.Debug($"[HFH] Emote line on repeat cooldown: {line.TriggerEmote}, {timeSinceLast.TotalSeconds:F1}s / {line.RepeatInterval}s");
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Plugin.Log.Debug($"[HFH] Emote line never executed before: {line.TriggerEmote}");
+                        }
+                    }
+                    
+                    // Execute the response
                     line.ResolvedTargetName = emInstigator;
                     
                     Plugin.Log.Info($"[HFH] Emote response: {emInstigator} did {emCmdForEmote} -> executing {line.SlashCommand}");
@@ -152,11 +255,15 @@ public class EmoteEngine : IDisposable
                 continue;
             }
             
-            var timeSinceLastExec = (now - line.LastExecuted).TotalSeconds;
-            if (timeSinceLastExec < line.RepeatInterval)
+            // Check per-line repeat cooldown
+            if (line.LastExecuted != DateTime.MinValue)
             {
-                Plugin.Log.Debug($"[HFH] Line on cooldown: {line.TargetName}, {timeSinceLastExec:F1}s / {line.RepeatInterval}s");
-                continue;
+                var timeSinceLastExec = (now - line.LastExecuted).TotalSeconds;
+                if (timeSinceLastExec < line.RepeatInterval)
+                {
+                    Plugin.Log.Debug($"[HFH] Line on repeat cooldown: {line.TargetName}, {timeSinceLastExec:F1}s / {line.RepeatInterval}s");
+                    continue;
+                }
             }
             
             // "*" means all nearby players

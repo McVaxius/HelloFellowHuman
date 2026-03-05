@@ -30,7 +30,10 @@ public class EmoteLine
         
         if (TriggerType == 1) // Emote
         {
-            return !string.IsNullOrWhiteSpace(TriggerEmote) && TriggerEmote.StartsWith("/");
+            // Emote lines need TriggerEmote, TargetName is optional (can be "*" or empty for ALL), RepeatInterval >= 0
+            return !string.IsNullOrWhiteSpace(TriggerEmote) && 
+                   TriggerEmote.StartsWith("/") &&
+                   RepeatInterval >= 0;
         }
         else // Proximity
         {
