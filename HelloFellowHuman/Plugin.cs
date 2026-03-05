@@ -19,6 +19,8 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
     [PluginService] internal static IDtrBar DtrBar { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
+    [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
+    [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
 
     private const string CommandName = "/hfh";
     
@@ -27,6 +29,7 @@ public sealed class Plugin : IDalamudPlugin
     
     private ConfigWindow ConfigWindow { get; init; }
     private EmoteEngine EmoteEngine { get; init; }
+    public EmoteDetectionService EmoteDetectionService { get; init; }
     private IDtrBarEntry? DtrEntry { get; set; }
 
     public Plugin()
@@ -45,7 +48,8 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw += DrawUI;
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
         
-        EmoteEngine = new EmoteEngine(Framework, ClientState, ObjectTable, CommandManager, Configuration);
+        EmoteDetectionService = new EmoteDetectionService(GameInterop, ObjectTable, DataManager, Log);
+        EmoteEngine = new EmoteEngine(Framework, ClientState, ObjectTable, CommandManager, Configuration, EmoteDetectionService);
         
         SetupDtrBar();
         
@@ -114,6 +118,7 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem.RemoveAllWindows();
         ConfigWindow.Dispose();
         EmoteEngine.Dispose();
+        EmoteDetectionService.Dispose();
         
         if (DtrEntry != null)
         {

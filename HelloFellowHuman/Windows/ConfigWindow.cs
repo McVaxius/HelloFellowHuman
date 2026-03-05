@@ -3,6 +3,7 @@ using Dalamud.Interface.Windowing;
 using HelloFellowHuman.Models;
 using HelloFellowHuman.Services;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
 using System.Text;
@@ -17,6 +18,7 @@ public class ConfigWindow : Window, IDisposable
     private int selectedPresetIndex = 0;
     private string newPresetName = string.Empty;
     private string importText = string.Empty;
+    private readonly Dictionary<int, string> emoteSearchFilters = new();
     
     public ConfigWindow(Plugin plugin) : base("Hello Fellow Human Config###HFHConfig")
     {
@@ -282,14 +284,18 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Emote Lines:");
         ImGui.Separator();
         
-        ImGui.Columns(7, "EmoteColumns");
+        ImGui.Columns(8, "EmoteColumns");
+        ImGui.Text("Type");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Proximity = distance-based, Emote = responds to emotes directed at you");
+        ImGui.NextColumn();
         ImGui.Text("ALL");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Check to target all nearby players");
         ImGui.NextColumn();
         ImGui.Text("Name");
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Target player name (without @server)");
+            ImGui.SetTooltip("Target player name (without @server). For Emote type, leave blank to respond to anyone.");
         ImGui.NextColumn();
         ImGui.Text("Command");
         if (ImGui.IsItemHovered())
@@ -301,11 +307,11 @@ public class ConfigWindow : Window, IDisposable
         ImGui.NextColumn();
         ImGui.Text("Repeat");
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Seconds before this emote can trigger again");
+            ImGui.SetTooltip("Seconds before this emote can trigger again (Proximity only)");
         ImGui.NextColumn();
-        ImGui.Text("Distance");
+        ImGui.Text("Dist/Emote");
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Maximum distance (yalms) to trigger");
+            ImGui.SetTooltip("Proximity: max distance (yalms). Emote: the trigger emote slash command.");
         ImGui.NextColumn();
         ImGui.NextColumn();
         ImGui.Separator();
@@ -318,13 +324,29 @@ public class ConfigWindow : Window, IDisposable
             if (!isValid)
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
             
+            // Type dropdown column
+            var triggerType = line.TriggerType;
+            ImGui.SetNextItemWidth(-1);
+            if (ImGui.Combo($"##type{i}", ref triggerType, "Prox\0Emote\0"))
+            {
+                line.TriggerType = triggerType;
+                plugin.SaveConfig();
+            }
+            ImGui.NextColumn();
+            
             // ALL checkbox column
+            var isEmoteType = line.TriggerType == 1;
+            if (isEmoteType) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.3f);
             var isAllTargets = line.TargetName == "*";
             if (ImGui.Checkbox($"##all{i}", ref isAllTargets))
             {
-                line.TargetName = isAllTargets ? "*" : "";
-                plugin.SaveConfig();
+                if (!isEmoteType)
+                {
+                    line.TargetName = isAllTargets ? "*" : "";
+                    plugin.SaveConfig();
+                }
             }
+            if (isEmoteType) ImGui.PopStyleVar();
             ImGui.NextColumn();
             
             var name = line.TargetName;
@@ -384,21 +406,67 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.NextColumn();
             
+            if (isEmoteType) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.3f);
             var repeat = line.RepeatInterval;
             ImGui.SetNextItemWidth(-1);
             if (ImGui.DragFloat($"##repeat{i}", ref repeat, 0.1f, 0.1f, 300f))
             {
-                line.RepeatInterval = repeat;
-                plugin.SaveConfig();
+                if (!isEmoteType)
+                {
+                    line.RepeatInterval = repeat;
+                    plugin.SaveConfig();
+                }
             }
+            if (isEmoteType) ImGui.PopStyleVar();
             ImGui.NextColumn();
             
-            var dist = line.DistanceThreshold;
-            ImGui.SetNextItemWidth(-1);
-            if (ImGui.DragFloat($"##dist{i}", ref dist, 0.1f, 0.1f, 100f))
+            if (isEmoteType)
             {
-                line.DistanceThreshold = dist;
-                plugin.SaveConfig();
+                // Emote type: show emote selector dropdown with search
+                var emoteCommands = plugin.EmoteDetectionService.EmoteCommands;
+                var triggerEmote = line.TriggerEmote;
+                ImGui.SetNextItemWidth(-1);
+                if (ImGui.BeginCombo($"##emote{i}", string.IsNullOrEmpty(triggerEmote) ? "(select)" : triggerEmote))
+                {
+                    if (!emoteSearchFilters.ContainsKey(i))
+                        emoteSearchFilters[i] = "";
+                    var filter = emoteSearchFilters[i];
+                    ImGui.SetNextItemWidth(-1);
+                    if (ImGui.InputText($"##efilter{i}", ref filter, 64))
+                        emoteSearchFilters[i] = filter;
+                    
+                    var filterLower = filter.ToLowerInvariant();
+                    var shown = 0;
+                    foreach (var ec in emoteCommands)
+                    {
+                        if (!string.IsNullOrEmpty(filterLower) && !ec.ToLowerInvariant().Contains(filterLower))
+                            continue;
+                        
+                        var isSelected = ec == triggerEmote;
+                        if (ImGui.Selectable(ec, isSelected))
+                        {
+                            line.TriggerEmote = ec;
+                            plugin.SaveConfig();
+                        }
+                        if (isSelected) ImGui.SetItemDefaultFocus();
+                        
+                        if (++shown > 50) break; // Limit visible items
+                    }
+                    ImGui.EndCombo();
+                }
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip("The emote that triggers this response (e.g. /wave)");
+            }
+            else
+            {
+                // Proximity type: show distance
+                var dist = line.DistanceThreshold;
+                ImGui.SetNextItemWidth(-1);
+                if (ImGui.DragFloat($"##dist{i}", ref dist, 0.1f, 0.1f, 100f))
+                {
+                    line.DistanceThreshold = dist;
+                    plugin.SaveConfig();
+                }
             }
             ImGui.NextColumn();
             
