@@ -361,10 +361,17 @@ public class EmoteEngine : IDisposable
     {
         try
         {
-            Plugin.Log.Info($"[HFH] Targeting: {line.TargetName}");
-            var targetName = line.ResolvedTargetName ?? line.TargetName;
-            SendChatCommand($"/target {targetName}");
-            System.Threading.Thread.Sleep(500);
+            if (line.TargetBeforeCommand)
+            {
+                var targetName = line.ResolvedTargetName ?? line.TargetName;
+                Plugin.Log.Info($"[HFH] Targeting: {targetName}");
+                SendChatCommand($"/target {targetName}");
+                System.Threading.Thread.Sleep(500);
+            }
+            else
+            {
+                Plugin.Log.Info($"[HFH] Skipping target (TargetBeforeCommand=off)");
+            }
             Plugin.Log.Info($"[HFH] Sending command: {line.SlashCommand}");
             SendChatCommand(line.SlashCommand);
         }

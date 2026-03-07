@@ -13,6 +13,7 @@ public class EmoteLine
     public float DistanceThreshold { get; set; } = 5.0f;
     public int TriggerType { get; set; } = 0; // 0=Proximity, 1=Emote
     public string TriggerEmote { get; set; } = string.Empty; // e.g. "/wave" - the emote that triggers this response
+    public bool TargetBeforeCommand { get; set; } = true; // If true, /target the player before executing the command
     
     [JsonIgnore]
     public DateTime LastExecuted { get; set; } = DateTime.MinValue;
@@ -54,6 +55,7 @@ public class EmoteLine
             DistanceThreshold = DistanceThreshold,
             TriggerType = TriggerType,
             TriggerEmote = TriggerEmote,
+            TargetBeforeCommand = TargetBeforeCommand,
             LastExecuted = LastExecuted
         };
     }

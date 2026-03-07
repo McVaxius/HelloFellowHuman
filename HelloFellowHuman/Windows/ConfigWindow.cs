@@ -284,7 +284,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Emote Lines:");
         ImGui.Separator();
         
-        ImGui.Columns(8, "EmoteColumns");
+        ImGui.Columns(9, "EmoteColumns");
         ImGui.Text("Type");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity = distance-based, Emote = responds to emotes directed at you");
@@ -292,6 +292,10 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("ALL");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Check to target all nearby players");
+        ImGui.NextColumn();
+        ImGui.Text("Tgt");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Target before command: if checked, /target the player before executing the slash command");
         ImGui.NextColumn();
         ImGui.Text("Name");
         if (ImGui.IsItemHovered())
@@ -340,6 +344,15 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.Checkbox($"##all{i}", ref isAllTargets))
             {
                 line.TargetName = isAllTargets ? "*" : "";
+                plugin.SaveConfig();
+            }
+            ImGui.NextColumn();
+            
+            // Target before command checkbox
+            var targetBefore = line.TargetBeforeCommand;
+            if (ImGui.Checkbox($"##tgt{i}", ref targetBefore))
+            {
+                line.TargetBeforeCommand = targetBefore;
                 plugin.SaveConfig();
             }
             ImGui.NextColumn();

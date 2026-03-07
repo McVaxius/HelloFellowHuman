@@ -64,6 +64,10 @@ TestResults/
 *-draft.md
 *-wip.md
 
+## All .md docs except README (may contain character names, keep private)
+*.md
+!README.md
+
 ## Personal Settings
 personal/
 local/
