@@ -28,7 +28,7 @@ public class ConfigWindow : Window, IDisposable
         Size = new Vector2(800, 500);
         SizeCondition = ImGuiCond.FirstUseEver;
         
-        selectedPresetIndex = config.SelectedPresetIndex;
+        selectedPresetIndex = 0;
     }
     
     public override void Draw()
@@ -53,11 +53,13 @@ public class ConfigWindow : Window, IDisposable
     
     private void DrawConfigurationTab()
     {
-        var enabled = config.Enabled;
+        var account = plugin.ConfigManager.GetOrCreateCurrentAccount();
+        
+        var enabled = account.Enabled;
         if (ImGui.Checkbox("Enabled", ref enabled))
         {
-            config.Enabled = enabled;
-            plugin.SaveConfig();
+            account.Enabled = enabled;
+            plugin.ConfigManager.SaveCurrentAccount();
             Plugin.Log.Info($"Hello Fellow Human {(enabled ? "enabled" : "disabled")}");
         }
         if (ImGui.IsItemHovered())
@@ -159,10 +161,13 @@ public class ConfigWindow : Window, IDisposable
             {
                 if (!string.IsNullOrWhiteSpace(newPresetName))
                 {
-                    config.AddPreset(newPresetName);
-                    selectedPresetIndex = config.Presets.Count - 1;
-                    config.SelectedPresetIndex = selectedPresetIndex;
-                    plugin.SaveConfig();
+                    var acct = plugin.ConfigManager.GetOrCreateCurrentAccount();
+                    var defaultPreset = acct.Presets.Count > 0 ? acct.Presets[0].Clone() : new EmotePreset { Name = newPresetName };
+                    defaultPreset.Name = newPresetName;
+                    acct.Presets.Add(defaultPreset);
+                    selectedPresetIndex = acct.Presets.Count - 1;
+                    acct.SelectedPresetIndex = selectedPresetIndex;
+                    plugin.ConfigManager.SaveCurrentAccount();
                     newPresetName = string.Empty;
                     ImGui.CloseCurrentPopup();
                 }
@@ -183,12 +188,13 @@ public class ConfigWindow : Window, IDisposable
         
         if (ImGui.Button("Delete", new Vector2(-1, 0)))
         {
-            if (ctrlHeld && selectedPresetIndex > 0 && config.Presets[selectedPresetIndex].Name != "DEFAULT PRESET")
+            var acct = plugin.ConfigManager.GetOrCreateCurrentAccount();
+            if (ctrlHeld && selectedPresetIndex > 0 && acct.Presets[selectedPresetIndex].Name != "DEFAULT PRESET")
             {
-                config.DeletePreset(selectedPresetIndex);
-                selectedPresetIndex = Math.Min(selectedPresetIndex, config.Presets.Count - 1);
-                config.SelectedPresetIndex = selectedPresetIndex;
-                plugin.SaveConfig();
+                acct.Presets.RemoveAt(selectedPresetIndex);
+                selectedPresetIndex = Math.Min(selectedPresetIndex, acct.Presets.Count - 1);
+                acct.SelectedPresetIndex = selectedPresetIndex;
+                plugin.ConfigManager.SaveCurrentAccount();
             }
         }
         ImGui.PopStyleColor();
@@ -200,11 +206,12 @@ public class ConfigWindow : Window, IDisposable
         
         ImGui.Separator();
         
-        for (int i = 0; i < config.Presets.Count; i++)
+        var acctList = plugin.ConfigManager.GetOrCreateCurrentAccount();
+        for (int i = 0; i < acctList.Presets.Count; i++)
         {
-            var preset = config.Presets[i];
+            var preset = acctList.Presets[i];
             var isSelected = i == selectedPresetIndex;
-            var isActive = i == config.SelectedPresetIndex;
+            var isActive = i == acctList.SelectedPresetIndex;
             
             var presetName = config.KrangleEnabled ? KrangleService.KrangleName(preset.Name) : preset.Name;
             var displayName = $"[{i}] {presetName}";
@@ -217,8 +224,8 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.Selectable(displayName, isSelected))
             {
                 selectedPresetIndex = i;
-                config.SelectedPresetIndex = i;
-                plugin.SaveConfig();
+                acctList.SelectedPresetIndex = i;
+                plugin.ConfigManager.SaveCurrentAccount();
             }
             
             if (isActive)
@@ -228,10 +235,11 @@ public class ConfigWindow : Window, IDisposable
     
     private void DrawPresetEditor()
     {
-        if (selectedPresetIndex < 0 || selectedPresetIndex >= config.Presets.Count)
+        var account = plugin.ConfigManager.GetOrCreateCurrentAccount();
+        if (selectedPresetIndex < 0 || selectedPresetIndex >= account.Presets.Count)
             return;
         
-        var preset = config.Presets[selectedPresetIndex];
+        var preset = account.Presets[selectedPresetIndex];
         
         var editingName = config.KrangleEnabled ? KrangleService.KrangleName(preset.Name) : preset.Name;
         ImGui.Text($"Editing: {editingName}");
@@ -253,7 +261,7 @@ public class ConfigWindow : Window, IDisposable
             if (imported != null)
             {
                 preset.Lines = imported.Lines;
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
                 Plugin.Log.Info("Preset imported successfully");
             }
             else
@@ -276,7 +284,7 @@ public class ConfigWindow : Window, IDisposable
                     RepeatInterval = 5.0f,
                     DistanceThreshold = 5.0f
                 });
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
             }
         }
         
@@ -293,9 +301,9 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Check to target all nearby players");
         ImGui.NextColumn();
-        ImGui.Text("Tgt");
+        ImGui.Text("ToT (?)");
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Target before command: if checked, /target the player before executing the slash command");
+            ImGui.SetTooltip("Target triggering player: if checked, /target the player before executing the slash command");
         ImGui.NextColumn();
         ImGui.Text("Name");
         if (ImGui.IsItemHovered())
@@ -334,7 +342,7 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.Combo($"##type{i}", ref triggerType, "Proximity\0Emote\0"))
             {
                 line.TriggerType = triggerType;
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
             }
             ImGui.NextColumn();
             
@@ -344,7 +352,7 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.Checkbox($"##all{i}", ref isAllTargets))
             {
                 line.TargetName = isAllTargets ? "*" : "";
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
             }
             ImGui.NextColumn();
             
@@ -353,7 +361,7 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.Checkbox($"##tgt{i}", ref targetBefore))
             {
                 line.TargetBeforeCommand = targetBefore;
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
             }
             ImGui.NextColumn();
             
@@ -384,7 +392,7 @@ public class ConfigWindow : Window, IDisposable
                     if (!isAllTargets)
                     {
                         line.TargetName = displayName;
-                        plugin.SaveConfig();
+                        plugin.ConfigManager.SaveCurrentAccount();
                     }
                 }
             }
@@ -394,7 +402,7 @@ public class ConfigWindow : Window, IDisposable
                 if (name != "*" && !string.IsNullOrWhiteSpace(name))
                 {
                     line.TargetName = KrangleService.KrangleName(name);
-                    plugin.SaveConfig();
+                    plugin.ConfigManager.SaveCurrentAccount();
                 }
             }
             if (ImGui.IsItemHovered())
@@ -406,7 +414,7 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.InputText($"##cmd{i}", ref cmd, 100))
             {
                 line.SlashCommand = cmd;
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
             }
             ImGui.NextColumn();
             
@@ -415,7 +423,7 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.DragFloat($"##wait{i}", ref wait, 0.1f, 0f, 60f))
             {
                 line.WaitTimeAfter = wait;
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
             }
             ImGui.NextColumn();
             
@@ -425,7 +433,7 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.DragFloat($"##repeat{i}", ref repeat, 0.1f, 0.1f, 300f))
             {
                 line.RepeatInterval = repeat;
-                plugin.SaveConfig();
+                plugin.ConfigManager.SaveCurrentAccount();
             }
             ImGui.NextColumn();
             
@@ -455,7 +463,7 @@ public class ConfigWindow : Window, IDisposable
                         if (ImGui.Selectable(ec, isSelected))
                         {
                             line.TriggerEmote = ec;
-                            plugin.SaveConfig();
+                            plugin.ConfigManager.SaveCurrentAccount();
                         }
                         if (isSelected) ImGui.SetItemDefaultFocus();
                         
@@ -474,7 +482,7 @@ public class ConfigWindow : Window, IDisposable
                 if (ImGui.DragFloat($"##dist{i}", ref dist, 0.1f, 0.1f, 100f))
                 {
                     line.DistanceThreshold = dist;
-                    plugin.SaveConfig();
+                    plugin.ConfigManager.SaveCurrentAccount();
                 }
             }
             ImGui.NextColumn();
@@ -484,7 +492,7 @@ public class ConfigWindow : Window, IDisposable
                 if (ImGui.Button($"-##del{i}"))
                 {
                     preset.Lines.RemoveAt(i);
-                    plugin.SaveConfig();
+                    plugin.ConfigManager.SaveCurrentAccount();
                     break;
                 }
             }
@@ -508,7 +516,7 @@ public class ConfigWindow : Window, IDisposable
                 RepeatInterval = 5.0f,
                 DistanceThreshold = 5.0f
             });
-            plugin.SaveConfig();
+            plugin.ConfigManager.SaveCurrentAccount();
         }
     }
     

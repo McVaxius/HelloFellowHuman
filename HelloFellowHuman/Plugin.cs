@@ -4,6 +4,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
+using HelloFellowHuman.Models;
 using HelloFellowHuman.Windows;
 using HelloFellowHuman.Services;
 using System;
@@ -21,21 +22,29 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
     [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
 
     private const string CommandName = "/hfh";
     
     public Configuration Configuration { get; init; }
+    public ConfigManager ConfigManager { get; init; }
     public readonly WindowSystem WindowSystem = new("HelloFellowHuman");
     
     private ConfigWindow ConfigWindow { get; init; }
     private EmoteEngine EmoteEngine { get; init; }
     public EmoteDetectionService EmoteDetectionService { get; init; }
     private IDtrBarEntry? DtrEntry { get; set; }
+    private bool wasLoggedIn;
+    private int loginDetectionDelay;
 
     public Plugin()
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Configuration.Initialize();
+        
+        ConfigManager = new ConfigManager(PluginInterface, Log);
+        if (!string.IsNullOrEmpty(Configuration.LastAccountId))
+            ConfigManager.CurrentAccountId = Configuration.LastAccountId;
         
         ConfigWindow = new ConfigWindow(this);
         WindowSystem.AddWindow(ConfigWindow);
@@ -49,11 +58,19 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
         
         EmoteDetectionService = new EmoteDetectionService(GameInterop, ObjectTable, DataManager, Log);
-        EmoteEngine = new EmoteEngine(Framework, ClientState, ObjectTable, CommandManager, Configuration, EmoteDetectionService);
+        EmoteEngine = new EmoteEngine(this);
         
         SetupDtrBar();
         
+        ClientState.Login += OnLoginEvent;
         Framework.Update += OnFrameworkUpdate;
+        
+        // If already logged in at plugin load, defer detection
+        if (ClientState.IsLoggedIn)
+        {
+            wasLoggedIn = true;
+            loginDetectionDelay = 3;
+        }
     }
 
     private void SetupDtrBar()
@@ -64,10 +81,11 @@ public sealed class Plugin : IDalamudPlugin
             UpdateDtrBar();
             DtrEntry.OnClick = (_) =>
             {
-                Configuration.Enabled = !Configuration.Enabled;
-                SaveConfig();
+                var account = ConfigManager.GetOrCreateCurrentAccount();
+                account.Enabled = !account.Enabled;
+                ConfigManager.SaveCurrentAccount();
                 UpdateDtrBar();
-                Log.Info($"Hello Fellow Human {(Configuration.Enabled ? "enabled" : "disabled")}");
+                Log.Info($"Hello Fellow Human {(account.Enabled ? "enabled" : "disabled")}");
             };
         }
         catch (Exception ex)
@@ -87,7 +105,9 @@ public sealed class Plugin : IDalamudPlugin
         // DTR modes: 0=text-only, 1=icon+text, 2=icon-only
         var iconEnabled = string.IsNullOrEmpty(Configuration.DtrIconEnabled) ? "\uE03C" : Configuration.DtrIconEnabled;
         var iconDisabled = string.IsNullOrEmpty(Configuration.DtrIconDisabled) ? "\uE03D" : Configuration.DtrIconDisabled;
-        var glyph = Configuration.Enabled ? iconEnabled : iconDisabled;
+        var account = ConfigManager.GetCurrentAccount();
+        var isEnabled = account?.Enabled ?? false;
+        var glyph = isEnabled ? iconEnabled : iconDisabled;
 
         switch (Configuration.DtrBarMode)
         {
@@ -98,16 +118,63 @@ public sealed class Plugin : IDalamudPlugin
                 DtrEntry.Text = glyph;
                 break;
             default: // text-only
-                var status = Configuration.Enabled ? "ON" : "OFF";
-                var activePreset = Configuration.GetActivePreset();
+                var status = isEnabled ? "ON" : "OFF";
+                var activePreset = account?.GetActivePreset();
                 var presetName = activePreset?.Name ?? "None";
                 DtrEntry.Text = $"HFH: {status} [{presetName}]";
                 break;
         }
     }
 
+    private void OnLoginEvent()
+    {
+        loginDetectionDelay = 3;
+    }
+
+    private void OnLogin()
+    {
+        try
+        {
+            var charName = ObjectTable.LocalPlayer?.Name.ToString() ?? "";
+            var worldName = ObjectTable.LocalPlayer?.HomeWorld.Value.Name.ToString() ?? "";
+            if (!string.IsNullOrEmpty(charName) && !string.IsNullOrEmpty(worldName))
+            {
+                var contentId = PlayerState.ContentId;
+                Log.Info($"[HFH] OnLogin: Character={charName}@{worldName}, ContentId={contentId:X16}");
+                ConfigManager.EnsureAccountSelected(contentId, charName);
+                ConfigManager.MigrateFromLegacyConfig(Configuration);
+                Configuration.LastAccountId = ConfigManager.CurrentAccountId;
+                SaveConfig();
+                Log.Info($"[HFH] Account selected: {ConfigManager.CurrentAccountId}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"[HFH] Error during login detection: {ex.Message}");
+        }
+    }
+
     private void OnFrameworkUpdate(IFramework fw)
     {
+        // Delayed login detection (LocalPlayer may not be ready immediately)
+        if (ClientState.IsLoggedIn && !wasLoggedIn)
+        {
+            wasLoggedIn = true;
+            loginDetectionDelay = 3;
+        }
+        else if (!ClientState.IsLoggedIn && wasLoggedIn)
+        {
+            wasLoggedIn = false;
+            loginDetectionDelay = 0;
+        }
+
+        if (loginDetectionDelay > 0)
+        {
+            loginDetectionDelay--;
+            if (loginDetectionDelay == 0)
+                OnLogin();
+        }
+
         UpdateDtrBar();
     }
 
@@ -115,6 +182,7 @@ public sealed class Plugin : IDalamudPlugin
     public void Dispose()
     {
         Framework.Update -= OnFrameworkUpdate;
+        ClientState.Login -= OnLoginEvent;
         WindowSystem.RemoveAllWindows();
         ConfigWindow.Dispose();
         EmoteEngine.Dispose();
@@ -140,8 +208,9 @@ public sealed class Plugin : IDalamudPlugin
         
         if (argLower == "on" || argLower == "enable")
         {
-            Configuration.Enabled = true;
-            SaveConfig();
+            var account = ConfigManager.GetOrCreateCurrentAccount();
+            account.Enabled = true;
+            ConfigManager.SaveCurrentAccount();
             UpdateDtrBar();
             Log.Info("Hello Fellow Human enabled");
             return;
@@ -149,8 +218,9 @@ public sealed class Plugin : IDalamudPlugin
         
         if (argLower == "off" || argLower == "disable")
         {
-            Configuration.Enabled = false;
-            SaveConfig();
+            var account = ConfigManager.GetOrCreateCurrentAccount();
+            account.Enabled = false;
+            ConfigManager.SaveCurrentAccount();
             UpdateDtrBar();
             Log.Info("Hello Fellow Human disabled");
             return;
@@ -158,19 +228,20 @@ public sealed class Plugin : IDalamudPlugin
         
         if (argLower.StartsWith("preset "))
         {
+            var account = ConfigManager.GetOrCreateCurrentAccount();
             var presetIdStr = argLower.Substring(7).Trim();
             if (int.TryParse(presetIdStr, out var presetId))
             {
-                if (presetId >= 0 && presetId < Configuration.Presets.Count)
+                if (presetId >= 0 && presetId < account.Presets.Count)
                 {
-                    Configuration.SelectedPresetIndex = presetId;
-                    SaveConfig();
+                    account.SelectedPresetIndex = presetId;
+                    ConfigManager.SaveCurrentAccount();
                     UpdateDtrBar();
-                    Log.Info($"Switched to preset [{presetId}] {Configuration.Presets[presetId].Name}");
+                    Log.Info($"Switched to preset [{presetId}] {account.Presets[presetId].Name}");
                 }
                 else
                 {
-                    Log.Error($"Invalid preset ID: {presetId}. Valid range: 0-{Configuration.Presets.Count - 1}");
+                    Log.Error($"Invalid preset ID: {presetId}. Valid range: 0-{account.Presets.Count - 1}");
                 }
             }
             else

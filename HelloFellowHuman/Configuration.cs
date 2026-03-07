@@ -11,6 +11,7 @@ public class Configuration : IPluginConfiguration
 {
     public int Version { get; set; } = 0;
     
+    // Legacy fields (kept for migration to per-account config)
     public bool Enabled { get; set; } = false;
     public bool DtrBarEnabled { get; set; } = true;
     public int DtrBarMode { get; set; } = 0; // 0=text-only, 1=icon+text, 2=icon-only
@@ -19,6 +20,9 @@ public class Configuration : IPluginConfiguration
     public bool KrangleEnabled { get; set; } = false;
     public int SelectedPresetIndex { get; set; } = 0;
     public List<EmotePreset> Presets { get; set; } = new();
+    
+    // Account tracking
+    public string LastAccountId { get; set; } = "";
     
     public void Initialize()
     {

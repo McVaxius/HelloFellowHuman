@@ -14,11 +14,7 @@ namespace HelloFellowHuman.Services;
 
 public class EmoteEngine : IDisposable
 {
-    private readonly IFramework framework;
-    private readonly IClientState clientState;
-    private readonly IObjectTable objectTable;
-    private readonly ICommandManager commandManager;
-    private readonly Configuration config;
+    private readonly Plugin plugin;
     private readonly EmoteDetectionService? emoteDetection;
     
     private DateTime lastCheckTime = DateTime.MinValue;
@@ -28,25 +24,15 @@ public class EmoteEngine : IDisposable
     // Queue of pending emote-triggered responses: (instigatorName, emoteId)
     private readonly Queue<(string Name, ushort EmoteId)> pendingEmoteResponses = new();
     
-    public EmoteEngine(
-        IFramework framework,
-        IClientState clientState,
-        IObjectTable objectTable,
-        ICommandManager commandManager,
-        Configuration config,
-        EmoteDetectionService? emoteDetection = null)
+    public EmoteEngine(Plugin plugin)
     {
-        this.framework = framework;
-        this.clientState = clientState;
-        this.objectTable = objectTable;
-        this.commandManager = commandManager;
-        this.config = config;
-        this.emoteDetection = emoteDetection;
+        this.plugin = plugin;
+        this.emoteDetection = plugin.EmoteDetectionService;
         
         if (emoteDetection != null)
             emoteDetection.OnEmoteReceived += OnEmoteReceived;
         
-        this.framework.Update += OnFrameworkUpdate;
+        Plugin.Framework.Update += OnFrameworkUpdate;
     }
     
     private void OnEmoteReceived(string instigatorName, ushort emoteId)
@@ -54,7 +40,8 @@ public class EmoteEngine : IDisposable
         Plugin.Log.Debug($"[HFH] OnEmoteReceived: {instigatorName} -> ID {emoteId}");
         
         var now = DateTime.Now;
-        if (!config.Enabled) 
+        var account = plugin.ConfigManager.GetCurrentAccount();
+        if (account == null || !account.Enabled) 
         {
             Plugin.Log.Debug("[HFH] Plugin disabled, ignoring emote");
             return;
@@ -67,7 +54,7 @@ public class EmoteEngine : IDisposable
             return;
         }
         
-        var activePreset = config.GetActivePreset();
+        var activePreset = account.GetActivePreset();
         if (activePreset == null) 
         {
             Plugin.Log.Debug("[HFH] No active preset, ignoring emote");
@@ -144,9 +131,10 @@ public class EmoteEngine : IDisposable
     
     private void OnFrameworkUpdate(IFramework fw)
     {
-        if (!config.Enabled) return;
+        var account = plugin.ConfigManager.GetCurrentAccount();
+        if (account == null || !account.Enabled) return;
         
-        var localPlayer = objectTable.LocalPlayer;
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
         if (localPlayer == null) return;
         
         var now = DateTime.UtcNow;
@@ -161,7 +149,7 @@ public class EmoteEngine : IDisposable
         if ((now - lastCheckTime).TotalSeconds < CheckInterval) return;
         lastCheckTime = now;
         
-        var activePreset = config.GetActivePreset();
+        var activePreset = account.GetActivePreset();
         if (activePreset == null || activePreset.Lines.Count == 0)
         {
             Plugin.Log.Debug("[HFH] No active preset or empty preset");
@@ -324,7 +312,7 @@ public class EmoteEngine : IDisposable
     private IGameObject? FindPlayerByName(string name)
     {
         var cleanName = name.Trim();
-        foreach (var obj in objectTable)
+        foreach (var obj in Plugin.ObjectTable)
         {
             if (obj.ObjectKind == Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player)
             {
@@ -338,11 +326,11 @@ public class EmoteEngine : IDisposable
     
     private IGameObject? FindNearestPlayer(Vector3 playerPos, float maxDistance)
     {
-        var localPlayer = objectTable.LocalPlayer;
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
         IGameObject? nearest = null;
         var nearestDist = float.MaxValue;
         
-        foreach (var obj in objectTable)
+        foreach (var obj in Plugin.ObjectTable)
         {
             if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player) continue;
             if (obj.GameObjectId == localPlayer?.GameObjectId) continue;
@@ -386,7 +374,7 @@ public class EmoteEngine : IDisposable
         try
         {
             // Try plugin command first
-            if (commandManager.ProcessCommand(command))
+            if (Plugin.CommandManager.ProcessCommand(command))
                 return;
             
             // Fall back to game command via UIModule
@@ -409,7 +397,7 @@ public class EmoteEngine : IDisposable
     
     public void Dispose()
     {
-        framework.Update -= OnFrameworkUpdate;
+        Plugin.Framework.Update -= OnFrameworkUpdate;
         if (emoteDetection != null)
             emoteDetection.OnEmoteReceived -= OnEmoteReceived;
     }
