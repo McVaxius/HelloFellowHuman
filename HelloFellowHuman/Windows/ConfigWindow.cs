@@ -35,13 +35,15 @@ public class ConfigWindow : Window, IDisposable
     {
         if (ImGui.BeginTabBar("HFHTabBar"))
         {
-            if (ImGui.BeginTabItem("Presets"))
+            bool presetsOpen = true;
+            if (ImGui.BeginTabItem("Presets", ref presetsOpen, ImGuiTabItemFlags.None))
             {
                 DrawPresetsTab();
                 ImGui.EndTabItem();
             }
             
-            if (ImGui.BeginTabItem("Configuration"))
+            bool configOpen = true;
+            if (ImGui.BeginTabItem("Configuration", ref configOpen, ImGuiTabItemFlags.None))
             {
                 DrawConfigurationTab();
                 ImGui.EndTabItem();
