@@ -35,15 +35,15 @@ public class ConfigWindow : Window, IDisposable
     {
         if (ImGui.BeginTabBar("HFHTabBar"))
         {
-            if (ImGui.BeginTabItem("Configuration"))
-            {
-                DrawConfigurationTab();
-                ImGui.EndTabItem();
-            }
-            
             if (ImGui.BeginTabItem("Presets"))
             {
                 DrawPresetsTab();
+                ImGui.EndTabItem();
+            }
+            
+            if (ImGui.BeginTabItem("Configuration"))
+            {
+                DrawConfigurationTab();
                 ImGui.EndTabItem();
             }
             
@@ -129,6 +129,21 @@ public class ConfigWindow : Window, IDisposable
     
     private void DrawPresetsTab()
     {
+        // Krangle checkbox at top of Presets tab
+        var krangleEnabled = config.KrangleEnabled;
+        if (ImGui.Checkbox("Krangle", ref krangleEnabled))
+        {
+            config.KrangleEnabled = krangleEnabled;
+            plugin.SaveConfig();
+            KrangleService.ClearCache();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Obfuscate player names with military/exercise words.\nUseful for screenshots.");
+        
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+        
         var leftPanelWidth = 200f;
         
         ImGui.BeginChild("PresetList", new Vector2(leftPanelWidth, -1), true);
