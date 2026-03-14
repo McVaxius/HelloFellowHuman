@@ -349,11 +349,11 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
         
         ImGui.Columns(9, "EmoteColumns");
-        ImGui.Text("Type");
+        ImGui.Text("Type (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity = distance-based, Emote = responds to emotes directed at you");
         ImGui.NextColumn();
-        ImGui.Text("ALL");
+        ImGui.Text("ALL (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Check to target all nearby players");
         ImGui.NextColumn();
@@ -361,25 +361,25 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Target triggering player: if checked, /target the player before executing the slash command");
         ImGui.NextColumn();
-        ImGui.Text("Name");
+        ImGui.Text("Name (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Target player name (without @server). For Emote type, leave blank to respond to anyone.");
         ImGui.NextColumn();
-        ImGui.Text("Command");
+        ImGui.Text("Command (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Slash command to execute. Try '/wave motion' to emote without text!");
         ImGui.NextColumn();
-        ImGui.Text("Wait");
+        ImGui.Text("Wait (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Seconds to wait after executing this emote");
         ImGui.NextColumn();
-        ImGui.Text("Repeat");
+        ImGui.Text("Repeat (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Seconds before this emote can trigger again (Proximity only)");
         ImGui.NextColumn();
-        ImGui.Text("Dist/Emote");
+        ImGui.Text("Dist/Emote (?)");
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Proximity: max distance (yalms). Emote: the trigger emote slash command.");
+            ImGui.SetTooltip("Proximity: max distance (yalms). Emote: the trigger emote slash command.\nCOPYCAT: Responds with ANY emote received (copies the emote).");
         ImGui.NextColumn();
         ImGui.NextColumn();
         ImGui.Separator();
