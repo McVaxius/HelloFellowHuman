@@ -19,6 +19,7 @@ public class EmoteEngine : IDisposable
     
     private DateTime lastCheckTime = DateTime.MinValue;
     private DateTime currentWaitUntil = DateTime.MinValue;
+    private DateTime lastPresetLog = DateTime.MinValue;
     private const float CheckInterval = 1.0f;
     
     // Queue of pending emote responses: (instigatorName, emoteId, receivedCommand)
@@ -59,6 +60,14 @@ public class EmoteEngine : IDisposable
         {
             Plugin.Log.Debug("[HFH] No active preset, ignoring emote");
             return;
+        }
+        
+        // Log preset details when emote received
+        Plugin.Log.Info($"[HFH] Emote received - Active preset: {activePreset.Name} with {activePreset.Lines.Count} lines");
+        for (int i = 0; i < activePreset.Lines.Count; i++)
+        {
+            var line = activePreset.Lines[i];
+            Plugin.Log.Info($"[HFH] Line {i}: Type={line.TriggerType}, Trigger='{line.TriggerEmote}', Target='{line.TargetName}', Cmd='{line.SlashCommand}'");
         }
         
         Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote: {cmdForEmote}");
@@ -166,6 +175,18 @@ public class EmoteEngine : IDisposable
         {
             Plugin.Log.Debug("[HFH] No active preset or empty preset");
             return;
+        }
+        
+        // Log preset info once per minute
+        if (lastPresetLog == DateTime.MinValue || (now - lastPresetLog).TotalMinutes >= 1)
+        {
+            Plugin.Log.Info($"[HFH] Active preset: {activePreset.Name} with {activePreset.Lines.Count} lines");
+            for (int i = 0; i < activePreset.Lines.Count; i++)
+            {
+                var line = activePreset.Lines[i];
+                Plugin.Log.Info($"[HFH] Line {i}: Type={line.TriggerType}, Trigger='{line.TriggerEmote}', Target='{line.TargetName}', Cmd='{line.SlashCommand}'");
+            }
+            lastPresetLog = now;
         }
         
         // --- Process pending emote responses first ---
