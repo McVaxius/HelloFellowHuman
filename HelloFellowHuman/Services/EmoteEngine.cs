@@ -80,7 +80,7 @@ public class EmoteEngine : IDisposable
             // Special case: COPYCAT matches any emote
             if (triggerCmd == "COPYCAT")
             {
-                Plugin.Log.Debug($"[HFH] COPYCAT line matches any emote: {receivedCmd}");
+                Plugin.Log.Info($"[HFH] COPYCAT line matches any emote: {receivedCmd} from {instigatorName}");
                 // Continue with COPYCAT logic below
             }
             else if (triggerCmd != receivedCmd)
@@ -100,7 +100,7 @@ public class EmoteEngine : IDisposable
             }
             
             // Check per-line repeat cooldown (skip if RepeatInterval = 0)
-            Plugin.Log.Debug($"[HFH] Checking cooldown: RepeatInterval={line.RepeatInterval}, LastExecuted={line.LastExecuted}");
+            Plugin.Log.Info($"[HFH] Checking cooldown for {line.TriggerEmote}: RepeatInterval={line.RepeatInterval}, LastExecuted={line.LastExecuted}");
             if (line.RepeatInterval > 0)
             {
                 if (line.LastExecuted != DateTime.MinValue)
@@ -114,22 +114,22 @@ public class EmoteEngine : IDisposable
                     else
                     {
                         var timeSinceLast = now - line.LastExecuted;
-                        Plugin.Log.Debug($"[HFH] Time since last: {timeSinceLast.TotalSeconds:F1}s");
+                        Plugin.Log.Info($"[HFH] Time since last: {timeSinceLast.TotalSeconds:F1}s, cooldown: {line.RepeatInterval}s");
                         if (timeSinceLast.TotalSeconds < line.RepeatInterval)
                         {
-                            Plugin.Log.Debug($"[HFH] Repeat cooldown: {timeSinceLast.TotalSeconds:F1}s < {line.RepeatInterval}s");
+                            Plugin.Log.Info($"[HFH] Repeat cooldown active: {timeSinceLast.TotalSeconds:F1}s < {line.RepeatInterval}s");
                             continue;
                         }
                     }
                 }
                 else
                 {
-                    Plugin.Log.Debug($"[HFH] Never executed before, allowing trigger");
+                    Plugin.Log.Info($"[HFH] Never executed before, allowing trigger");
                 }
             }
             else
             {
-                Plugin.Log.Debug($"[HFH] RepeatInterval is 0, no cooldown check");
+                Plugin.Log.Info($"[HFH] RepeatInterval is 0, no cooldown check");
             }
             
             // Queue the response

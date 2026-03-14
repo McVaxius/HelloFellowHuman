@@ -26,14 +26,21 @@ public class EmoteLine
     
     public bool IsValid()
     {
+        // COPYCAT doesn't need a SlashCommand since it copies the received emote
+        if (TriggerType == 1 && TriggerEmote == "COPYCAT")
+        {
+            return !string.IsNullOrWhiteSpace(TriggerEmote) && RepeatInterval >= 0;
+        }
+        
         if (string.IsNullOrWhiteSpace(SlashCommand)) return false;
         if (WaitTimeAfter < 0) return false;
         
         if (TriggerType == 1) // Emote
         {
             // Emote lines need TriggerEmote, TargetName is optional (can be "*" or empty for ALL), RepeatInterval >= 0
+            // COPYCAT is a special case that doesn't need to start with "/"
             return !string.IsNullOrWhiteSpace(TriggerEmote) && 
-                   TriggerEmote.StartsWith("/") &&
+                   (TriggerEmote.StartsWith("/") || TriggerEmote == "COPYCAT") &&
                    RepeatInterval >= 0;
         }
         else // Proximity

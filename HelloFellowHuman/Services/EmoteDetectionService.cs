@@ -101,10 +101,9 @@ public class EmoteDetectionService : IDisposable
 
             commands.Sort(StringComparer.OrdinalIgnoreCase);
             
-            // Add COPYCAT as a special emote option
-            var copycatList = commands.ToList();
-            copycatList.Add("COPYCAT");
-            copycatList.Sort(StringComparer.OrdinalIgnoreCase);
+            // Add COPYCAT at the top of the list
+            var copycatList = new List<string> { "COPYCAT" };
+            copycatList.AddRange(commands);
             EmoteCommands = copycatList.ToArray();
             
             log.Information($"[HFH] Built emote lookup: {emoteIdToCommand.Count} IDs, {EmoteCommands.Length} commands (including COPYCAT)");

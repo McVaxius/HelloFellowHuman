@@ -467,10 +467,22 @@ public class ConfigWindow : Window, IDisposable
             
             var cmd = line.SlashCommand;
             ImGui.SetNextItemWidth(220);
-            if (ImGui.InputText($"##cmd{i}", ref cmd, 100))
+            
+            // Show asterisk for COPYCAT lines since command doesn't matter
+            if (line.TriggerEmote == "COPYCAT")
             {
-                line.SlashCommand = cmd;
-                plugin.ConfigManager.SaveCurrentAccount();
+                var asterisk = "***";
+                ImGui.InputText($"##cmd{i}", ref asterisk, 100, ImGuiInputTextFlags.ReadOnly);
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip("COPYCAT mode - command will be copied from received emote");
+            }
+            else
+            {
+                if (ImGui.InputText($"##cmd{i}", ref cmd, 100))
+                {
+                    line.SlashCommand = cmd;
+                    plugin.ConfigManager.SaveCurrentAccount();
+                }
             }
             ImGui.NextColumn();
             
