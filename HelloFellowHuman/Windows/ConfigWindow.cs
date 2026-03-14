@@ -4,6 +4,7 @@ using HelloFellowHuman.Models;
 using HelloFellowHuman.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 using System.Text;
@@ -33,6 +34,21 @@ public class ConfigWindow : Window, IDisposable
     
     public override void Draw()
     {
+        // Ko-fi donation button in upper right
+        ImGui.SameLine(ImGui.GetWindowWidth() - 120);
+        if (ImGui.SmallButton("\u2661 Ko-fi \u2661"))
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://ko-fi.com/mcvaxius",
+                UseShellExecute = true
+            });
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip("Support development on Ko-fi");
+        }
+        
         if (ImGui.BeginTabBar("HFHTabBar"))
         {
             bool presetsOpen = true;
