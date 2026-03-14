@@ -100,8 +100,14 @@ public class EmoteDetectionService : IDisposable
             }
 
             commands.Sort(StringComparer.OrdinalIgnoreCase);
-            EmoteCommands = commands.ToArray();
-            log.Information($"[HFH] Built emote lookup: {emoteIdToCommand.Count} IDs, {EmoteCommands.Length} commands");
+            
+            // Add COPYCAT as a special emote option
+            var copycatList = commands.ToList();
+            copycatList.Add("COPYCAT");
+            copycatList.Sort(StringComparer.OrdinalIgnoreCase);
+            EmoteCommands = copycatList.ToArray();
+            
+            log.Information($"[HFH] Built emote lookup: {emoteIdToCommand.Count} IDs, {EmoteCommands.Length} commands (including COPYCAT)");
         }
         catch (Exception ex)
         {

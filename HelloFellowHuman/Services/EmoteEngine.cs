@@ -21,8 +21,8 @@ public class EmoteEngine : IDisposable
     private DateTime currentWaitUntil = DateTime.MinValue;
     private const float CheckInterval = 1.0f;
     
-    // Queue of pending emote-triggered responses: (instigatorName, emoteId)
-    private readonly Queue<(string Name, ushort EmoteId)> pendingEmoteResponses = new();
+    // Queue of pending emote responses: (instigatorName, emoteId, receivedCommand)
+    private readonly Queue<(string Name, ushort EmoteId, string ReceivedCommand)> pendingEmoteResponses = new();
     
     public EmoteEngine(Plugin plugin)
     {
@@ -74,10 +74,20 @@ public class EmoteEngine : IDisposable
             }
             
             // Match the trigger emote command
-            var triggerCmd = line.TriggerEmote.Trim().ToLowerInvariant();
-            var receivedCmd = cmdForEmote.ToLowerInvariant();
-            Plugin.Log.Debug($"[HFH] Comparing: trigger='{triggerCmd}' vs received='{receivedCmd}'");
-            if (triggerCmd != receivedCmd) continue;
+            var triggerCmd = line.TriggerEmote.Trim().ToUpperInvariant();
+            var receivedCmd = cmdForEmote.Trim().ToUpperInvariant();
+            
+            // Special case: COPYCAT matches any emote
+            if (triggerCmd == "COPYCAT")
+            {
+                Plugin.Log.Debug($"[HFH] COPYCAT line matches any emote: {receivedCmd}");
+                // Continue with COPYCAT logic below
+            }
+            else if (triggerCmd != receivedCmd)
+            {
+                Plugin.Log.Debug($"[HFH] Emote mismatch: trigger='{triggerCmd}' vs received='{receivedCmd}'");
+                continue;
+            }
             
             // Check name filtering - "*" or empty means match anyone
             if (!string.IsNullOrWhiteSpace(line.TargetName) && line.TargetName != "*")
@@ -123,7 +133,7 @@ public class EmoteEngine : IDisposable
             }
             
             // Queue the response
-            pendingEmoteResponses.Enqueue((instigatorName, emoteId));
+            pendingEmoteResponses.Enqueue((instigatorName, emoteId, cmdForEmote));
             Plugin.Log.Info($"[HFH] Emote queued: {instigatorName} did {cmdForEmote}, will respond with {line.SlashCommand}");
             break;
         }
@@ -160,21 +170,26 @@ public class EmoteEngine : IDisposable
         if (pendingEmoteResponses.Count > 0)
         {
             Plugin.Log.Debug($"[HFH] Processing {pendingEmoteResponses.Count} pending emote responses");
-            var (emInstigator, emEmoteId) = pendingEmoteResponses.Dequeue();
-            var emCmdForEmote = emoteDetection?.GetCommandForEmoteId(emEmoteId);
-            Plugin.Log.Debug($"[HFH] Dequeued emote: {emInstigator} -> {emCmdForEmote} (ID {emEmoteId})");
+            var (emInstigator, emEmoteId, emReceivedCmd) = pendingEmoteResponses.Dequeue();
+            Plugin.Log.Debug($"[HFH] Dequeued emote: {emInstigator} -> {emReceivedCmd} (ID {emEmoteId})");
             
-            if (activePreset != null && emCmdForEmote != null)
+            if (activePreset != null && emReceivedCmd != null)
             {
-                Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote match: {emCmdForEmote}");
+                Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote match: {emReceivedCmd}");
                 foreach (var line in activePreset.Lines)
                 {
                     if (line.TriggerType != 1) continue;
                     if (!line.IsValid()) continue;
                     
-                    var triggerCmd = line.TriggerEmote.Trim().ToLowerInvariant();
-                    Plugin.Log.Debug($"[HFH] Checking emote line: trigger='{triggerCmd}' vs received='{emCmdForEmote.ToLowerInvariant()}'");
-                    if (triggerCmd != emCmdForEmote.ToLowerInvariant()) continue;
+                    var triggerCmd = line.TriggerEmote.Trim().ToUpperInvariant();
+                    Plugin.Log.Debug($"[HFH] Checking emote line: trigger='{triggerCmd}' vs received='{emReceivedCmd.Trim().ToUpperInvariant()}'");
+                    
+                    // Special case: COPYCAT matches any emote
+                    if (triggerCmd != "COPYCAT" && triggerCmd != emReceivedCmd.Trim().ToUpperInvariant())
+                    {
+                        Plugin.Log.Debug($"[HFH] Emote line mismatch: {triggerCmd} vs {emReceivedCmd}");
+                        continue;
+                    }
                     
                     // Check name filtering - "*" or empty means match anyone
                     if (!string.IsNullOrWhiteSpace(line.TargetName) && line.TargetName != "*")
@@ -216,8 +231,11 @@ public class EmoteEngine : IDisposable
                     // Execute the response
                     line.ResolvedTargetName = emInstigator;
                     
-                    Plugin.Log.Info($"[HFH] Emote response: {emInstigator} did {emCmdForEmote} -> executing {line.SlashCommand}");
-                    ExecuteLine(line);
+                    // For COPYCAT, use the received emote command instead of the configured one
+                    var commandToExecute = triggerCmd == "COPYCAT" ? emReceivedCmd : line.SlashCommand;
+                    
+                    Plugin.Log.Info($"[HFH] Emote response: {emInstigator} did {emReceivedCmd} -> executing {commandToExecute}");
+                    ExecuteLine(line, commandToExecute);
                     line.LastExecuted = now;
                     currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
                     return;
@@ -301,7 +319,7 @@ public class EmoteEngine : IDisposable
         foreach (var line in shuffled)
         {
             Plugin.Log.Info($"[HFH] Executing: {line.TargetName} -> {line.SlashCommand}");
-            ExecuteLine(line);
+            ExecuteLine(line, null);
             line.LastExecuted = now;
             currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
             Plugin.Log.Info($"[HFH] Wait until {currentWaitUntil:HH:mm:ss} ({line.WaitTimeAfter}s)");
@@ -345,7 +363,7 @@ public class EmoteEngine : IDisposable
         return nearest;
     }
     
-    private void ExecuteLine(EmoteLine line)
+    private void ExecuteLine(EmoteLine line, string? overrideCommand = null)
     {
         try
         {
@@ -360,8 +378,10 @@ public class EmoteEngine : IDisposable
             {
                 Plugin.Log.Info($"[HFH] Skipping target (TargetBeforeCommand=off)");
             }
-            Plugin.Log.Info($"[HFH] Sending command: {line.SlashCommand}");
-            SendChatCommand(line.SlashCommand);
+            
+            var commandToExecute = overrideCommand ?? line.SlashCommand;
+            Plugin.Log.Info($"[HFH] Sending command: {commandToExecute}");
+            SendChatCommand(commandToExecute);
         }
         catch (Exception ex)
         {

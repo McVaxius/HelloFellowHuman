@@ -147,6 +147,33 @@ public class ConfigWindow : Window, IDisposable
     
     private void DrawPresetsTab()
     {
+        var account = plugin.ConfigManager.GetOrCreateCurrentAccount();
+        
+        var enabled = account.Enabled;
+        if (ImGui.Checkbox("Enabled", ref enabled))
+        {
+            account.Enabled = enabled;
+            plugin.ConfigManager.SaveCurrentAccount();
+            Plugin.Log.Info($"Hello Fellow Human {(enabled ? "enabled" : "disabled")}");
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Enable/disable the plugin's emote automation");
+        
+        ImGui.SameLine();
+        
+        var dtrEnabled = config.DtrBarEnabled;
+        if (ImGui.Checkbox("DTR ON", ref dtrEnabled))
+        {
+            config.DtrBarEnabled = dtrEnabled;
+            plugin.SaveConfig();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Show/hide the DTR bar entry (server info bar)");
+        
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+        
         // Krangle checkbox at top of Presets tab
         var krangleEnabled = config.KrangleEnabled;
         if (ImGui.Checkbox("Krangle", ref krangleEnabled))
@@ -157,10 +184,6 @@ public class ConfigWindow : Window, IDisposable
         }
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Obfuscate player names with military/exercise words.\nUseful for screenshots.");
-        
-        ImGui.Spacing();
-        ImGui.Separator();
-        ImGui.Spacing();
         
         var leftPanelWidth = 200f;
         
