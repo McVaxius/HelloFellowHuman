@@ -77,6 +77,8 @@ public class EmoteEngine : IDisposable
             var triggerCmd = line.TriggerEmote.Trim().ToUpperInvariant();
             var receivedCmd = cmdForEmote.Trim().ToUpperInvariant();
             
+            Plugin.Log.Info($"[HFH] OnEmoteReceived: stored trigger='{line.TriggerEmote}' -> normalized='{triggerCmd}' vs received='{receivedCmd}'");
+            
             // Special case: COPYCAT matches any emote
             if (triggerCmd == "COPYCAT")
             {
@@ -182,7 +184,7 @@ public class EmoteEngine : IDisposable
                     if (!line.IsValid()) continue;
                     
                     var triggerCmd = line.TriggerEmote.Trim().ToUpperInvariant();
-                    Plugin.Log.Debug($"[HFH] Checking emote line: trigger='{triggerCmd}' vs received='{emReceivedCmd.Trim().ToUpperInvariant()}'");
+                    Plugin.Log.Info($"[HFH] Checking emote line: stored trigger='{line.TriggerEmote}' -> normalized='{triggerCmd}' vs received='{emReceivedCmd.Trim().ToUpperInvariant()}'");
                     
                     // Special case: COPYCAT matches any emote
                     if (triggerCmd != "COPYCAT" && triggerCmd != emReceivedCmd.Trim().ToUpperInvariant())
