@@ -487,13 +487,19 @@ public class ConfigWindow : Window, IDisposable
             var cmd = line.SlashCommand;
             ImGui.SetNextItemWidth(220);
             
-            // Show asterisk for COPYCAT lines since command doesn't matter
+            // Show editable command field for COPYCAT with default *
             if (line.TriggerEmote == "COPYCAT")
             {
-                var asterisk = "***";
-                ImGui.InputText($"##cmd{i}", ref asterisk, 100, ImGuiInputTextFlags.ReadOnly);
+                var fallbackCmd = line.SlashCommand;
+                if (string.IsNullOrEmpty(fallbackCmd)) fallbackCmd = "*"; // Default fallback
+                ImGui.SetNextItemWidth(220);
+                if (ImGui.InputText($"##cmd{i}", ref fallbackCmd, 100))
+                {
+                    line.SlashCommand = fallbackCmd;
+                    plugin.ConfigManager.SaveCurrentAccount();
+                }
                 if (ImGui.IsItemHovered())
-                    ImGui.SetTooltip("COPYCAT mode - command will be copied from received emote");
+                    ImGui.SetTooltip("COPYCAT mode - fallback command when emote copying fails");
             }
             else
             {

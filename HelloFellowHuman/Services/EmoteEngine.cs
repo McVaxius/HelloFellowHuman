@@ -199,8 +199,16 @@ public class EmoteEngine : IDisposable
         // Global WAIT blocking - if any line is in wait mode, block everything
         if (now < currentWaitUntil)
         {
-            Plugin.Log.Debug($"[HFH] In global wait mode until {currentWaitUntil:HH:mm:ss}");
+            var remainingWait = (currentWaitUntil - now).TotalSeconds;
+            Plugin.Log.Debug($"[HFH] In global wait mode until {currentWaitUntil:HH:mm:ss} ({remainingWait:F1}s remaining)");
             return;
+        }
+        
+        // Log when wait period ends
+        if (currentWaitUntil != DateTime.MinValue && now >= currentWaitUntil)
+        {
+            Plugin.Log.Debug($"[HFH] Wait period ended at {now:HH:mm:ss}, resuming normal operation");
+            currentWaitUntil = DateTime.MinValue; // Reset wait state
         }
         
         if ((now - lastCheckTime).TotalSeconds < CheckInterval) return;
@@ -293,10 +301,21 @@ public class EmoteEngine : IDisposable
                     // For COPYCAT, use the received emote command instead of the configured one
                     var commandToExecute = triggerCmd == "COPYCAT" ? emReceivedCmd : line.SlashCommand;
                     
+                    // Fallback logic for COPYCAT if emote copying fails
+                    if (triggerCmd == "COPYCAT" && string.IsNullOrEmpty(emReceivedCmd))
+                    {
+                        commandToExecute = line.SlashCommand; // Use fallback
+                        Plugin.Log.Info($"[HFH] COPYCAT fallback: using fallback command '{commandToExecute}'");
+                    }
+                    
                     Plugin.Log.Info($"[HFH] Emote response: {emInstigator} did {emReceivedCmd} -> executing {commandToExecute}");
+                    Plugin.Log.Debug($"[HFH] Wait time tracking: starting wait for {line.WaitTimeAfter}s at {now:HH:mm:ss}");
+                    
                     ExecuteLine(line, commandToExecute);
                     line.LastExecuted = now;
                     currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
+                    
+                    Plugin.Log.Debug($"[HFH] Wait time tracking: global wait set until {currentWaitUntil:HH:mm:ss}");
                     return;
                 }
             }
