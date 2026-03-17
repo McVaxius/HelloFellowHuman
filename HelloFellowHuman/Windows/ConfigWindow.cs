@@ -349,39 +349,42 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
         
         ImGui.Columns(10, "EmoteColumns");
-        ImGui.Text("Type (?)");
+        ImGui.Text("Type");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity = distance-based, Emote = responds to emotes directed at you");
         ImGui.NextColumn();
-        ImGui.Text("ALL (?)");
+        ImGui.Text("ALL");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Check to target all nearby players");
         ImGui.NextColumn();
-        ImGui.Text("ToT (?)");
+        ImGui.SetColumnWidth(1, 40); // ALL column 40px
+        
+        ImGui.Text("ToT");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Target triggering player: if checked, /target the player before executing the slash command");
         ImGui.NextColumn();
-        ImGui.Text("Name (?)");
+        ImGui.SetColumnWidth(2, 40); // ToT column 40px
+        ImGui.Text("Name");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Target player name (without @server). For Emote type, leave blank to respond to anyone.");
         ImGui.NextColumn();
-        ImGui.Text("Command (?)");
+        ImGui.Text("Command");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Slash command to execute. Try '/wave motion' to emote without text!");
         ImGui.NextColumn();
-        ImGui.Text("Wait (?)");
+        ImGui.Text("Wait");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Seconds to wait after executing this emote");
         ImGui.NextColumn();
-        ImGui.Text("Repeat (?)");
+        ImGui.Text("Repeat");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Seconds before this emote can trigger again (Proximity only)");
         ImGui.NextColumn();
-        ImGui.Text("Dist/Emote (?)");
+        ImGui.Text("Dist/Emote");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity: max distance (yalms). Emote: the trigger emote slash command.\nCOPYCAT: Responds with ANY emote received (copies the emote).");
         ImGui.NextColumn();
-        ImGui.Text("Emote Range (?)");
+        ImGui.Text("Emote Range");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Range for emote triggers in yalms (default: 10). Only applies to Emote type lines.");
         ImGui.NextColumn();
@@ -492,7 +495,7 @@ public class ConfigWindow : Window, IDisposable
             
             var wait = line.WaitTimeAfter;
             ImGui.SetNextItemWidth(-1);
-            if (ImGui.DragFloat($"##wait{i}", ref wait, 0.1f, 0f, 60f))
+            if (ImGui.DragFloat($"##wait{i}", ref wait, 0.1f, 0f, 60f, "%.1f"))
             {
                 line.WaitTimeAfter = wait;
                 plugin.ConfigManager.SaveCurrentAccount();
@@ -502,7 +505,7 @@ public class ConfigWindow : Window, IDisposable
             // Repeat interval is editable for both proximity and emote types
             var repeat = line.RepeatInterval;
             ImGui.SetNextItemWidth(-1);
-            if (ImGui.DragFloat($"##repeat{i}", ref repeat, 0.1f, 0.1f, 300f))
+            if (ImGui.DragFloat($"##repeat{i}", ref repeat, 0.1f, 0.1f, 300f, "%.1f"))
             {
                 line.RepeatInterval = repeat;
                 plugin.ConfigManager.SaveCurrentAccount();
@@ -551,7 +554,7 @@ public class ConfigWindow : Window, IDisposable
                 // Proximity type: show distance
                 var dist = line.DistanceThreshold;
                 ImGui.SetNextItemWidth(-1);
-                if (ImGui.DragFloat($"##dist{i}", ref dist, 0.1f, 0.1f, 100f))
+                if (ImGui.DragFloat($"##dist{i}", ref dist, 0.1f, 0.1f, 100f, "%.1f"))
                 {
                     line.DistanceThreshold = dist;
                     plugin.ConfigManager.SaveCurrentAccount();
@@ -564,7 +567,7 @@ public class ConfigWindow : Window, IDisposable
             {
                 var emoteRange = line.EmoteRange;
                 ImGui.SetNextItemWidth(-1);
-                if (ImGui.DragFloat($"##emoteRange{i}", ref emoteRange, 0.1f, 0.1f, 100f))
+                if (ImGui.DragFloat($"##emoteRange{i}", ref emoteRange, 0.1f, 0.1f, 100f, "%.1f"))
                 {
                     line.EmoteRange = emoteRange;
                     plugin.ConfigManager.SaveCurrentAccount();
