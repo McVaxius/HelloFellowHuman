@@ -279,8 +279,21 @@ public class ConfigWindow : Window, IDisposable
             
             if (ImGui.Selectable(displayName, isSelected))
             {
+                var oldActiveIndex = acctList.SelectedPresetIndex;
                 selectedPresetIndex = i;
                 acctList.SelectedPresetIndex = i;
+                
+                // Reset cooldowns when switching active presets
+                if (oldActiveIndex != i)
+                {
+                    var newPreset = acctList.Presets[i];
+                    foreach (var line in newPreset.Lines)
+                    {
+                        line.ResetRuntimeState();
+                    }
+                    Plugin.Log.Info($"[HFH] Switched to preset '{newPreset.Name}', cooldowns reset");
+                }
+                
                 plugin.ConfigManager.SaveCurrentAccount();
             }
             

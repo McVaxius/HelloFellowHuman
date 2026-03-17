@@ -348,14 +348,31 @@ public class EmoteEngine : IDisposable
             }
             Plugin.Log.Debug($"[HFH] Weather filter passed for proximity: required '{line.WeatherFilter}', current '{currentWeather}'");
             
-            // Check per-line repeat cooldown
-            if (line.LastExecuted != DateTime.MinValue)
+            // Check per-line repeat cooldown (skip if RepeatInterval = 0)
+            if (line.RepeatInterval > 0)
             {
-                var timeSinceLastExec = (now - line.LastExecuted).TotalSeconds;
-                if (timeSinceLastExec < line.RepeatInterval)
+                if (line.LastExecuted != DateTime.MinValue)
                 {
-                    Plugin.Log.Debug($"[HFH] Line on repeat cooldown: {line.TargetName}, {timeSinceLastExec:F1}s / {line.RepeatInterval}s");
-                    continue;
+                    // Reset LastExecuted if it's in the future (bug fix)
+                    if (line.LastExecuted > now)
+                    {
+                        Plugin.Log.Debug($"[HFH] LastExecuted is in future (proximity), resetting it");
+                        line.LastExecuted = DateTime.MinValue;
+                    }
+                    else
+                    {
+                        var timeSinceLastExec = (now - line.LastExecuted).TotalSeconds;
+                        Plugin.Log.Debug($"[HFH] Proximity cooldown check: {line.TargetName}, {timeSinceLastExec:F1}s / {line.RepeatInterval}s");
+                        if (timeSinceLastExec < line.RepeatInterval)
+                        {
+                            Plugin.Log.Debug($"[HFH] Proximity repeat cooldown active: {timeSinceLastExec:F1}s < {line.RepeatInterval}s");
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    Plugin.Log.Debug($"[HFH] Proximity line never executed before, allowing trigger");
                 }
             }
             
