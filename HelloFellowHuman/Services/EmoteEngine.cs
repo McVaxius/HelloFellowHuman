@@ -137,6 +137,15 @@ public class EmoteEngine : IDisposable
                 continue;
             }
             
+            // Check weather filter
+            var currentWeather = plugin.WeatherService.GetCurrentWeather();
+            if (!plugin.WeatherService.IsWeatherMatch(line.WeatherFilter, currentWeather))
+            {
+                Plugin.Log.Debug($"[HFH] Weather filter failed: required '{line.WeatherFilter}', current '{currentWeather}'");
+                continue;
+            }
+            Plugin.Log.Debug($"[HFH] Weather filter passed: required '{line.WeatherFilter}', current '{currentWeather}'");
+            
             // Check per-line repeat cooldown (skip if RepeatInterval = 0)
             Plugin.Log.Info($"[HFH] Checking cooldown for {line.TriggerEmote}: RepeatInterval={line.RepeatInterval}, LastExecuted={line.LastExecuted}");
             if (line.RepeatInterval > 0)
@@ -310,6 +319,15 @@ public class EmoteEngine : IDisposable
                 Plugin.Log.Debug($"[HFH] Line invalid: {line.TargetName}");
                 continue;
             }
+            
+            // Check weather filter
+            var currentWeather = plugin.WeatherService.GetCurrentWeather();
+            if (!plugin.WeatherService.IsWeatherMatch(line.WeatherFilter, currentWeather))
+            {
+                Plugin.Log.Debug($"[HFH] Weather filter failed for proximity: required '{line.WeatherFilter}', current '{currentWeather}'");
+                continue;
+            }
+            Plugin.Log.Debug($"[HFH] Weather filter passed for proximity: required '{line.WeatherFilter}', current '{currentWeather}'");
             
             // Check per-line repeat cooldown
             if (line.LastExecuted != DateTime.MinValue)

@@ -34,6 +34,7 @@ public sealed class Plugin : IDalamudPlugin
     private ConfigWindow ConfigWindow { get; init; }
     private EmoteEngine EmoteEngine { get; init; }
     public EmoteDetectionService EmoteDetectionService { get; init; }
+    public WeatherService WeatherService { get; init; }
     private IDtrBarEntry? DtrEntry { get; set; }
     private bool wasLoggedIn;
     private int loginDetectionDelay;
@@ -60,6 +61,7 @@ public sealed class Plugin : IDalamudPlugin
         
         EmoteDetectionService = new EmoteDetectionService(GameInterop, ObjectTable, DataManager, Log);
         EmoteEngine = new EmoteEngine(this);
+        WeatherService = new WeatherService(DataManager);
         
         SetupDtrBar();
         

@@ -299,6 +299,13 @@ public class ConfigWindow : Window, IDisposable
         
         var editingName = config.KrangleEnabled ? KrangleService.KrangleName(preset.Name) : preset.Name;
         ImGui.Text($"Editing: {editingName}");
+        
+        // Show red warning if editing Default Preset (index 0)
+        if (selectedPresetIndex == 0)
+        {
+            ImGui.TextColored(new Vector4(1, 0, 0, 1), "⚠️ EDITING DEFAULT PRESET (Presets[1] is active)");
+        }
+        
         ImGui.Separator();
         
         if (ImGui.Button("Export"))
@@ -348,7 +355,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Emote Lines:");
         ImGui.Separator();
         
-        ImGui.Columns(10, "EmoteColumns");
+        ImGui.Columns(11, "EmoteColumns");
         ImGui.Text("Type");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity = distance-based, Emote = responds to emotes directed at you");
@@ -364,6 +371,7 @@ public class ConfigWindow : Window, IDisposable
             ImGui.SetTooltip("Target triggering player: if checked, /target the player before executing the slash command");
         ImGui.NextColumn();
         ImGui.SetColumnWidth(2, 40); // ToT column 40px
+        
         ImGui.Text("Name");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Target player name (without @server). For Emote type, leave blank to respond to anyone.");
@@ -383,6 +391,10 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Dist/Emote");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity: max distance (yalms). Emote: the trigger emote slash command.\nCOPYCAT: Responds with ANY emote received (copies the emote).");
+        ImGui.NextColumn();
+        ImGui.Text("Weather");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Weather condition required for this line to trigger (ALL = any weather)");
         ImGui.NextColumn();
         ImGui.Text("Emote Range");
         if (ImGui.IsItemHovered())
@@ -562,6 +574,21 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.NextColumn();
             
+            // Weather column
+            var weatherTypes = WeatherService.GetWeatherTypes();
+            var currentWeatherIndex = weatherTypes.IndexOf(line.WeatherFilter);
+            if (currentWeatherIndex == -1) currentWeatherIndex = 0; // Default to ALL
+            
+            ImGui.SetNextItemWidth(-1);
+            if (ImGui.Combo($"##weather{i}", ref currentWeatherIndex, weatherTypes.ToArray(), weatherTypes.Count))
+            {
+                line.WeatherFilter = weatherTypes[currentWeatherIndex];
+                plugin.ConfigManager.SaveCurrentAccount();
+            }
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("Select weather condition for this line");
+            ImGui.NextColumn();
+            
             // Emote Range column (only for emote type lines)
             if (line.TriggerType == 1) // Emote type
             {
@@ -612,6 +639,7 @@ public class ConfigWindow : Window, IDisposable
                 WaitTimeAfter = 3.0f,
                 RepeatInterval = 5.0f,
                 DistanceThreshold = 5.0f,
+                WeatherFilter = "ALL",
                 EmoteRange = 10.0f
             });
             plugin.ConfigManager.SaveCurrentAccount();
