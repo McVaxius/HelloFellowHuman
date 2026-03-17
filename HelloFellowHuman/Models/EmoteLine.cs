@@ -11,6 +11,7 @@ public class EmoteLine
     public float WaitTimeAfter { get; set; } = 3.0f;
     public float RepeatInterval { get; set; } = 5.0f;
     public float DistanceThreshold { get; set; } = 5.0f;
+    public float EmoteRange { get; set; } = 10.0f; // Range for emote triggers (default: 10 yalms)
     public int TriggerType { get; set; } = 0; // 0=Proximity, 1=Emote
     public string TriggerEmote { get; set; } = string.Empty; // e.g. "/wave" - the emote that triggers this response
     public bool TargetBeforeCommand { get; set; } = true; // If true, /target the player before executing the command
@@ -60,6 +61,7 @@ public class EmoteLine
             WaitTimeAfter = WaitTimeAfter,
             RepeatInterval = RepeatInterval,
             DistanceThreshold = DistanceThreshold,
+            EmoteRange = EmoteRange,
             TriggerType = TriggerType,
             TriggerEmote = TriggerEmote,
             TargetBeforeCommand = TargetBeforeCommand,

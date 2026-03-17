@@ -110,6 +110,33 @@ public class EmoteEngine : IDisposable
                 }
             }
             
+            // Check emote range for TriggerType == 1 (Emote)
+            var instigatorPlayer = FindPlayerByName(instigatorName);
+            if (instigatorPlayer != null)
+            {
+                var localPlayer = Plugin.ObjectTable.LocalPlayer;
+                if (localPlayer != null)
+                {
+                    var distance = Vector3.Distance(localPlayer.Position, instigatorPlayer.Position);
+                    if (distance > line.EmoteRange)
+                    {
+                        Plugin.Log.Debug($"[HFH] Emote range check failed: {instigatorName} too far ({distance:F2}y > {line.EmoteRange}y)");
+                        continue;
+                    }
+                    Plugin.Log.Debug($"[HFH] Emote range check passed: {instigatorName} in range ({distance:F2}y <= {line.EmoteRange}y)");
+                }
+                else
+                {
+                    Plugin.Log.Debug("[HFH] Local player not found, cannot check emote range");
+                    continue;
+                }
+            }
+            else
+            {
+                Plugin.Log.Debug($"[HFH] Instigator player not found: {instigatorName}");
+                continue;
+            }
+            
             // Check per-line repeat cooldown (skip if RepeatInterval = 0)
             Plugin.Log.Info($"[HFH] Checking cooldown for {line.TriggerEmote}: RepeatInterval={line.RepeatInterval}, LastExecuted={line.LastExecuted}");
             if (line.RepeatInterval > 0)
@@ -390,21 +417,59 @@ public class EmoteEngine : IDisposable
     {
         try
         {
-            if (line.TargetBeforeCommand)
+            Plugin.Log.Debug($"[HFH] ExecuteLine: {line.TargetName} -> {line.SlashCommand}");
+            
+            string? targetName = line.ResolvedTargetName ?? line.TargetName;
+            
+            // Check if we need to target someone first
+            if (!string.IsNullOrWhiteSpace(targetName) && targetName != "*")
             {
-                var targetName = line.ResolvedTargetName ?? line.TargetName;
-                Plugin.Log.Info($"[HFH] Targeting: {targetName}");
-                SendChatCommand($"/target {targetName}");
-                System.Threading.Thread.Sleep(500);
+                if (line.TargetBeforeCommand)
+                {
+                    Plugin.Log.Info($"[HFH] Targeting: {targetName}");
+                    var target = FindPlayerByName(targetName);
+                    if (target != null)
+                    {
+                        // Check distance threshold for proximity-type lines
+                        if (line.TriggerType == 0) // Proximity type
+                        {
+                            var player = Plugin.ObjectTable.LocalPlayer;
+                            if (player != null)
+                            {
+                                var distance = Vector3.Distance(player.Position, target.Position);
+                                if (distance > line.DistanceThreshold)
+                                {
+                                    Plugin.Log.Debug($"[HFH] Target {targetName} too far: {distance:F2}y > {line.DistanceThreshold}y threshold");
+                                    return; // Don't execute if too far
+                                }
+                                Plugin.Log.Debug($"[HFH] Target {targetName} in range: {distance:F2}y <= {line.DistanceThreshold}y threshold");
+                            }
+                        }
+                        
+                        Plugin.TargetManager.Target = target;
+                    }
+                    else
+                    {
+                        Plugin.Log.Debug($"[HFH] Target not found: {targetName}");
+                        return;
+                    }
+                }
+                else
+                {
+                    Plugin.Log.Info($"[HFH] Skipping target (TargetBeforeCommand=off)");
+                }
+                
+                var commandToExecute = overrideCommand ?? line.SlashCommand;
+                Plugin.Log.Info($"[HFH] Sending command: {commandToExecute}");
+                SendChatCommand(commandToExecute);
             }
             else
             {
-                Plugin.Log.Info($"[HFH] Skipping target (TargetBeforeCommand=off)");
+                // No specific target - just execute command
+                var commandToExecute = overrideCommand ?? line.SlashCommand;
+                Plugin.Log.Info($"[HFH] Sending command: {commandToExecute}");
+                SendChatCommand(commandToExecute);
             }
-            
-            var commandToExecute = overrideCommand ?? line.SlashCommand;
-            Plugin.Log.Info($"[HFH] Sending command: {commandToExecute}");
-            SendChatCommand(commandToExecute);
         }
         catch (Exception ex)
         {

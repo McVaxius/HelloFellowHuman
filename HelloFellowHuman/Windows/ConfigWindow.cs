@@ -348,7 +348,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Emote Lines:");
         ImGui.Separator();
         
-        ImGui.Columns(9, "EmoteColumns");
+        ImGui.Columns(10, "EmoteColumns");
         ImGui.Text("Type (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity = distance-based, Emote = responds to emotes directed at you");
@@ -380,6 +380,10 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Dist/Emote (?)");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity: max distance (yalms). Emote: the trigger emote slash command.\nCOPYCAT: Responds with ANY emote received (copies the emote).");
+        ImGui.NextColumn();
+        ImGui.Text("Emote Range (?)");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Range for emote triggers in yalms (default: 10). Only applies to Emote type lines.");
         ImGui.NextColumn();
         ImGui.NextColumn();
         ImGui.Separator();
@@ -555,6 +559,28 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.NextColumn();
             
+            // Emote Range column (only for emote type lines)
+            if (line.TriggerType == 1) // Emote type
+            {
+                var emoteRange = line.EmoteRange;
+                ImGui.SetNextItemWidth(-1);
+                if (ImGui.DragFloat($"##emoteRange{i}", ref emoteRange, 0.1f, 0.1f, 100f))
+                {
+                    line.EmoteRange = emoteRange;
+                    plugin.ConfigManager.SaveCurrentAccount();
+                }
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip("Range for emote triggers in yalms");
+            }
+            else
+            {
+                // Show empty for proximity type
+                ImGui.TextDisabled("--");
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip("Emote range only applies to Emote type lines");
+            }
+            ImGui.NextColumn();
+            
             if (i > 0 || preset.Lines.Count > 1)
             {
                 if (ImGui.Button($"-##del{i}"))
@@ -582,7 +608,8 @@ public class ConfigWindow : Window, IDisposable
                 SlashCommand = "",
                 WaitTimeAfter = 3.0f,
                 RepeatInterval = 5.0f,
-                DistanceThreshold = 5.0f
+                DistanceThreshold = 5.0f,
+                EmoteRange = 10.0f
             });
             plugin.ConfigManager.SaveCurrentAccount();
         }
