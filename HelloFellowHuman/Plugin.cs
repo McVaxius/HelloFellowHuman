@@ -60,6 +60,10 @@ public sealed unsafe class Plugin : IDalamudPlugin
     
     // Track applied pulse titles to prevent spam and enable cleanup
     private readonly Dictionary<ulong, string> appliedTitles = new();
+    
+    // Rate limiting to prevent crash
+    private DateTime lastHookCall = DateTime.MinValue;
+    private const int hookCallInterval = 100; // 100ms minimum between hook calls
 
     public Plugin()
     {
@@ -311,11 +315,18 @@ public sealed unsafe class Plugin : IDalamudPlugin
     {
         try
         {
+            // Rate limiting to prevent crash
+            var now = DateTime.UtcNow;
+            if ((now - lastHookCall).TotalMilliseconds < hookCallInterval)
+            {
+                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+            }
+            lastHookCall = now;
+            
             // Check if HFH is enabled
             var currentAccount = ConfigManager.GetCurrentAccount();
             if (currentAccount == null || !currentAccount.Enabled) 
             {
-                Log.Debug("[HFH] Plugin disabled, returning early");
                 return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
             }
             
@@ -338,93 +349,62 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
             // Only process player nameplates
             if (battleChara == null) 
-            {
-                Log.Debug("[HFH] battleChara is null, returning early");
                 return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
-            }
             
             var gameObject = &battleChara->Character.GameObject;
             var playerName = battleChara->NameString.ToString();
             
-            // Log everything we see (but limit to avoid spam)
-            if (DateTime.UtcNow.Second % 20 == 0) // Every 20 seconds
-            {
-                Log.Debug($"[HFH] Object: {playerName} - ObjectKind={gameObject->ObjectKind}, SubKind={gameObject->SubKind}");
-            }
-            
-            if (gameObject->ObjectKind != FFXIVClientStructs.FFXIV.Client.Game.Object.ObjectKind.Pc || gameObject->SubKind != 4) 
-            {
-                // Specifically log if we see Hildabrand but he's not the right type
-                if (playerName.Contains("Hildabrand"))
-                {
-                    Log.Info($"[HFH] Found Hildabrand but wrong type: ObjectKind={gameObject->ObjectKind}, SubKind={gameObject->SubKind}");
-                }
-                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
-            }
-
-            // Get player name
-            if (string.IsNullOrEmpty(playerName)) 
+            // Only process ObjectKind.Pc with SubKind=4 (player characters)
+            if (gameObject->ObjectKind != FFXIVClientStructs.FFXIV.Client.Game.Object.ObjectKind.Pc || gameObject->SubKind != 4)
                 return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
             
-            // Log all player nameplates we process
-            Log.Debug($"[HFH] Processing player: {playerName}");
-            
-            // Check if this player has an active pulse animation
+            // Check for pulse animation
             var pulseTitle = EmoteEngine.GetPulseTitleForPlayer(playerName);
-            Log.Debug($"[HFH] Pulse lookup for {playerName}: {(pulseTitle != null ? $"FOUND {pulseTitle.Emoji}" : "NULL")}");
-            if (pulseTitle != null)
+            if (pulseTitle == null)
             {
-                // Use SeString encoding for color and glow effects
-                var titleSeString = pulseTitle.ToSeString();
-                var titleBytes = titleSeString.Encode();
-                
-                if (titleBytes != null && titleBytes.Length > 0 && namePlateInfo != null)
+                // Only log cleanup when actually removing a title
+                if (appliedTitles.TryGetValue(battleChara->EntityId, out var currentTitle))
                 {
-                    // Prevent setting the same title too frequently
-                    if (!appliedTitles.TryGetValue(battleChara->EntityId, out var lastTitle) || lastTitle != pulseTitle.Emoji)
-                    {
-                        try
-                        {
-                            // Set the title as prefix (Caraxi pattern)
-                            namePlateInfo->DisplayTitle.SetString(titleBytes);
-                            namePlateInfo->IsPrefix = true;
-                            namePlateInfo->IsDirty = true;
-                            
-                            appliedTitles[battleChara->EntityId] = pulseTitle.Emoji;
-                            Log.Info($"[HFH] Applied pulse title to {playerName}: {pulseTitle.Emoji}");
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error($"[HFH] Error setting title: {ex.Message}");
-                        }
-                    }
+                    appliedTitles.Remove(battleChara->EntityId);
+                    Log.Debug($"[HFH] Restored original title for {playerName}");
                 }
+                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
             }
-            else
+            
+            // Log when we actually find a pulse animation
+            Log.Debug($"[HFH] Pulse lookup for {playerName}: FOUND {pulseTitle.Emoji}");
+            
+            // Use SeString encoding for color and glow effects
+            var titleSeString = pulseTitle.ToSeString();
+            var titleBytes = titleSeString.Encode();
+            
+            if (titleBytes != null && titleBytes.Length > 0 && namePlateInfo != null)
             {
-                // Clean up tracking and restore original title when pulse ends
-                if (appliedTitles.ContainsKey(battleChara->EntityId) && namePlateInfo != null)
+                // Prevent setting the same title too frequently
+                if (!appliedTitles.TryGetValue(battleChara->EntityId, out var lastTitle) || lastTitle != pulseTitle.Emoji)
                 {
                     try
                     {
-                        appliedTitles.Remove(battleChara->EntityId);
-                        // Clear the title by setting empty string
-                        namePlateInfo->DisplayTitle.SetString([]);
+                        // Set the title as prefix (Caraxi pattern)
+                        namePlateInfo->DisplayTitle.SetString(titleBytes);
+                        namePlateInfo->IsPrefix = true;
                         namePlateInfo->IsDirty = true;
-                        Log.Info($"[HFH] Restored original title for {playerName}");
+                        
+                        appliedTitles[battleChara->EntityId] = pulseTitle.Emoji;
+                        Log.Info($"[HFH] Applied pulse title to {playerName}: {pulseTitle.Emoji}");
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"[HFH] Error clearing title: {ex.Message}");
+                        Log.Error($"[HFH] Failed to apply pulse title to {playerName}: {ex.Message}");
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            Log.Error($"[HFH] Nameplate hook error: {ex.Message}");
+            Log.Error($"[HFH] Error in nameplate hook: {ex.Message}");
         }
-
+        
         return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
     }
 }
