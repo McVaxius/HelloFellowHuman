@@ -20,6 +20,8 @@ public class PulseAnimation
     public string PlayerName { get; set; } = string.Empty;
     public DateTime StartTime { get; set; }
     public float WaitDuration { get; set; }
+    public string Command { get; set; } = string.Empty; // The command to display
+    public string ReceivedEmote { get; set; } = string.Empty; // The received emote for COPYCAT
     public bool IsActive => DateTime.UtcNow < StartTime.AddSeconds(WaitDuration + 2); // 2s extra buffer
 }
 
@@ -344,7 +346,7 @@ public class EmoteEngine : IDisposable
                     // Start pulse animation if enabled
                     if (line.PulseTarget)
                     {
-                        StartPulseAnimation(emInstigator, line);
+                        StartPulseAnimation(emInstigator, line, commandToExecute, emReceivedCmd);
                     }
                     
                     line.LastExecuted = now;
@@ -625,7 +627,7 @@ public class EmoteEngine : IDisposable
         }
     }
     
-    private void StartPulseAnimation(string playerName, EmoteLine line)
+    private void StartPulseAnimation(string playerName, EmoteLine line, string command, string receivedEmote)
     {
         try
         {
@@ -636,7 +638,9 @@ public class EmoteEngine : IDisposable
             {
                 PlayerName = playerName,
                 StartTime = DateTime.UtcNow,
-                WaitDuration = line.WaitTimeAfter
+                WaitDuration = line.WaitTimeAfter,
+                Command = command,
+                ReceivedEmote = receivedEmote
             };
             
             // Create the actual pulse title based on line configuration
@@ -665,27 +669,35 @@ public class EmoteEngine : IDisposable
                 IsPrefix = true
             };
             
-            // Set emoji based on style
+            // Set emoji based on trigger - show command or emote
+            if (line.TriggerType == 1 && line.TriggerEmote.ToUpperInvariant() == "COPYCAT")
+            {
+                // For COPYCAT, show the received emote (will be overridden in GetPulseTitleForPlayer)
+                pulseTitle.Emoji = line.SlashCommand; // This will be replaced with actual emote
+            }
+            else
+            {
+                // Show the slash command for normal triggers
+                pulseTitle.Emoji = line.SlashCommand;
+            }
+            
+            // Set color based on style
             switch (line.PulseStyle)
             {
                 case "emoji":
-                    pulseTitle.Emoji = "♥"; // Simple heart
                     pulseTitle.Color = new Vector3(1.0f, 0.0f, 0.0f); // Red
                     pulseTitle.Glow = new Vector3(1.0f, 0.5f, 0.5f); // Pink glow
                     break;
                 case "color":
-                    pulseTitle.Emoji = "♥"; // Heart with color only
                     pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Use configured color or default red
                     pulseTitle.Glow = Vector3.Zero; // No glow for color-only
                     break;
                 case "both":
-                    pulseTitle.Emoji = "♥"; // Heart with both
                     pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f);
                     pulseTitle.Glow = new Vector3(1.0f, 1.0f, 1.0f); // White glow
                     break;
                 default:
-                    pulseTitle.Emoji = "♥"; // Default heart
-                    pulseTitle.Color = new Vector3(1.0f, 0.0f, 0.0f);
+                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f);
                     pulseTitle.Glow = new Vector3(1.0f, 0.5f, 0.5f);
                     break;
             }
@@ -708,10 +720,6 @@ public class EmoteEngine : IDisposable
     {
         if (activePulses.TryGetValue(playerName, out var pulse))
         {
-            // Get the current phase for animation
-            var currentPhase = (int)((DateTime.Now - pulse.StartTime).TotalSeconds / 2) % 4;
-            var emoji = GetEmojiForPhase(currentPhase);
-            
             // Find the emote line that created this pulse to get its configuration
             var account = plugin.ConfigManager.GetCurrentAccount();
             if (account != null)
@@ -727,8 +735,15 @@ public class EmoteEngine : IDisposable
                             var pulseTitle = CreatePulseTitleFromLine(line);
                             if (pulseTitle != null)
                             {
-                                // Override emoji with current phase animation
-                                pulseTitle.Emoji = emoji;
+                                // Set emoji to show command or received emote
+                                if (line.TriggerEmote.ToUpperInvariant() == "COPYCAT")
+                                {
+                                    pulseTitle.Emoji = pulse.ReceivedEmote; // Show the received emote
+                                }
+                                else
+                                {
+                                    pulseTitle.Emoji = pulse.Command; // Show the command
+                                }
                                 return pulseTitle;
                             }
                         }
@@ -737,9 +752,10 @@ public class EmoteEngine : IDisposable
             }
             
             // Fallback to basic pulse title if no line found
+            var displayText = string.IsNullOrEmpty(pulse.ReceivedEmote) ? pulse.Command : pulse.ReceivedEmote;
             return new PulseTitle
             {
-                Emoji = emoji,
+                Emoji = displayText,
                 Color = new Vector3(1.0f, 0.0f, 0.0f), // Default red
                 Glow = new Vector3(1.0f, 0.5f, 0.5f),  // Default pink glow
                 Style = "emoji"
