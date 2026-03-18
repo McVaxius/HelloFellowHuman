@@ -12,6 +12,17 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 
 namespace HelloFellowHuman.Services;
 
+/// <summary>
+/// Represents an active pulse animation for a player
+/// </summary>
+public class PulseAnimation
+{
+    public string PlayerName { get; set; } = string.Empty;
+    public DateTime StartTime { get; set; }
+    public float WaitDuration { get; set; }
+    public bool IsActive => DateTime.UtcNow < StartTime.AddSeconds(WaitDuration + 2); // 2s extra buffer
+}
+
 public class EmoteEngine : IDisposable
 {
     private readonly Plugin plugin;
@@ -20,10 +31,18 @@ public class EmoteEngine : IDisposable
     private DateTime lastCheckTime = DateTime.MinValue;
     private DateTime currentWaitUntil = DateTime.MinValue;
     private DateTime lastPresetLog = DateTime.MinValue;
+    private bool hasLoggedWaitStart = false;
     private const float CheckInterval = 1.0f;
     
     // Queue of pending emote responses: (instigatorName, emoteId, receivedCommand)
     private readonly Queue<(string Name, ushort EmoteId, string ReceivedCommand)> pendingEmoteResponses = new();
+    
+    // Active pulse animations by player name
+    private readonly Dictionary<string, PulseAnimation> activePulses = new();
+    
+    // Last cleanup time for expired animations
+    private DateTime lastCleanupTime = DateTime.MinValue;
+    private const float CleanupInterval = 5.0f; // Cleanup every 5 seconds
     
     public EmoteEngine(Plugin plugin)
     {
@@ -70,7 +89,7 @@ public class EmoteEngine : IDisposable
             Plugin.Log.Info($"[HFH] Line {i}: Type={line.TriggerType}, Trigger='{line.TriggerEmote}', Target='{line.TargetName}', Cmd='{line.SlashCommand}'");
         }
         
-        Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote: {cmdForEmote}");
+        // Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote: {cmdForEmote}");
         
         // Check if any emote-type lines match this emote
         foreach (var line in activePreset.Lines)
@@ -186,8 +205,11 @@ public class EmoteEngine : IDisposable
         }
     }
     
-    private void OnFrameworkUpdate(IFramework fw)
+    private void OnFrameworkUpdate(IFramework framework)
     {
+        // Cleanup expired animations periodically
+        CleanupExpiredAnimations();
+        
         var account = plugin.ConfigManager.GetCurrentAccount();
         if (account == null || !account.Enabled) return;
         
@@ -199,8 +221,13 @@ public class EmoteEngine : IDisposable
         // Global WAIT blocking - if any line is in wait mode, block everything
         if (now < currentWaitUntil)
         {
-            var remainingWait = (currentWaitUntil - now).TotalSeconds;
-            Plugin.Log.Debug($"[HFH] In global wait mode until {currentWaitUntil:HH:mm:ss} ({remainingWait:F1}s remaining)");
+            // Only log wait start once
+            if (!hasLoggedWaitStart)
+            {
+                var remainingWait = (currentWaitUntil - now).TotalSeconds;
+                Plugin.Log.Debug($"[HFH] Wait started: waiting until {currentWaitUntil:HH:mm:ss} ({remainingWait:F1}s)");
+                hasLoggedWaitStart = true;
+            }
             return;
         }
         
@@ -209,6 +236,7 @@ public class EmoteEngine : IDisposable
         {
             Plugin.Log.Debug($"[HFH] Wait period ended at {now:HH:mm:ss}, resuming normal operation");
             currentWaitUntil = DateTime.MinValue; // Reset wait state
+            hasLoggedWaitStart = false; // Reset wait start flag
         }
         
         if ((now - lastCheckTime).TotalSeconds < CheckInterval) return;
@@ -242,7 +270,7 @@ public class EmoteEngine : IDisposable
             
             if (activePreset != null && emReceivedCmd != null)
             {
-                Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote match: {emReceivedCmd}");
+                // Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote match: {emReceivedCmd}");
                 foreach (var line in activePreset.Lines)
                 {
                     if (line.TriggerType != 1) continue;
@@ -312,6 +340,13 @@ public class EmoteEngine : IDisposable
                     Plugin.Log.Debug($"[HFH] Wait time tracking: starting wait for {line.WaitTimeAfter}s at {now:HH:mm:ss}");
                     
                     ExecuteLine(line, commandToExecute);
+                    
+                    // Start pulse animation if enabled
+                    if (line.PulseTarget)
+                    {
+                        StartPulseAnimation(emInstigator, line);
+                    }
+                    
                     line.LastExecuted = now;
                     currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
                     
@@ -326,7 +361,7 @@ public class EmoteEngine : IDisposable
         var validLines = new List<EmoteLine>();
         var playerPos = localPlayer.Position;
         
-        Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines, player pos: {playerPos}");
+        // Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines, player pos: {playerPos}");
         
         foreach (var line in activePreset.Lines)
         {
@@ -411,7 +446,7 @@ public class EmoteEngine : IDisposable
         
         if (validLines.Count == 0)
         {
-            Plugin.Log.Debug($"[HFH] No valid lines this cycle");
+            // Plugin.Log.Debug($"[HFH] No valid lines this cycle");
             return;
         }
         
@@ -557,6 +592,119 @@ public class EmoteEngine : IDisposable
         }
     }
     
+    /// <summary>
+    /// Clean up expired pulse animations to prevent memory leaks
+    /// </summary>
+    private void CleanupExpiredAnimations()
+    {
+        var now = DateTime.UtcNow;
+        if ((now - lastCleanupTime).TotalSeconds < CleanupInterval)
+            return;
+            
+        lastCleanupTime = now;
+        
+        var expiredKeys = new List<string>();
+        
+        foreach (var kvp in activePulses)
+        {
+            if (!kvp.Value.IsActive)
+            {
+                expiredKeys.Add(kvp.Key);
+            }
+        }
+        
+        foreach (var key in expiredKeys)
+        {
+            activePulses.Remove(key);
+            Plugin.Log.Debug($"[HFH] Cleaned up expired pulse animation for: {key}");
+        }
+        
+        if (expiredKeys.Count > 0)
+        {
+            Plugin.Log.Debug($"[HFH] Cleanup complete: removed {expiredKeys.Count} expired animations, {activePulses.Count} active remaining");
+        }
+    }
+    
+    private void StartPulseAnimation(string playerName, EmoteLine line)
+    {
+        try
+        {
+            Plugin.Log.Info($"[HFH] Starting pulse animation for {playerName} ({line.PulseStyle}, {line.WaitTimeAfter}s)");
+            
+            // Create or update pulse animation
+            activePulses[playerName] = new PulseAnimation
+            {
+                PlayerName = playerName,
+                StartTime = DateTime.UtcNow,
+                WaitDuration = line.WaitTimeAfter
+            };
+            
+            // For now, we'll just log the pulse animation
+            // TODO: In Phase 3, we'll implement the actual nameplate modification
+            switch (line.PulseStyle)
+            {
+                case "emoji":
+                    Plugin.Log.Debug($"[HFH] Pulse style: emoji - would use FFXIV icons");
+                    break;
+                case "color":
+                    Plugin.Log.Debug($"[HFH] Pulse style: color - would use color {PulseTitle.ColorToHex(line.PulseColor)}");
+                    break;
+                case "both":
+                    Plugin.Log.Debug($"[HFH] Pulse style: both - would use emoji + color");
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Debug($"[HFH] Pulse animation error for {playerName}: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Gets the current pulse title for a specific player
+    /// </summary>
+    /// <param name="playerName">The player name to check</param>
+    /// <returns>PulseTitle if active, null otherwise</returns>
+    public PulseTitle? GetPulseTitleForPlayer(string playerName)
+    {
+        // Force rebuild comment
+        if (activePulses.TryGetValue(playerName, out var pulse))
+        {
+            var currentPhase = (int)((DateTime.Now - pulse.StartTime).TotalSeconds / 2) % 4;
+            var emoji = GetEmojiForPhase(currentPhase);
+            
+            // Pulse animation is self-contained - no line lookup needed
+            var pulseTitle = new PulseTitle
+            {
+                Emoji = emoji,
+                Color = new Vector3(1.0f, 0.0f, 0.0f), // Default red
+                Glow = new Vector3(1.0f, 1.0f, 1.0f),  // Default white glow
+                Style = "emoji"
+            };
+            
+            return pulseTitle;
+        }
+        
+        return null;
+    }
+
+    /// <summary>
+    /// Gets the emoji for a specific animation phase
+    /// </summary>
+    /// <param name="phase">Current animation phase (0-3)</param>
+    /// <returns>Emoji character for the phase</returns>
+    private string GetEmojiForPhase(int phase)
+    {
+        return phase switch
+        {
+            0 => "💗",   // Heart
+            1 => "✨",   // Sparkles
+            2 => "💖",   // Sparkling Heart
+            3 => "⭐",   // Star
+            _ => "💗"
+        };
+    }
+
     public void Dispose()
     {
         Plugin.Framework.Update -= OnFrameworkUpdate;

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace HelloFellowHuman.Models;
@@ -16,6 +18,17 @@ public class EmoteLine
     public int TriggerType { get; set; } = 0; // 0=Proximity, 1=Emote
     public string TriggerEmote { get; set; } = string.Empty; // e.g. "/wave" - the emote that triggers this response
     public bool TargetBeforeCommand { get; set; } = true; // If true, /target the player before executing the command
+    
+    // Pulse Animation Properties (from Caraxi CustomTitle)
+    public bool PulseTarget { get; set; } = false; // Enable pulse animation
+    
+    [JsonConverter(typeof(Vector3Converter))]
+    public Vector3? PulseColor { get; set; } = null; // Main color (RGB 0-1)
+    
+    [JsonConverter(typeof(Vector3Converter))]
+    public Vector3? PulseGlow { get; set; } = null; // Glow/edge color (RGB 0-1)
+    
+    public string PulseStyle { get; set; } = "emoji"; // "emoji", "color", "both"
     
     [JsonIgnore]
     public DateTime LastExecuted { get; set; } = DateTime.MinValue;
@@ -67,6 +80,10 @@ public class EmoteLine
             TriggerType = TriggerType,
             TriggerEmote = TriggerEmote,
             TargetBeforeCommand = TargetBeforeCommand,
+            PulseTarget = PulseTarget,
+            PulseColor = PulseColor,
+            PulseGlow = PulseGlow,
+            PulseStyle = PulseStyle,
             LastExecuted = LastExecuted
         };
     }
@@ -75,5 +92,84 @@ public class EmoteLine
     {
         LastExecuted = DateTime.MinValue;
         EmoteFiredBy.Clear();
+    }
+}
+
+/// <summary>
+/// JSON converter for Vector3 to handle nullable Vector3 serialization
+/// </summary>
+public class Vector3Converter : JsonConverter<Vector3?>
+{
+    public override Vector3? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.Null)
+            return null;
+            
+        if (reader.TokenType == JsonTokenType.StartArray)
+        {
+            reader.Read(); // Skip start array
+            var x = reader.GetSingle();
+            reader.Read(); // Move to next
+            var y = reader.GetSingle();
+            reader.Read(); // Move to next
+            var z = reader.GetSingle();
+            reader.Read(); // Skip end array
+            return new Vector3(x, y, z);
+        }
+        
+        if (reader.TokenType == JsonTokenType.StartObject)
+        {
+            reader.Read(); // Skip start object
+            var x = 0f;
+            var y = 0f;
+            var z = 0f;
+            
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndObject)
+                    break;
+                    
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    var propertyName = reader.GetString();
+                    reader.Read(); // Move to value
+                    
+                    switch (propertyName)
+                    {
+                        case "X":
+                        case "x":
+                            x = reader.GetSingle();
+                            break;
+                        case "Y":
+                        case "y":
+                            y = reader.GetSingle();
+                            break;
+                        case "Z":
+                        case "z":
+                            z = reader.GetSingle();
+                            break;
+                    }
+                }
+            }
+            
+            return new Vector3(x, y, z);
+        }
+        
+        return null;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Vector3? value, JsonSerializerOptions options)
+    {
+        if (value == null)
+        {
+            writer.WriteNullValue();
+            return;
+        }
+        
+        writer.WriteStartArray();
+        writer.WriteNumberValue(value.Value.X);
+        writer.WriteNumberValue(value.Value.Y);
+        writer.WriteNumberValue(value.Value.Z);
+        writer.WriteEndArray();
     }
 }

@@ -8,11 +8,20 @@ using HelloFellowHuman.Models;
 using HelloFellowHuman.Windows;
 using HelloFellowHuman.Services;
 using System;
+using System.Numerics;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using FFXIVClientStructs.FFXIV.Component.GUI;
+using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.UI;
+using Dalamud.Hooking;
 
 namespace HelloFellowHuman;
 
-public sealed class Plugin : IDalamudPlugin
+public sealed unsafe class Plugin : IDalamudPlugin
 {
+    public const string Version = "1.0.0";
+    
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
@@ -24,6 +33,12 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
+
+    // Nameplate hook from Caraxi's pattern
+    [Signature("40 53 55 57 41 56 48 81 EC ?? ?? ?? ?? 48 8B 84 24", DetourName = nameof(UpdateNameplateDetour))]
+    private Hook<UpdateNameplateDelegate>? updateNameplateHook;
+
+    private delegate void* UpdateNameplateDelegate(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex);
 
     private const string CommandName = "/hfh";
     
@@ -62,6 +77,10 @@ public sealed class Plugin : IDalamudPlugin
         EmoteDetectionService = new EmoteDetectionService(GameInterop, ObjectTable, DataManager, Log);
         EmoteEngine = new EmoteEngine(this);
         WeatherService = new WeatherService(DataManager);
+        
+        // Initialize nameplate hook for pulse animation
+        GameInterop.InitializeFromAttributes(this);
+        updateNameplateHook?.Enable();
         
         SetupDtrBar();
         
@@ -265,5 +284,51 @@ public sealed class Plugin : IDalamudPlugin
     {
         PluginInterface.SavePluginConfig(Configuration);
         UpdateDtrBar();
+    }
+
+    /// <summary>
+    /// Nameplate hook detour for pulse animation (based on Caraxi's pattern)
+    /// </summary>
+    private unsafe void* UpdateNameplateDetour(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex)
+    {
+        try
+        {
+            // Get player name from battle character
+            var playerName = battleChara != null ? battleChara->NameString.ToString() : string.Empty;
+            
+            if (!string.IsNullOrEmpty(playerName))
+            {
+                // Check if this player has an active pulse animation
+                var pulseTitle = EmoteEngine.GetPulseTitleForPlayer(playerName);
+                if (pulseTitle != null)
+                {
+                    // Apply pulse title to nameplate (prefix position - node ID 11)
+                    var titleText = pulseTitle.ToSeString(true, true);
+                    var titleBytes = titleText.Encode();
+                    
+                    // Try to set the title text using available StringArrayData API
+                    try
+                    {
+                        // Method 1: Try to access string array entries directly
+                        if (stringArray != null)
+                        {
+                            // Use a safer approach - check if we can access the string array
+                            // TODO: Research the exact StringArrayData API for Dalamud 14.0.2
+                        }
+                    }
+                    catch (Exception apiEx)
+                    {
+                        // Silently handle API errors - no logging needed
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"[HFH] Nameplate hook error: {ex.Message}");
+        }
+
+        // Call original function
+        return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
     }
 }

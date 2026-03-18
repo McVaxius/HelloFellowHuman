@@ -20,8 +20,13 @@ public class ConfigWindow : Window, IDisposable
     private string newPresetName = string.Empty;
     private string importText = string.Empty;
     private readonly Dictionary<int, string> emoteSearchFilters = new();
+    private bool hasLoggedWindowLoad = false;
     
-    public ConfigWindow(Plugin plugin) : base("Hello Fellow Human Config###HFHConfig")
+    // Color picker state management
+    private readonly Dictionary<string, Vector3> editingColors = new();
+    private readonly Dictionary<string, Vector3> editingGlows = new();
+    
+    public ConfigWindow(Plugin plugin) : base($"Hello Fellow Human Config v{Plugin.Version}###HFHConfig")
     {
         this.plugin = plugin;
         this.config = plugin.Configuration;
@@ -34,6 +39,16 @@ public class ConfigWindow : Window, IDisposable
     
     public override void Draw()
     {
+        // Log window load once
+        if (!hasLoggedWindowLoad)
+        {
+            Plugin.Log.Debug("[HFH] Config window opened - NEW DLL v2.0");
+            hasLoggedWindowLoad = true;
+        }
+        
+        // UNIQUE MARKER: This should appear in logs if new DLL is loaded
+        // Plugin.Log.Debug("[HFH] NEW DLL LOADED - If you see this, the fix is working");
+        
         // Ko-fi donation button in upper right
         ImGui.SameLine(ImGui.GetWindowWidth() - 120);
         if (ImGui.SmallButton("\u2661 Ko-fi \u2661"))
@@ -283,6 +298,12 @@ public class ConfigWindow : Window, IDisposable
                 selectedPresetIndex = i;
                 acctList.SelectedPresetIndex = i;
                 
+                Plugin.Log.Debug($"[HFH] Preset changed to {i}: {preset.Name}");
+                
+                // Clear editing dictionaries when switching presets to prevent conflicts
+                editingColors.Clear();
+                editingGlows.Clear();
+                
                 // Reset cooldowns when switching active presets
                 if (oldActiveIndex != i)
                 {
@@ -368,7 +389,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Text("Emote Lines:");
         ImGui.Separator();
         
-        ImGui.Columns(11, "EmoteColumns");
+        ImGui.Columns(15, "EmoteColumns"); // Added 4 columns for pulse animation
         ImGui.Text("Type");
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Proximity = distance-based, Emote = responds to emotes directed at you");
@@ -413,7 +434,33 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Range for emote triggers in yalms (default: 10). Only applies to Emote type lines.");
         ImGui.NextColumn();
+        
+        // Pulse animation columns
+        ImGui.Text("Pulse");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Enable pulse animation with color and glow effects");
         ImGui.NextColumn();
+        ImGui.SetColumnWidth(10, 50); // Pulse column 50px
+        
+        ImGui.Text("Color");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Main color for pulse animation (RGB)");
+        ImGui.NextColumn();
+        ImGui.SetColumnWidth(11, 80); // Color column 80px
+        
+        ImGui.Text("Glow");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Glow/edge color for pulse animation (RGB)");
+        ImGui.NextColumn();
+        ImGui.SetColumnWidth(12, 80); // Glow column 80px
+        
+        ImGui.Text("Style");
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Pulse animation style: emoji, color, or both");
+        ImGui.NextColumn();
+        ImGui.SetColumnWidth(13, 70); // Style column 70px
+        
+        ImGui.NextColumn(); // Delete button column
         ImGui.Separator();
         
         for (int i = 0; i < preset.Lines.Count; i++)
@@ -630,6 +677,68 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.NextColumn();
             
+            // Pulse animation columns
+            var pulseTarget = line.PulseTarget;
+            if (ImGui.Checkbox($"##pulse{i}", ref pulseTarget))
+            {
+                line.PulseTarget = pulseTarget;
+                plugin.ConfigManager.SaveCurrentAccount();
+            }
+            ImGui.NextColumn();
+            
+            // Color picker (only enabled if pulse is enabled)
+            var pulseColor = line.PulseColor;
+            var colorId = $"##color_preset{selectedPresetIndex}_line{i}";
+            
+            var modifiedColor = DrawColorPicker(colorId, ref pulseColor, readOnly: !line.PulseTarget);
+            if (modifiedColor)
+            {
+                Plugin.Log.Debug($"[HFH] Color changed for preset {selectedPresetIndex}, line {i}");
+                line.PulseColor = pulseColor;
+                plugin.ConfigManager.SaveCurrentAccount();
+            }
+            ImGui.NextColumn();
+            
+            // Glow picker (only enabled if pulse is enabled)
+            var pulseGlow = line.PulseGlow;
+            var glowId = $"##glow_preset{selectedPresetIndex}_line{i}";
+            
+            var modifiedGlow = DrawGlowPicker(glowId, ref pulseGlow, readOnly: !line.PulseTarget);
+            if (modifiedGlow)
+            {
+                Plugin.Log.Debug($"[HFH] Glow changed for preset {selectedPresetIndex}, line {i}");
+                line.PulseGlow = pulseGlow;
+                plugin.ConfigManager.SaveCurrentAccount();
+            }
+            ImGui.NextColumn();
+            
+            // Pulse style dropdown (only enabled if pulse is enabled)
+            var pulseStyleIndex = line.PulseStyle switch
+            {
+                "emoji" => 0,
+                "color" => 1,
+                "both" => 2,
+                _ => 0
+            };
+            ImGui.SetNextItemWidth(-1);
+            var styleId = $"##style_preset{selectedPresetIndex}_line{i}";
+            if (ImGui.Combo(styleId, ref pulseStyleIndex, "emoji\0color\0both\0"))
+            {
+                line.PulseStyle = pulseStyleIndex switch
+                {
+                    0 => "emoji",
+                    1 => "color", 
+                    2 => "both",
+                    _ => "emoji"
+                };
+                plugin.ConfigManager.SaveCurrentAccount();
+            }
+            if (!line.PulseTarget && ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip("Enable pulse animation to select style");
+            }
+            ImGui.NextColumn();
+            
             if (i > 0 || preset.Lines.Count > 1)
             {
                 if (ImGui.Button($"-##del{i}"))
@@ -761,4 +870,156 @@ public class ConfigWindow : Window, IDisposable
     }
 
     private const string IconGuideUrl = "https://na.finalfantasyxiv.com/lodestone/character/22423564/blog/4393835";
+
+    /// <summary>
+    /// Color picker based on Caraxi's DrawColorPicker method with proper state management
+    /// </summary>
+    private bool DrawColorPicker(string id, ref Vector3? color, bool readOnly = false)
+    {
+        var modified = false;
+        var displayText = color == null ? "No Colour" : PulseTitle.ColorToHex(color);
+        
+        // Show color button with current color preview
+        var buttonColor = color ?? new Vector3(1, 1, 1);
+        var buttonClicked = ImGui.ColorButton(id, new Vector4(buttonColor, 1), ImGuiColorEditFlags.None, new Vector2(60, 20));
+        
+        if (buttonClicked)
+        {
+            if (!readOnly)
+            {
+                // Initialize editing color when opening popup
+                editingColors[id] = color ?? new Vector3(1, 1, 1);
+                ImGui.OpenPopup($"##{id}_popup");
+            }
+            else
+            {
+                // Read-only - silently ignore
+            }
+        }
+        
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip($"Click to { (readOnly ? "view" : "change" ) } color");
+        }
+        
+        ImGui.SameLine();
+        ImGui.Text(displayText);
+        
+        // Color picker popup
+        if (ImGui.BeginPopup($"##{id}_popup"))
+        {
+            // Use the maintained editing color
+            if (!editingColors.ContainsKey(id))
+                editingColors[id] = color ?? new Vector3(1, 1, 1);
+            
+            var editingColour = editingColors[id];
+            
+            // Clear button
+            if (ImGui.Button("Clear"))
+            {
+                color = null;
+                modified = true;
+                ImGui.CloseCurrentPopup();
+            }
+            
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip("Clear selected colour");
+            }
+            
+            ImGui.SameLine();
+            
+            // Color picker - this will update the editing color in real-time
+            if (ImGui.ColorPicker3($"##ColorPick", ref editingColour, ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview))
+            {
+                // Update the stored editing color for real-time preview
+                editingColors[id] = editingColour;
+            }
+            
+            // Confirm button
+            if (ImGui.Button("Confirm"))
+            {
+                color = editingColour;
+                modified = true;
+                ImGui.CloseCurrentPopup();
+            }
+            
+            ImGui.EndPopup();
+        }
+        
+        return modified;
+    }
+
+    /// <summary>
+    /// Glow picker based on Caraxi's DrawGlowPicker method with proper state management
+    /// </summary>
+    private bool DrawGlowPicker(string id, ref Vector3? glow, bool readOnly = false)
+    {
+        var modified = false;
+        var displayText = glow == null ? "No Glow" : PulseTitle.ColorToHex(glow);
+        
+        // Show color button with current glow preview
+        var buttonColor = glow ?? new Vector3(1, 1, 0);
+        if (ImGui.ColorButton(id, new Vector4(buttonColor, 1), ImGuiColorEditFlags.None, new Vector2(60, 20)))
+        {
+            if (!readOnly)
+            {
+                // Initialize editing glow when opening popup
+                editingGlows[id] = glow ?? new Vector3(1, 1, 0);
+                ImGui.OpenPopup($"##{id}_popup");
+            }
+        }
+        
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip($"Click to { (readOnly ? "view" : "change" ) } glow");
+        }
+        
+        ImGui.SameLine();
+        ImGui.Text(displayText);
+        
+        // Glow color picker popup
+        if (ImGui.BeginPopup($"##{id}_popup"))
+        {
+            // Use the maintained editing glow
+            if (!editingGlows.ContainsKey(id))
+                editingGlows[id] = glow ?? new Vector3(1, 1, 0);
+            
+            var editingGlow = editingGlows[id];
+            
+            // Clear button
+            if (ImGui.Button("Clear"))
+            {
+                glow = null;
+                modified = true;
+                ImGui.CloseCurrentPopup();
+            }
+            
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip("Clear selected glow");
+            }
+            
+            ImGui.SameLine();
+            
+            // Glow color picker - this will update the editing glow in real-time
+            if (ImGui.ColorPicker3($"##GlowPick", ref editingGlow, ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview))
+            {
+                // Update the stored editing glow for real-time preview
+                editingGlows[id] = editingGlow;
+            }
+            
+            // Confirm button
+            if (ImGui.Button("Confirm"))
+            {
+                glow = editingGlow;
+                modified = true;
+                ImGui.CloseCurrentPopup();
+            }
+            
+            ImGui.EndPopup();
+        }
+        
+        return modified;
+    }
 }
