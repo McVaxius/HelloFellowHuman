@@ -22,7 +22,7 @@ public class PulseAnimation
     public float WaitDuration { get; set; }
     public string Command { get; set; } = string.Empty; // The command to display
     public string ReceivedEmote { get; set; } = string.Empty; // The received emote for COPYCAT
-    public bool IsActive => DateTime.UtcNow < StartTime.AddSeconds(WaitDuration + 2); // 2s extra buffer
+    public bool IsActive => DateTime.UtcNow < StartTime.AddSeconds(WaitDuration);
 }
 
 public class EmoteEngine : IDisposable
@@ -237,6 +237,39 @@ public class EmoteEngine : IDisposable
         if (currentWaitUntil != DateTime.MinValue && now >= currentWaitUntil)
         {
             Plugin.Log.Debug($"[HFH] Wait period ended at {now:HH:mm:ss}, resuming normal operation");
+            
+            // Phase 3: Set LastExecuted for repeat timer timing
+            // Find the line that just completed and set its LastExecuted
+            if (account != null)
+            {
+                var preset = account.GetActivePreset();
+                if (preset != null)
+                {
+                    // Find the most recently executed line (within the last wait period)
+                    var recentLine = preset.Lines
+                        .Where(l => l.LastExecuted > currentWaitUntil.AddSeconds(-10)) // Within 10 seconds of wait period
+                        .OrderByDescending(l => l.LastExecuted)
+                        .FirstOrDefault();
+                    
+                    if (recentLine != null)
+                    {
+                        recentLine.LastExecuted = now;
+                        Plugin.Log.Debug($"[HFH] Set LastExecuted for line {recentLine.TriggerEmote} at {now:HH:mm:ss}");
+                    }
+                }
+            }
+            
+            // Phase 4: Clean up all pulse animations and restore nameplates
+            var playerNames = activePulses.Keys.ToList();
+            foreach (var playerName in playerNames)
+            {
+                activePulses.Remove(playerName);
+                Plugin.Log.Debug($"[HFH] Cleaned up pulse animation for: {playerName} (wait expired)");
+            }
+            
+            // Clear applied titles to restore original nameplates
+            plugin.ClearAppliedTitles();
+            
             currentWaitUntil = DateTime.MinValue; // Reset wait state
             hasLoggedWaitStart = false; // Reset wait start flag
         }
@@ -349,7 +382,6 @@ public class EmoteEngine : IDisposable
                         StartPulseAnimation(emInstigator, line, commandToExecute, emReceivedCmd);
                     }
                     
-                    line.LastExecuted = now;
                     currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
                     
                     Plugin.Log.Debug($"[HFH] Wait time tracking: global wait set until {currentWaitUntil:HH:mm:ss}");

@@ -87,6 +87,15 @@ public sealed unsafe class Plugin : IDalamudPlugin
     // Track applied pulse titles to prevent spam and enable cleanup
     private readonly Dictionary<ulong, string> appliedTitles = new();
     
+    /// <summary>
+    /// Clear all applied pulse titles to restore original nameplates
+    /// </summary>
+    public void ClearAppliedTitles()
+    {
+        appliedTitles.Clear();
+        Log.Debug("[HFH] Cleared applied titles, nameplates restored to original state");
+    }
+    
     // Rate limiting to prevent crash
     private DateTime lastHookCall = DateTime.MinValue;
     private const int hookCallInterval = 100; // 100ms minimum between hook calls
