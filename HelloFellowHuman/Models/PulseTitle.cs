@@ -21,38 +21,38 @@ namespace HelloFellowHuman.Models
         public bool IncludeQuotes { get; set; } = false; // No quotes for pulse animation
 
         /// <summary>
-        /// Convert to SeString with color and glow effects
+        /// Convert to SeString with color and glow effects (Caraxi's method)
         /// </summary>
         public SeString ToSeString()
         {
-            var seString = new SeString();
+            var builder = new SeStringBuilder();
             
-            // Add color payload if color is specified
+            // Add color payload if color is specified (Caraxi pattern)
             if (Color.HasValue)
             {
-                seString.Append(new UIForegroundPayload((ushort)ColorToUInt(Color.Value)));
+                builder.PushColorRgba(new Vector4(Color.Value, 1));
             }
             
-            // Add glow payload if glow is specified
+            // Add glow payload if glow is specified (Caraxi pattern)
             if (Glow.HasValue)
             {
-                seString.Append(new UIGlowPayload((ushort)ColorToUInt(Glow.Value)));
+                builder.PushEdgeColorRgba(new Vector4(Glow.Value, 1));
             }
             
             // Add the emoji/icon
-            seString.Append(new TextPayload(Emoji));
+            builder.Append(Emoji);
             
-            // Close glow and color payloads in reverse order
+            // Close glow and color payloads in reverse order (Caraxi pattern)
             if (Glow.HasValue)
             {
-                seString.Append(new UIGlowPayload(0));
+                builder.PopEdgeColor();
             }
             if (Color.HasValue)
             {
-                seString.Append(new UIForegroundPayload(0));
+                builder.PopColor();
             }
             
-            return seString;
+            return SeString.Parse(builder.GetViewAsSpan());
         }
         
         /// <summary>
