@@ -685,8 +685,8 @@ public class EmoteEngine : IDisposable
             switch (line.PulseStyle)
             {
                 case "emoji":
-                    pulseTitle.Color = new Vector3(1.0f, 0.0f, 0.0f); // Red
-                    pulseTitle.Glow = new Vector3(1.0f, 0.5f, 0.5f); // Pink glow
+                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Use configured color or default red
+                    pulseTitle.Glow = line.PulseGlow ?? new Vector3(1.0f, 0.5f, 0.5f); // Use configured glow or default pink glow
                     break;
                 case "color":
                     pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Use configured color or default red

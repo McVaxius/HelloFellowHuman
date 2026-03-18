@@ -397,23 +397,24 @@ public sealed unsafe class Plugin : IDalamudPlugin
             
             if (titleBytes != null && titleBytes.Length > 0 && namePlateInfo != null)
             {
-                // Prevent setting the same title too frequently
-                if (!appliedTitles.TryGetValue(battleChara->EntityId, out var lastTitle) || lastTitle != pulseTitle.Emoji)
+                // Always apply the title since SeString encoding is working
+                try
                 {
-                    try
+                    // Set the title as prefix (Caraxi pattern)
+                    namePlateInfo->DisplayTitle.SetString(titleBytes);
+                    namePlateInfo->IsPrefix = true;
+                    namePlateInfo->IsDirty = true;
+                    
+                    // Only log the first time we apply this specific emoji
+                    if (!appliedTitles.TryGetValue(battleChara->EntityId, out var lastTitle) || lastTitle != pulseTitle.Emoji)
                     {
-                        // Set the title as prefix (Caraxi pattern)
-                        namePlateInfo->DisplayTitle.SetString(titleBytes);
-                        namePlateInfo->IsPrefix = true;
-                        namePlateInfo->IsDirty = true;
-                        
                         appliedTitles[battleChara->EntityId] = pulseTitle.Emoji;
                         Log.Info($"[HFH] Applied pulse title to {playerName}: {pulseTitle.Emoji}");
                     }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"[HFH] Failed to apply pulse title to {playerName}: {ex.Message}");
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"[HFH] Failed to apply pulse title to {playerName}: {ex.Message}");
                 }
             }
         }

@@ -27,28 +27,45 @@ namespace HelloFellowHuman.Models
         {
             var seString = new SeString();
             
-            // Add color payload
-            seString.Append(new UIForegroundPayload((ushort)ColorToUInt(Color!.Value)));
+            // Add color payload if color is specified
+            if (Color.HasValue)
+            {
+                seString.Append(new UIForegroundPayload((ushort)ColorToUInt(Color.Value)));
+            }
             
-            // Add glow payload
-            seString.Append(new UIGlowPayload((ushort)ColorToUInt(Glow!.Value)));
+            // Add glow payload if glow is specified
+            if (Glow.HasValue)
+            {
+                seString.Append(new UIGlowPayload((ushort)ColorToUInt(Glow.Value)));
+            }
             
             // Add the emoji/icon
             seString.Append(new TextPayload(Emoji));
             
-            // Close glow and color payloads
-            seString.Append(new UIGlowPayload(0));
-            seString.Append(new UIForegroundPayload(0));
+            // Close glow and color payloads in reverse order
+            if (Glow.HasValue)
+            {
+                seString.Append(new UIGlowPayload(0));
+            }
+            if (Color.HasValue)
+            {
+                seString.Append(new UIForegroundPayload(0));
+            }
             
             return seString;
         }
         
         /// <summary>
-        /// Convert Vector3 color to uint for SeString payloads
+        /// Convert Vector3 color to uint for SeString payloads (FFXIV standard format)
         /// </summary>
         private static uint ColorToUInt(Vector3 color)
         {
-            return (uint)(color.X * 255) | ((uint)(color.Y * 255) << 8) | ((uint)(color.Z * 255) << 16);
+            // FFXIV uses standard RGB format with values 0-255
+            // Format: 0x00RRGGBB (alpha is always 0 for text colors)
+            var r = (uint)(color.X * 255);
+            var g = (uint)(color.Y * 255);
+            var b = (uint)(color.Z * 255);
+            return (r << 16) | (g << 8) | b;
         }
         
         /// <summary>
