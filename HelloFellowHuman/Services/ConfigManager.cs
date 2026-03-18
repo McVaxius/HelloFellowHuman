@@ -48,26 +48,9 @@ public class ConfigManager
         var account = GetCurrentAccount();
         if (account != null) return account;
 
-        // Fallback: use first account or create one
-        if (accounts.Count > 0)
-        {
-            var first = accounts.First();
-            CurrentAccountId = first.Key;
-            return first.Value;
-        }
-
-        var fallbackId = Guid.NewGuid().ToString("N")[..8];
-        var fallback = new AccountConfig
-        {
-            AccountId = fallbackId,
-            AccountAlias = "Default Account",
-        };
-        fallback.Initialize();
-        accounts[fallbackId] = fallback;
-        CurrentAccountId = fallbackId;
-        SaveAccount(fallbackId);
-        log.Warning($"[HFH] Created fallback account {fallbackId}");
-        return fallback;
+        // Don't create fallback account - let the login system handle it properly
+        log.Warning("[HFH] No current account available - login system should set this");
+        return null;
     }
 
     public void EnsureAccountSelected(ulong contentId, string? aliasHint = null)

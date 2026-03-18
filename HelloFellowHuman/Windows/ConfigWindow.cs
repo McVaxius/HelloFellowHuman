@@ -26,7 +26,7 @@ public class ConfigWindow : Window, IDisposable
     private readonly Dictionary<string, Vector3> editingColors = new();
     private readonly Dictionary<string, Vector3> editingGlows = new();
     
-    public ConfigWindow(Plugin plugin) : base($"Hello Fellow Human Config v{Plugin.Version}###HFHConfig")
+    public ConfigWindow(Plugin plugin) : base($"Hello Fellow Human Config v{Plugin.GetVersion()}###HFHConfig")
     {
         this.plugin = plugin;
         this.config = plugin.Configuration;

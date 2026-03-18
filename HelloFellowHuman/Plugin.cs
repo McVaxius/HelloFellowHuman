@@ -9,7 +9,9 @@ using HelloFellowHuman.Windows;
 using HelloFellowHuman.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
+using System.Text.Json;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -24,6 +26,30 @@ namespace HelloFellowHuman;
 public sealed unsafe class Plugin : IDalamudPlugin
 {
     public const string Version = "1.0.0";
+    
+    // Dynamic version from repo.json
+    public static string GetVersion()
+    {
+        try
+        {
+            var repoPath = Path.Combine(PluginInterface.ConfigDirectory.FullName, "..", "..", "HelloFellowHuman", "repo.json");
+            if (File.Exists(repoPath))
+            {
+                var json = File.ReadAllText(repoPath);
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.ValueKind == JsonValueKind.Array && doc.RootElement.GetArrayLength() > 0)
+                {
+                    var version = doc.RootElement[0].GetProperty("AssemblyVersion").GetString();
+                    return version ?? Version;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Debug($"[HFH] Failed to read version from repo.json: {ex.Message}");
+        }
+        return Version;
+    }
     
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
@@ -94,15 +120,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
         Log.Info($"[HFH] Hook initialization: updateNameplateHook is {(updateNameplateHook == null ? "NULL" : "initialized")}");
         updateNameplateHook?.Enable();
         Log.Info($"[HFH] Hook enabled: {(updateNameplateHook?.IsEnabled == true ? "YES" : "NO")}");
-        
-        // Force enable plugin for testing
-        var currentAccount = ConfigManager.GetOrCreateCurrentAccount();
-        if (!currentAccount.Enabled)
-        {
-            currentAccount.Enabled = true;
-            ConfigManager.SaveCurrentAccount();
-            Log.Info("[HFH] Plugin force-enabled for testing");
-        }
         
         SetupDtrBar();
         
