@@ -12,7 +12,7 @@ public class Configuration : IPluginConfiguration
     public int Version { get; set; } = 0;
     
     // Legacy fields (kept for migration to per-account config)
-    public bool Enabled { get; set; } = false;
+    public bool Enabled { get; set; } = true;
     public bool DtrBarEnabled { get; set; } = true;
     public int DtrBarMode { get; set; } = 0; // 0=text-only, 1=icon+text, 2=icon-only
     public string DtrIconEnabled { get; set; } = "\uE03C";

@@ -639,24 +639,63 @@ public class EmoteEngine : IDisposable
                 WaitDuration = line.WaitTimeAfter
             };
             
-            // For now, we'll just log the pulse animation
-            // TODO: In Phase 3, we'll implement the actual nameplate modification
-            switch (line.PulseStyle)
+            // Create the actual pulse title based on line configuration
+            var pulseTitle = CreatePulseTitleFromLine(line);
+            if (pulseTitle != null)
             {
-                case "emoji":
-                    Plugin.Log.Debug($"[HFH] Pulse style: emoji - would use FFXIV icons");
-                    break;
-                case "color":
-                    Plugin.Log.Debug($"[HFH] Pulse style: color - would use color {PulseTitle.ColorToHex(line.PulseColor)}");
-                    break;
-                case "both":
-                    Plugin.Log.Debug($"[HFH] Pulse style: both - would use emoji + color");
-                    break;
+                Plugin.Log.Debug($"[HFH] Created pulse title: {pulseTitle.Emoji} with color {pulseTitle.Color} and glow {pulseTitle.Glow}");
             }
         }
         catch (Exception ex)
         {
             Plugin.Log.Debug($"[HFH] Pulse animation error for {playerName}: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Creates a PulseTitle from an EmoteLine configuration
+    /// </summary>
+    private PulseTitle? CreatePulseTitleFromLine(EmoteLine line)
+    {
+        try
+        {
+            var pulseTitle = new PulseTitle
+            {
+                Style = line.PulseStyle,
+                IsPrefix = true
+            };
+            
+            // Set emoji based on style
+            switch (line.PulseStyle)
+            {
+                case "emoji":
+                    pulseTitle.Emoji = "♥"; // Simple heart
+                    pulseTitle.Color = new Vector3(1.0f, 0.0f, 0.0f); // Red
+                    pulseTitle.Glow = new Vector3(1.0f, 0.5f, 0.5f); // Pink glow
+                    break;
+                case "color":
+                    pulseTitle.Emoji = "♥"; // Heart with color only
+                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Use configured color or default red
+                    pulseTitle.Glow = Vector3.Zero; // No glow for color-only
+                    break;
+                case "both":
+                    pulseTitle.Emoji = "♥"; // Heart with both
+                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f);
+                    pulseTitle.Glow = new Vector3(1.0f, 1.0f, 1.0f); // White glow
+                    break;
+                default:
+                    pulseTitle.Emoji = "♥"; // Default heart
+                    pulseTitle.Color = new Vector3(1.0f, 0.0f, 0.0f);
+                    pulseTitle.Glow = new Vector3(1.0f, 0.5f, 0.5f);
+                    break;
+            }
+            
+            return pulseTitle;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error($"[HFH] Error creating pulse title from line: {ex.Message}");
+            return null;
         }
     }
     
@@ -667,22 +706,44 @@ public class EmoteEngine : IDisposable
     /// <returns>PulseTitle if active, null otherwise</returns>
     public PulseTitle? GetPulseTitleForPlayer(string playerName)
     {
-        // Force rebuild comment
         if (activePulses.TryGetValue(playerName, out var pulse))
         {
+            // Get the current phase for animation
             var currentPhase = (int)((DateTime.Now - pulse.StartTime).TotalSeconds / 2) % 4;
             var emoji = GetEmojiForPhase(currentPhase);
             
-            // Pulse animation is self-contained - no line lookup needed
-            var pulseTitle = new PulseTitle
+            // Find the emote line that created this pulse to get its configuration
+            var account = plugin.ConfigManager.GetCurrentAccount();
+            if (account != null)
+            {
+                var activePreset = account.GetActivePreset();
+                if (activePreset != null)
+                {
+                    foreach (var line in activePreset.Lines)
+                    {
+                        if (line.PulseTarget && line.TriggerType == 1) // Emote lines with pulse enabled
+                        {
+                            // Create pulse title based on the line configuration
+                            var pulseTitle = CreatePulseTitleFromLine(line);
+                            if (pulseTitle != null)
+                            {
+                                // Override emoji with current phase animation
+                                pulseTitle.Emoji = emoji;
+                                return pulseTitle;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Fallback to basic pulse title if no line found
+            return new PulseTitle
             {
                 Emoji = emoji,
                 Color = new Vector3(1.0f, 0.0f, 0.0f), // Default red
-                Glow = new Vector3(1.0f, 1.0f, 1.0f),  // Default white glow
+                Glow = new Vector3(1.0f, 0.5f, 0.5f),  // Default pink glow
                 Style = "emoji"
             };
-            
-            return pulseTitle;
         }
         
         return null;

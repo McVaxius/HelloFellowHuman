@@ -8,6 +8,7 @@ using HelloFellowHuman.Models;
 using HelloFellowHuman.Windows;
 using HelloFellowHuman.Services;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
@@ -15,6 +16,8 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using Dalamud.Hooking;
+using Dalamud.Game.ClientState.Conditions;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace HelloFellowHuman;
 
@@ -33,6 +36,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
+    [PluginService] internal static ICondition Condition { get; private set; } = null!;
 
     // Nameplate hook from Caraxi's pattern
     [Signature("40 53 55 57 41 56 48 81 EC ?? ?? ?? ?? 48 8B 84 24", DetourName = nameof(UpdateNameplateDetour))]
@@ -53,6 +57,9 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private IDtrBarEntry? DtrEntry { get; set; }
     private bool wasLoggedIn;
     private int loginDetectionDelay;
+    
+    // Track applied pulse titles to prevent spam and enable cleanup
+    private readonly Dictionary<ulong, string> appliedTitles = new();
 
     public Plugin()
     {
@@ -80,7 +87,18 @@ public sealed unsafe class Plugin : IDalamudPlugin
         
         // Initialize nameplate hook for pulse animation
         GameInterop.InitializeFromAttributes(this);
+        Log.Info($"[HFH] Hook initialization: updateNameplateHook is {(updateNameplateHook == null ? "NULL" : "initialized")}");
         updateNameplateHook?.Enable();
+        Log.Info($"[HFH] Hook enabled: {(updateNameplateHook?.IsEnabled == true ? "YES" : "NO")}");
+        
+        // Force enable plugin for testing
+        var currentAccount = ConfigManager.GetOrCreateCurrentAccount();
+        if (!currentAccount.Enabled)
+        {
+            currentAccount.Enabled = true;
+            ConfigManager.SaveCurrentAccount();
+            Log.Info("[HFH] Plugin force-enabled for testing");
+        }
         
         SetupDtrBar();
         
@@ -289,36 +307,115 @@ public sealed unsafe class Plugin : IDalamudPlugin
     /// <summary>
     /// Nameplate hook detour for pulse animation (based on Caraxi's pattern)
     /// </summary>
-    private unsafe void* UpdateNameplateDetour(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex)
+    public void* UpdateNameplateDetour(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex)
     {
         try
         {
-            // Get player name from battle character
-            var playerName = battleChara != null ? battleChara->NameString.ToString() : string.Empty;
-            
-            if (!string.IsNullOrEmpty(playerName))
+            // Check if HFH is enabled
+            var currentAccount = ConfigManager.GetCurrentAccount();
+            if (currentAccount == null || !currentAccount.Enabled) 
             {
-                // Check if this player has an active pulse animation
-                var pulseTitle = EmoteEngine.GetPulseTitleForPlayer(playerName);
-                if (pulseTitle != null)
+                Log.Debug("[HFH] Plugin disabled, returning early");
+                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+            }
+            
+            // Skip during certain game states to prevent issues
+            if (ClientState.IsPvPExcludingDen ||
+                Condition[ConditionFlag.BetweenAreas] ||
+                Condition[ConditionFlag.BetweenAreas51] ||
+                Condition[ConditionFlag.LoggingOut] ||
+                Condition[ConditionFlag.OccupiedInCutSceneEvent] ||
+                Condition[ConditionFlag.WatchingCutscene] ||
+                Condition[ConditionFlag.WatchingCutscene78])
+            {
+                // Only log game state issues every 10 seconds to avoid spam
+                if (DateTime.UtcNow.Second % 10 == 0)
                 {
-                    // Apply pulse title to nameplate (prefix position - node ID 11)
-                    var titleText = pulseTitle.ToSeString(true, true);
-                    var titleBytes = titleText.Encode();
-                    
-                    // Try to set the title text using available StringArrayData API
-                    try
+                    Log.Debug("[HFH] Game state prevents hook, returning early");
+                }
+                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+            }
+
+            // Only process player nameplates
+            if (battleChara == null) 
+            {
+                Log.Debug("[HFH] battleChara is null, returning early");
+                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+            }
+            
+            var gameObject = &battleChara->Character.GameObject;
+            var playerName = battleChara->NameString.ToString();
+            
+            // Log everything we see (but limit to avoid spam)
+            if (DateTime.UtcNow.Second % 20 == 0) // Every 20 seconds
+            {
+                Log.Debug($"[HFH] Object: {playerName} - ObjectKind={gameObject->ObjectKind}, SubKind={gameObject->SubKind}");
+            }
+            
+            if (gameObject->ObjectKind != FFXIVClientStructs.FFXIV.Client.Game.Object.ObjectKind.Pc || gameObject->SubKind != 4) 
+            {
+                // Specifically log if we see Hildabrand but he's not the right type
+                if (playerName.Contains("Hildabrand"))
+                {
+                    Log.Info($"[HFH] Found Hildabrand but wrong type: ObjectKind={gameObject->ObjectKind}, SubKind={gameObject->SubKind}");
+                }
+                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+            }
+
+            // Get player name
+            if (string.IsNullOrEmpty(playerName)) 
+                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+            
+            // Log all player nameplates we process
+            Log.Debug($"[HFH] Processing player: {playerName}");
+            
+            // Check if this player has an active pulse animation
+            var pulseTitle = EmoteEngine.GetPulseTitleForPlayer(playerName);
+            Log.Debug($"[HFH] Pulse lookup for {playerName}: {(pulseTitle != null ? $"FOUND {pulseTitle.Emoji}" : "NULL")}");
+            if (pulseTitle != null)
+            {
+                // Use SeString encoding for color and glow effects
+                var titleSeString = pulseTitle.ToSeString();
+                var titleBytes = titleSeString.Encode();
+                
+                if (titleBytes != null && titleBytes.Length > 0 && namePlateInfo != null)
+                {
+                    // Prevent setting the same title too frequently
+                    if (!appliedTitles.TryGetValue(battleChara->EntityId, out var lastTitle) || lastTitle != pulseTitle.Emoji)
                     {
-                        // Method 1: Try to access string array entries directly
-                        if (stringArray != null)
+                        try
                         {
-                            // Use a safer approach - check if we can access the string array
-                            // TODO: Research the exact StringArrayData API for Dalamud 14.0.2
+                            // Set the title as prefix (Caraxi pattern)
+                            namePlateInfo->DisplayTitle.SetString(titleBytes);
+                            namePlateInfo->IsPrefix = true;
+                            namePlateInfo->IsDirty = true;
+                            
+                            appliedTitles[battleChara->EntityId] = pulseTitle.Emoji;
+                            Log.Info($"[HFH] Applied pulse title to {playerName}: {pulseTitle.Emoji}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"[HFH] Error setting title: {ex.Message}");
                         }
                     }
-                    catch (Exception apiEx)
+                }
+            }
+            else
+            {
+                // Clean up tracking and restore original title when pulse ends
+                if (appliedTitles.ContainsKey(battleChara->EntityId) && namePlateInfo != null)
+                {
+                    try
                     {
-                        // Silently handle API errors - no logging needed
+                        appliedTitles.Remove(battleChara->EntityId);
+                        // Clear the title by setting empty string
+                        namePlateInfo->DisplayTitle.SetString([]);
+                        namePlateInfo->IsDirty = true;
+                        Log.Info($"[HFH] Restored original title for {playerName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"[HFH] Error clearing title: {ex.Message}");
                     }
                 }
             }
@@ -328,7 +425,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
             Log.Error($"[HFH] Nameplate hook error: {ex.Message}");
         }
 
-        // Call original function
         return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
     }
 }

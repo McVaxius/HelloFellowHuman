@@ -1,5 +1,6 @@
 using System.Numerics;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using SeString = Dalamud.Game.Text.SeStringHandling.SeString;
 using SeStringBuilder = Lumina.Text.SeStringBuilder;
 
@@ -20,42 +21,43 @@ namespace HelloFellowHuman.Models
         public bool IncludeQuotes { get; set; } = false; // No quotes for pulse animation
 
         /// <summary>
-        /// Generate SeString with color and glow effects (based on Caraxi's ToSeString)
+        /// Convert to SeString with color and glow effects
         /// </summary>
-        public SeString ToSeString(bool includeColor = true, bool animate = true)
+        public SeString ToSeString()
         {
-            var displayText = string.IsNullOrEmpty(Emoji) ? Title : Emoji;
-            if (string.IsNullOrEmpty(displayText)) return SeString.Empty;
+            var seString = new SeString();
             
-            var builder = new SeStringBuilder();
+            // Add color payload
+            seString.Append(new UIForegroundPayload((ushort)ColorToUInt(Color!.Value)));
             
-            // Add quotes if enabled (not used for pulse animation)
-            if (IncludeQuotes) builder.Append("《");
+            // Add glow payload
+            seString.Append(new UIGlowPayload((ushort)ColorToUInt(Glow!.Value)));
             
-            // Add main color
-            if (includeColor && Color != null) 
-                builder.PushColorRgba(new Vector4(Color.Value, 1));
+            // Add the emoji/icon
+            seString.Append(new TextPayload(Emoji));
             
-            // Add title with optional glow
-            if (Glow != null)
-            {
-                builder.PushEdgeColorRgba(new Vector4(Glow.Value, 1));
-                builder.Append(displayText);
-                builder.PopEdgeColor();
-            }
-            else
-            {
-                builder.Append(displayText);
-            }
+            // Close glow and color payloads
+            seString.Append(new UIGlowPayload(0));
+            seString.Append(new UIForegroundPayload(0));
             
-            // Close main color
-            if (includeColor && Color != null) 
-                builder.PopColor();
-            
-            // Close quotes
-            if (IncludeQuotes) builder.Append("》");
-            
-            return SeString.Parse(builder.GetViewAsSpan());
+            return seString;
+        }
+        
+        /// <summary>
+        /// Convert Vector3 color to uint for SeString payloads
+        /// </summary>
+        private static uint ColorToUInt(Vector3 color)
+        {
+            return (uint)(color.X * 255) | ((uint)(color.Y * 255) << 8) | ((uint)(color.Z * 255) << 16);
+        }
+        
+        /// <summary>
+        /// Get raw byte array for the heart symbol to avoid SeString encoding issues
+        /// </summary>
+        public byte[] GetRawBytes()
+        {
+            // Return UTF-8 bytes for heart symbol
+            return System.Text.Encoding.UTF8.GetBytes("♥");
         }
         
         /// <summary>
