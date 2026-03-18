@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 
 namespace HelloFellowHuman.Windows;
@@ -26,7 +27,7 @@ public class ConfigWindow : Window, IDisposable
     private readonly Dictionary<string, Vector3> editingColors = new();
     private readonly Dictionary<string, Vector3> editingGlows = new();
     
-    public ConfigWindow(Plugin plugin) : base($"Hello Fellow Human Config v{Plugin.GetVersion()}###HFHConfig")
+    public ConfigWindow(Plugin plugin) : base($"Hello Fellow Human Config v{Assembly.GetExecutingAssembly().GetName().Version}###HFHConfig")
     {
         this.plugin = plugin;
         this.config = plugin.Configuration;
