@@ -397,8 +397,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
             }
             
-            // Log when we actually find a pulse animation
-            Log.Debug($"[HFH] Pulse lookup for {playerName}: FOUND {pulseTitle.Emoji}");
+            // Apply pulse title without spamming logs every frame
             
             // Use SeString encoding for color and glow effects
             var titleSeString = pulseTitle.ToSeString();

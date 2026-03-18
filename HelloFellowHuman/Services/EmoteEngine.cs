@@ -238,7 +238,7 @@ public class EmoteEngine : IDisposable
         {
             Plugin.Log.Debug($"[HFH] Wait period ended at {now:HH:mm:ss}, resuming normal operation");
             
-            // Phase 3: Set LastExecuted for repeat timer timing
+            // Phase 1: Set LastExecuted for repeat timer timing
             // Find the line that just completed and set its LastExecuted
             if (account != null)
             {
@@ -259,17 +259,8 @@ public class EmoteEngine : IDisposable
                 }
             }
             
-            // Phase 4: Clean up all pulse animations and restore nameplates
-            var playerNames = activePulses.Keys.ToList();
-            foreach (var playerName in playerNames)
-            {
-                activePulses.Remove(playerName);
-                Plugin.Log.Debug($"[HFH] Cleaned up pulse animation for: {playerName} (wait expired)");
-            }
-            
-            // Clear applied titles to restore original nameplates
-            plugin.ClearAppliedTitles();
-            
+            // Phase 2: Reset wait state - DO NOT clean pulse animations here
+            // They will expire naturally based on their WaitDuration
             currentWaitUntil = DateTime.MinValue; // Reset wait state
             hasLoggedWaitStart = false; // Reset wait start flag
         }
