@@ -531,9 +531,10 @@ public class EmoteEngine : IDisposable
     {
         try
         {
-            Plugin.Log.Debug($"[HFH] ExecuteLine: {line.TargetName} -> {line.SlashCommand}");
-            
             string? targetName = line.ResolvedTargetName ?? line.TargetName;
+            var commandToExecute = overrideCommand ?? line.SlashCommand;
+            
+            Plugin.Log.Debug($"[HFH] ExecuteLine: {line.TargetName} -> {commandToExecute}");
             
             // Check if we need to target someone first
             if (!string.IsNullOrWhiteSpace(targetName) && targetName != "*")
@@ -573,14 +574,12 @@ public class EmoteEngine : IDisposable
                     Plugin.Log.Info($"[HFH] Skipping target (TargetBeforeCommand=off)");
                 }
                 
-                var commandToExecute = overrideCommand ?? line.SlashCommand;
                 Plugin.Log.Info($"[HFH] Sending command: {commandToExecute}");
                 SendChatCommand(commandToExecute);
             }
             else
             {
                 // No specific target - just execute command
-                var commandToExecute = overrideCommand ?? line.SlashCommand;
                 Plugin.Log.Info($"[HFH] Sending command: {commandToExecute}");
                 SendChatCommand(commandToExecute);
             }
