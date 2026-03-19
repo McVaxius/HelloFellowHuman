@@ -367,10 +367,10 @@ public class EmoteEngine : IDisposable
                     
                     ExecuteLine(line, commandToExecute);
                     
-                    // Start pulse animation if enabled
-                    if (line.PulseTarget)
+                    // Start glow animation if enabled
+                    if (line.GlowEnabled)
                     {
-                        StartPulseAnimation(emInstigator, line, commandToExecute, emReceivedCmd);
+                        StartGlowAnimation(emInstigator, line, commandToExecute, emReceivedCmd);
                     }
                     
                     currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
@@ -650,13 +650,13 @@ public class EmoteEngine : IDisposable
         }
     }
     
-    private void StartPulseAnimation(string playerName, EmoteLine line, string command, string receivedEmote)
+    private void StartGlowAnimation(string playerName, EmoteLine line, string command, string receivedEmote)
     {
         try
         {
-            Plugin.Log.Info($"[HFH] Starting pulse animation for {playerName} ({line.PulseStyle}, {line.WaitTimeAfter}s)");
+            Plugin.Log.Info($"[HFH] Starting glow animation for {playerName} ({line.WaitTimeAfter}s)");
             
-            // Create or update pulse animation
+            // Create or update glow animation
             activePulses[playerName] = new PulseAnimation
             {
                 PlayerName = playerName,
@@ -666,29 +666,29 @@ public class EmoteEngine : IDisposable
                 ReceivedEmote = receivedEmote
             };
             
-            // Create the actual pulse title based on line configuration
-            var pulseTitle = CreatePulseTitleFromLine(line);
-            if (pulseTitle != null)
+            // Create the actual glow title based on line configuration
+            var glowTitle = CreateGlowTitleFromLine(line);
+            if (glowTitle != null)
             {
-                Plugin.Log.Debug($"[HFH] Created pulse title: {pulseTitle.Emoji} with color {pulseTitle.Color} and glow {pulseTitle.Glow}");
+                Plugin.Log.Debug($"[HFH] Created glow title: {glowTitle.Emoji} with color {glowTitle.Color}");
             }
         }
         catch (Exception ex)
         {
-            Plugin.Log.Debug($"[HFH] Pulse animation error for {playerName}: {ex.Message}");
+            Plugin.Log.Debug($"[HFH] Glow animation error for {playerName}: {ex.Message}");
         }
     }
     
     /// <summary>
-    /// Creates a PulseTitle from an EmoteLine configuration
+    /// Creates a PulseTitle from an EmoteLine configuration (simplified)
     /// </summary>
-    private PulseTitle? CreatePulseTitleFromLine(EmoteLine line)
+    private PulseTitle? CreateGlowTitleFromLine(EmoteLine line)
     {
         try
         {
-            var pulseTitle = new PulseTitle
+            var glowTitle = new PulseTitle
             {
-                Style = line.PulseStyle,
+                Style = "glow", // Simplified - always use glow style
                 IsPrefix = true
             };
             
@@ -696,40 +696,24 @@ public class EmoteEngine : IDisposable
             if (line.TriggerType == 1 && line.TriggerEmote.ToUpperInvariant() == "COPYCAT")
             {
                 // For COPYCAT, show the received emote (will be overridden in GetPulseTitleForPlayer)
-                pulseTitle.Emoji = line.SlashCommand; // This will be replaced with actual emote
+                glowTitle.Emoji = line.SlashCommand; // This will be replaced with actual emote
             }
             else
             {
                 // Show the slash command for normal triggers
-                pulseTitle.Emoji = line.SlashCommand;
+                glowTitle.Emoji = line.SlashCommand;
             }
             
-            // Set color based on style
-            switch (line.PulseStyle)
-            {
-                case "emoji":
-                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Use configured color or default red
-                    pulseTitle.Glow = line.PulseGlow ?? new Vector3(1.0f, 0.5f, 0.5f); // Use configured glow or default pink glow
-                    break;
-                case "color":
-                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Use configured color or default red
-                    pulseTitle.Glow = Vector3.Zero; // No glow for color-only
-                    break;
-                case "both":
-                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f);
-                    pulseTitle.Glow = new Vector3(1.0f, 1.0f, 1.0f); // White glow
-                    break;
-                default:
-                    pulseTitle.Color = line.PulseColor ?? new Vector3(1.0f, 0.0f, 0.0f);
-                    pulseTitle.Glow = new Vector3(1.0f, 0.5f, 0.5f);
-                    break;
-            }
+            // Apply the selected color to both color and glow for maximum visibility
+            var selectedColor = line.GlowColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Default red if not set
+            glowTitle.Color = selectedColor;
+            glowTitle.Glow = selectedColor; // Use same color for both
             
-            return pulseTitle;
+            return glowTitle;
         }
         catch (Exception ex)
         {
-            Plugin.Log.Error($"[HFH] Error creating pulse title from line: {ex.Message}");
+            Plugin.Log.Error($"[HFH] Error creating glow title from line: {ex.Message}");
             return null;
         }
     }
@@ -752,22 +736,22 @@ public class EmoteEngine : IDisposable
                 {
                     foreach (var line in activePreset.Lines)
                     {
-                        if (line.PulseTarget && line.TriggerType == 1) // Emote lines with pulse enabled
+                        if (line.GlowEnabled && line.TriggerType == 1) // Emote lines with glow enabled
                         {
-                            // Create pulse title based on the line configuration
-                            var pulseTitle = CreatePulseTitleFromLine(line);
-                            if (pulseTitle != null)
+                            // Create glow title based on the line configuration
+                            var glowTitle = CreateGlowTitleFromLine(line);
+                            if (glowTitle != null)
                             {
                                 // Set emoji to show command or received emote
                                 if (line.TriggerEmote.ToUpperInvariant() == "COPYCAT")
                                 {
-                                    pulseTitle.Emoji = pulse.ReceivedEmote; // Show the received emote
+                                    glowTitle.Emoji = pulse.ReceivedEmote; // Show the received emote
                                 }
                                 else
                                 {
-                                    pulseTitle.Emoji = pulse.Command; // Show the command
+                                    glowTitle.Emoji = pulse.Command; // Show the command
                                 }
-                                return pulseTitle;
+                                return glowTitle;
                             }
                         }
                     }

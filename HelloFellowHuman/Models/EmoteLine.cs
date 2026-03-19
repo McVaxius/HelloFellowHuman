@@ -20,15 +20,10 @@ public class EmoteLine
     public bool TargetBeforeCommand { get; set; } = true; // If true, /target the player before executing the command
     
     // Pulse Animation Properties (from Caraxi CustomTitle)
-    public bool PulseTarget { get; set; } = false; // Enable pulse animation
+    public bool GlowEnabled { get; set; } = false; // Enable glow animation (renamed from PulseTarget)
     
     [JsonConverter(typeof(Vector3Converter))]
-    public Vector3? PulseColor { get; set; } = null; // Main color (RGB 0-1)
-    
-    [JsonConverter(typeof(Vector3Converter))]
-    public Vector3? PulseGlow { get; set; } = null; // Glow/edge color (RGB 0-1)
-    
-    public string PulseStyle { get; set; } = "emoji"; // "emoji", "color", "both"
+    public Vector3? GlowColor { get; set; } = null; // Glow color (RGB 0-1) (renamed from PulseColor)
     
     [JsonIgnore]
     public DateTime LastExecuted { get; set; } = DateTime.MinValue;
@@ -80,10 +75,8 @@ public class EmoteLine
             TriggerType = TriggerType,
             TriggerEmote = TriggerEmote,
             TargetBeforeCommand = TargetBeforeCommand,
-            PulseTarget = PulseTarget,
-            PulseColor = PulseColor,
-            PulseGlow = PulseGlow,
-            PulseStyle = PulseStyle,
+            GlowEnabled = GlowEnabled,
+            GlowColor = GlowColor,
             LastExecuted = LastExecuted
         };
     }
