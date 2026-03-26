@@ -16,7 +16,11 @@ FFXIV Dalamud plugin for automated proximity-based emote reactions.
 
 - **Preset System**: Create multiple emote presets with custom configurations
 - **Distance-Based Triggers**: Emotes trigger when specific players are within range
+- **Emote-Based Triggers**: React to incoming emotes, including `COPYCAT` mode
 - **Configurable Timing**: Set wait times and repeat intervals per emote line
+- **Pulse Titles**: Optional glow/color nameplate pulse tied to the triggering response
+- **Loop-Aware COPYCAT**: Repeated looping emotes are detected so COPYCAT can fall back instead of endlessly mirroring
+- **Media Triggers**: Use `media:`, `video:`, `audio:`, or `sound:` commands to launch local files
 - **DTR Bar Integration**: Click to toggle on/off, shows current status and active preset
 - **Slash Commands**: Full command-line control
 - **Import/Export**: Share presets via base64 encoding

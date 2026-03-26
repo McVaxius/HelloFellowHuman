@@ -546,7 +546,7 @@ public class ConfigWindow : Window, IDisposable
                     plugin.ConfigManager.SaveCurrentAccount();
                 }
                 if (ImGui.IsItemHovered())
-                    ImGui.SetTooltip("COPYCAT mode - fallback command when emote copying fails");
+                    ImGui.SetTooltip("COPYCAT mode - fallback command when emote copying fails or the incoming emote is already looping.\nUse media:, video:, audio:, or sound: to launch a local file.");
             }
             else
             {
@@ -556,6 +556,8 @@ public class ConfigWindow : Window, IDisposable
                     plugin.ConfigManager.SaveCurrentAccount();
                 }
             }
+            if (ImGui.IsItemHovered() && line.TriggerEmote != "COPYCAT")
+                ImGui.SetTooltip("Slash command to execute.\nUse media:, video:, audio:, or sound: to launch a local file relative to the plugin config folder or by full path.");
             ImGui.NextColumn();
             
             var wait = line.WaitTimeAfter;

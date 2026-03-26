@@ -4,6 +4,8 @@ using Dalamud.Plugin.Services;
 using HelloFellowHuman.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -22,6 +24,7 @@ public class PulseAnimation
     public float WaitDuration { get; set; }
     public string Command { get; set; } = string.Empty; // The command to display
     public string ReceivedEmote { get; set; } = string.Empty; // The received emote for COPYCAT
+    public PulseTitle? Title { get; set; }
     public bool IsActive => DateTime.UtcNow < StartTime.AddSeconds(WaitDuration);
 }
 
@@ -35,9 +38,11 @@ public class EmoteEngine : IDisposable
     private DateTime lastPresetLog = DateTime.MinValue;
     private bool hasLoggedWaitStart = false;
     private const float CheckInterval = 1.0f;
+    private const double LoopingEmoteWindowSeconds = 4.0;
     
-    // Queue of pending emote responses: (instigatorName, emoteId, receivedCommand)
-    private readonly Queue<(string Name, ushort EmoteId, string ReceivedCommand)> pendingEmoteResponses = new();
+    // Queue of pending emote responses: (instigatorName, emoteId, receivedCommand, alreadyLooping)
+    private readonly Queue<(string Name, ushort EmoteId, string ReceivedCommand, bool AlreadyLooping)> pendingEmoteResponses = new();
+    private readonly Dictionary<string, DateTime> recentIncomingEmotes = new(StringComparer.OrdinalIgnoreCase);
     
     // Active pulse animations by player name
     private readonly Dictionary<string, PulseAnimation> activePulses = new();
@@ -75,6 +80,8 @@ public class EmoteEngine : IDisposable
             Plugin.Log.Debug($"[HFH] No command found for emote ID {emoteId}");
             return;
         }
+
+        var isAlreadyLooping = IsAlreadyLoopingEmote(instigatorName, cmdForEmote, now);
         
         var activePreset = account.GetActivePreset();
         if (activePreset == null) 
@@ -118,6 +125,12 @@ public class EmoteEngine : IDisposable
             else if (triggerCmd != receivedCmd)
             {
                 Plugin.Log.Debug($"[HFH] Emote mismatch: trigger='{triggerCmd}' vs received='{receivedCmd}'");
+                continue;
+            }
+
+            if (isAlreadyLooping && triggerCmd != "COPYCAT")
+            {
+                Plugin.Log.Info($"[HFH] Ignoring already-looping emote '{receivedCmd}' from {instigatorName}");
                 continue;
             }
             
@@ -201,8 +214,8 @@ public class EmoteEngine : IDisposable
             }
             
             // Queue the response
-            pendingEmoteResponses.Enqueue((instigatorName, emoteId, cmdForEmote));
-            Plugin.Log.Info($"[HFH] Emote queued: {instigatorName} did {cmdForEmote}, will respond with {line.SlashCommand}");
+            pendingEmoteResponses.Enqueue((instigatorName, emoteId, cmdForEmote, isAlreadyLooping));
+            Plugin.Log.Info($"[HFH] Emote queued: {instigatorName} did {cmdForEmote}, will respond with {line.SlashCommand}, alreadyLooping={isAlreadyLooping}");
             break;
         }
     }
@@ -214,6 +227,7 @@ public class EmoteEngine : IDisposable
         
         var account = plugin.ConfigManager.GetCurrentAccount();
         if (account == null || !account.Enabled) return;
+        var currentAccount = account;
         
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
         if (localPlayer == null) return;
@@ -268,7 +282,7 @@ public class EmoteEngine : IDisposable
         if ((now - lastCheckTime).TotalSeconds < CheckInterval) return;
         lastCheckTime = now;
         
-        var activePreset = account.GetActivePreset();
+        var activePreset = currentAccount.GetActivePreset();
         if (activePreset == null || activePreset.Lines.Count == 0)
         {
             Plugin.Log.Debug("[HFH] No active preset or empty preset");
@@ -291,10 +305,10 @@ public class EmoteEngine : IDisposable
         if (pendingEmoteResponses.Count > 0)
         {
             Plugin.Log.Debug($"[HFH] Processing {pendingEmoteResponses.Count} pending emote responses");
-            var (emInstigator, emEmoteId, emReceivedCmd) = pendingEmoteResponses.Dequeue();
-            Plugin.Log.Debug($"[HFH] Dequeued emote: {emInstigator} -> {emReceivedCmd} (ID {emEmoteId})");
+            var (emInstigator, emEmoteId, emReceivedCmd, alreadyLooping) = pendingEmoteResponses.Dequeue();
+            Plugin.Log.Debug($"[HFH] Dequeued emote: {emInstigator} -> {emReceivedCmd} (ID {emEmoteId}, alreadyLooping={alreadyLooping})");
             
-            if (activePreset != null && emReceivedCmd != null)
+            if (activePreset != null)
             {
                 // Plugin.Log.Debug($"[HFH] Checking {activePreset.Lines.Count} lines for emote match: {emReceivedCmd}");
                 foreach (var line in activePreset.Lines)
@@ -353,13 +367,18 @@ public class EmoteEngine : IDisposable
                     line.ResolvedTargetName = emInstigator;
                     
                     // For COPYCAT, use the received emote command instead of the configured one
-                    var commandToExecute = triggerCmd == "COPYCAT" ? emReceivedCmd : line.SlashCommand;
-                    
-                    // Fallback logic for COPYCAT if emote copying fails
-                    if (triggerCmd == "COPYCAT" && string.IsNullOrEmpty(emReceivedCmd))
+                    string? commandToExecute;
+                    if (triggerCmd == "COPYCAT")
                     {
-                        commandToExecute = line.SlashCommand; // Use fallback
-                        Plugin.Log.Info($"[HFH] COPYCAT fallback: using fallback command '{commandToExecute}'");
+                        if (!TryResolveCopycatCommand(line, emReceivedCmd, alreadyLooping, out commandToExecute))
+                        {
+                            Plugin.Log.Info($"[HFH] COPYCAT skipped for {emInstigator} - no usable copied emote or fallback command");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        commandToExecute = line.SlashCommand;
                     }
                     
                     Plugin.Log.Info($"[HFH] Emote response: {emInstigator} did {emReceivedCmd} -> executing {commandToExecute}");
@@ -370,7 +389,7 @@ public class EmoteEngine : IDisposable
                     // Start glow animation if enabled
                     if (line.GlowEnabled)
                     {
-                        StartGlowAnimation(emInstigator, line, commandToExecute, emReceivedCmd);
+                        StartGlowAnimation(emInstigator, line, commandToExecute, emReceivedCmd, alreadyLooping);
                     }
                     
                     currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
@@ -535,6 +554,12 @@ public class EmoteEngine : IDisposable
             var commandToExecute = overrideCommand ?? line.SlashCommand;
             
             Plugin.Log.Debug($"[HFH] ExecuteLine: {line.TargetName} -> {commandToExecute}");
+
+            if (TryExecuteMediaCommand(commandToExecute))
+            {
+                Plugin.Log.Info($"[HFH] Executed media trigger: {commandToExecute}");
+                return;
+            }
             
             // Check if we need to target someone first
             if (!string.IsNullOrWhiteSpace(targetName) && targetName != "*")
@@ -642,35 +667,132 @@ public class EmoteEngine : IDisposable
             activePulses.Remove(key);
             Plugin.Log.Debug($"[HFH] Cleaned up expired pulse animation for: {key}");
         }
+
+        var staleIncomingKeys = recentIncomingEmotes
+            .Where(kvp => (now - kvp.Value).TotalSeconds > LoopingEmoteWindowSeconds * 2)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
+        foreach (var key in staleIncomingKeys)
+            recentIncomingEmotes.Remove(key);
         
         if (expiredKeys.Count > 0)
         {
             Plugin.Log.Debug($"[HFH] Cleanup complete: removed {expiredKeys.Count} expired animations, {activePulses.Count} active remaining");
         }
     }
-    
-    private void StartGlowAnimation(string playerName, EmoteLine line, string command, string receivedEmote)
+
+    private bool IsAlreadyLoopingEmote(string instigatorName, string command, DateTime now)
+    {
+        if (string.IsNullOrWhiteSpace(instigatorName) || string.IsNullOrWhiteSpace(command))
+            return false;
+
+        var key = $"{instigatorName.Trim().ToUpperInvariant()}|{command.Trim().ToUpperInvariant()}";
+        if (recentIncomingEmotes.TryGetValue(key, out var lastSeen))
+        {
+            recentIncomingEmotes[key] = now;
+            return (now - lastSeen).TotalSeconds <= LoopingEmoteWindowSeconds;
+        }
+
+        recentIncomingEmotes[key] = now;
+        return false;
+    }
+
+    private bool TryResolveCopycatCommand(EmoteLine line, string receivedCommand, bool alreadyLooping, out string commandToExecute)
+    {
+        commandToExecute = string.Empty;
+
+        if (!alreadyLooping && !string.IsNullOrWhiteSpace(receivedCommand))
+        {
+            commandToExecute = receivedCommand.Trim();
+            return true;
+        }
+
+        var fallbackCommand = (line.SlashCommand ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(fallbackCommand) || fallbackCommand == "*")
+            return false;
+
+        Plugin.Log.Info($"[HFH] COPYCAT fallback: using fallback command '{fallbackCommand}' (alreadyLooping={alreadyLooping})");
+        commandToExecute = fallbackCommand;
+        return true;
+    }
+
+    private bool TryExecuteMediaCommand(string command)
+    {
+        if (!TryParseMediaCommand(command, out var mediaPath))
+            return false;
+
+        var resolvedPath = ResolveMediaPath(mediaPath);
+        if (!File.Exists(resolvedPath))
+        {
+            Plugin.Log.Warning($"[HFH] Media trigger file not found: {resolvedPath}");
+            return true;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = resolvedPath,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error($"[HFH] Failed to launch media trigger '{resolvedPath}': {ex.Message}");
+        }
+
+        return true;
+    }
+
+    private static bool TryParseMediaCommand(string command, out string mediaPath)
+    {
+        mediaPath = string.Empty;
+        if (string.IsNullOrWhiteSpace(command))
+            return false;
+
+        foreach (var prefix in new[] { "media:", "video:", "audio:", "sound:" })
+        {
+            if (!command.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            mediaPath = command[prefix.Length..].Trim().Trim('"');
+            return !string.IsNullOrWhiteSpace(mediaPath);
+        }
+
+        return false;
+    }
+
+    private string ResolveMediaPath(string mediaPath)
+    {
+        var expanded = Environment.ExpandEnvironmentVariables(mediaPath);
+        if (Path.IsPathRooted(expanded))
+            return expanded;
+
+        return Path.GetFullPath(Path.Combine(Plugin.PluginInterface.GetPluginConfigDirectory(), expanded));
+    }
+
+    private void StartGlowAnimation(string playerName, EmoteLine line, string command, string receivedEmote, bool alreadyLooping)
     {
         try
         {
             Plugin.Log.Info($"[HFH] Starting glow animation for {playerName} ({line.WaitTimeAfter}s)");
-            
-            // Create or update glow animation
+
+            var glowTitle = CreateGlowTitleFromLine(line, GetPulseDisplayText(command, receivedEmote, alreadyLooping));
+            if (glowTitle != null)
+            {
+                Plugin.Log.Debug($"[HFH] Created glow title: {glowTitle.Emoji} with color {glowTitle.Color}");
+            }
+
             activePulses[playerName] = new PulseAnimation
             {
                 PlayerName = playerName,
                 StartTime = DateTime.UtcNow,
                 WaitDuration = line.WaitTimeAfter,
                 Command = command,
-                ReceivedEmote = receivedEmote
+                ReceivedEmote = receivedEmote,
+                Title = glowTitle
             };
-            
-            // Create the actual glow title based on line configuration
-            var glowTitle = CreateGlowTitleFromLine(line);
-            if (glowTitle != null)
-            {
-                Plugin.Log.Debug($"[HFH] Created glow title: {glowTitle.Emoji} with color {glowTitle.Color}");
-            }
         }
         catch (Exception ex)
         {
@@ -681,7 +803,18 @@ public class EmoteEngine : IDisposable
     /// <summary>
     /// Creates a PulseTitle from an EmoteLine configuration (simplified)
     /// </summary>
-    private PulseTitle? CreateGlowTitleFromLine(EmoteLine line)
+    private string GetPulseDisplayText(string command, string receivedEmote, bool alreadyLooping)
+    {
+        if (!alreadyLooping && !string.IsNullOrWhiteSpace(receivedEmote))
+            return receivedEmote;
+
+        if (TryParseMediaCommand(command, out var mediaPath))
+            return Path.GetFileNameWithoutExtension(mediaPath);
+
+        return command;
+    }
+
+    private PulseTitle? CreateGlowTitleFromLine(EmoteLine line, string displayText)
     {
         try
         {
@@ -692,16 +825,7 @@ public class EmoteEngine : IDisposable
             };
             
             // Set emoji based on trigger - show command or emote
-            if (line.TriggerType == 1 && line.TriggerEmote.ToUpperInvariant() == "COPYCAT")
-            {
-                // For COPYCAT, show the received emote (will be overridden in GetPulseTitleForPlayer)
-                glowTitle.Emoji = line.SlashCommand; // This will be replaced with actual emote
-            }
-            else
-            {
-                // Show the slash command for normal triggers
-                glowTitle.Emoji = line.SlashCommand;
-            }
+            glowTitle.Emoji = displayText;
             
             // Apply the selected color to both color and glow for maximum visibility
             var selectedColor = line.GlowColor ?? new Vector3(1.0f, 0.0f, 0.0f); // Default red if not set
@@ -726,44 +850,15 @@ public class EmoteEngine : IDisposable
     {
         if (activePulses.TryGetValue(playerName, out var pulse))
         {
-            // Find the emote line that created this pulse to get its configuration
-            var account = plugin.ConfigManager.GetCurrentAccount();
-            if (account != null)
-            {
-                var activePreset = account.GetActivePreset();
-                if (activePreset != null)
-                {
-                    foreach (var line in activePreset.Lines)
-                    {
-                        if (line.GlowEnabled && line.TriggerType == 1) // Emote lines with glow enabled
-                        {
-                            // Create glow title based on the line configuration
-                            var glowTitle = CreateGlowTitleFromLine(line);
-                            if (glowTitle != null)
-                            {
-                                // Set emoji to show command or received emote
-                                if (line.TriggerEmote.ToUpperInvariant() == "COPYCAT")
-                                {
-                                    glowTitle.Emoji = pulse.ReceivedEmote; // Show the received emote
-                                }
-                                else
-                                {
-                                    glowTitle.Emoji = pulse.Command; // Show the command
-                                }
-                                return glowTitle;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Fallback to basic pulse title if no line found
+            if (pulse.Title != null)
+                return pulse.Title;
+
             var displayText = string.IsNullOrEmpty(pulse.ReceivedEmote) ? pulse.Command : pulse.ReceivedEmote;
             return new PulseTitle
             {
                 Emoji = displayText,
-                Color = new Vector3(1.0f, 0.0f, 0.0f), // Default red
-                Glow = new Vector3(1.0f, 0.5f, 0.5f),  // Default pink glow
+                Color = new Vector3(1.0f, 0.0f, 0.0f),
+                Glow = new Vector3(1.0f, 0.5f, 0.5f),
                 Style = "emoji"
             };
         }
