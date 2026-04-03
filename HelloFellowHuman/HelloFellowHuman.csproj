@@ -3,14 +3,14 @@
 <Project Sdk="Dalamud.NET.Sdk/14.0.2">
 
   <PropertyGroup>
-    <Version>0.0.0.31</Version>
+    <Version>0.0.0.32</Version>
     <PackageProjectUrl>https://github.com/McVaxius/HelloFellowHuman</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="images\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="images\icon.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
