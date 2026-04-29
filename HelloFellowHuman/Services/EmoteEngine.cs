@@ -515,7 +515,7 @@ public class EmoteEngine : IDisposable
         var cleanName = name.Trim();
         foreach (var obj in Plugin.ObjectTable)
         {
-            if (obj.ObjectKind == Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player)
+            if (obj.ObjectKind == Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Pc)
             {
                 var pcName = obj.Name.TextValue;
                 if (pcName.Equals(cleanName, StringComparison.OrdinalIgnoreCase))
@@ -533,7 +533,7 @@ public class EmoteEngine : IDisposable
         
         foreach (var obj in Plugin.ObjectTable)
         {
-            if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player) continue;
+            if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Pc) continue;
             if (obj.GameObjectId == localPlayer?.GameObjectId) continue;
             
             var dist = Vector3.Distance(playerPos, obj.Position);
