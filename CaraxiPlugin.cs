@@ -163,7 +163,7 @@ public unsafe class Plugin : IDalamudPlugin {
         SeString? GetString(int index) {
             var atkValues = new ReadOnlySpan<AtkValue>(atkUnitBase->AtkValues, atkUnitBase->AtkValuesCount);
             if (atkValues.Length <= index) return null;
-            if (atkValues[index].Type is not (ValueType.String or ValueType.String8 or ValueType.ManagedString)) return null;
+            if (atkValues[index].Type is not (ValueType.String or ValueType.ConstString or ValueType.ManagedString)) return null;
             return MemoryHelper.ReadSeStringNullTerminated(new nint(atkValues[index].String));
         }
 
