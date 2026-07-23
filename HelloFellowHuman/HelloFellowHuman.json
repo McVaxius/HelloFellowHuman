@@ -1,18 +1,19 @@
 {
   "Author": "DhogGPT",
   "Name": "Hello Fellow Human",
-  "Punchline": "Automated proximity-based emote reactions.",
-  "Description": "Configure emote responses that trigger when specific players are nearby. Perfect for passive RP automation. Use /hfh to configure.",
+  "Punchline": "Build proximity and emote-triggered reactions for nearby players.",
+  "Description": "Create presets of automatic reactions that run when a specific or any nearby player enters range or performs an emote. Choose the response command, timing, cooldown, distance, weather, targeting, and optional nameplate glow; COPYCAT can mirror incoming emotes, and advanced rules can launch local media. Use /hfh or the guided setup wizard to configure.",
   "InternalName": "HelloFellowHuman",
   "ApplicableVersion": "any",
   "Tags": [
     "emote",
     "automation",
-    "rp",
-    "proximity"
+    "social",
+    "proximity",
+    "roleplay"
   ],
   "DalamudApiLevel": 15,
   "LoadPriority": 0,
   "IconUrl": "https://raw.githubusercontent.com/McVaxius/HelloFellowHuman/refs/heads/master/HelloFellowHuman/images/icon.png",
-  "AssemblyVersion": "1.0.0.4"
+  "AssemblyVersion": "1.0.0.5"
 }

@@ -53,7 +53,7 @@ public class ConfigManager
         return null;
     }
 
-    public void EnsureAccountSelected(ulong contentId, string? aliasHint = null)
+    public bool EnsureAccountSelected(ulong contentId, string? aliasHint = null)
     {
         if (contentId == 0)
         {
@@ -61,7 +61,7 @@ public class ConfigManager
             if (accounts.Count > 0)
             {
                 CurrentAccountId = accounts.Keys.First();
-                return;
+                return false;
             }
 
             var fallbackId = Guid.NewGuid().ToString("N")[..8];
@@ -74,10 +74,11 @@ public class ConfigManager
             accounts[fallbackId] = fallbackAccount;
             CurrentAccountId = fallbackId;
             SaveAccount(fallbackId);
-            return;
+            return false;
         }
 
         var accountId = contentId.ToString("X");
+        var createdNewAccount = false;
         log.Information($"[HFH] EnsureAccountSelected: ContentId={contentId:X16}, AccountId={accountId}");
 
         if (!accounts.TryGetValue(accountId, out var account))
@@ -118,6 +119,7 @@ public class ConfigManager
                 account.Initialize();
                 accounts[accountId] = account;
                 SaveAccount(accountId);
+                createdNewAccount = true;
                 log.Information($"[HFH] Created account {accountId} ({account.AccountAlias})");
             }
         }
@@ -128,16 +130,17 @@ public class ConfigManager
         }
 
         CurrentAccountId = accountId;
+        return createdNewAccount;
     }
 
     /// <summary>
     /// Migrate presets from legacy Configuration into the current account.
     /// Only runs once (when account has no presets but Configuration does).
     /// </summary>
-    public void MigrateFromLegacyConfig(Configuration legacyConfig)
+    public bool MigrateFromLegacyConfig(Configuration legacyConfig)
     {
         var account = GetCurrentAccount();
-        if (account == null) return;
+        if (account == null) return false;
 
         // Only migrate if account has default/empty presets and legacy has real data
         if (account.Presets.Count <= 1 && legacyConfig.Presets.Count > 0)
@@ -154,8 +157,11 @@ public class ConfigManager
                 account.Enabled = legacyConfig.Enabled;
                 SaveCurrentAccount();
                 log.Information($"[HFH] Migrated {legacyConfig.Presets.Count} presets from legacy config to account {account.AccountId}");
+                return true;
             }
         }
+
+        return false;
     }
 
     public void SaveCurrentAccount()

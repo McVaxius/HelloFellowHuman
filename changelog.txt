@@ -1,0 +1,4 @@
+2026-07-22
+- Added a five-stage guided setup and add-rule wizard with draft-only cancel/close behavior.
+- Added automatic first-time setup for genuinely new accounts, guided editor buttons, and /hfh wizard and /hfh setup aliases.
+- Refreshed installer, README, and Aethertek descriptions for the plugin's current trigger, tuning, COPYCAT, glow, preset, and optional local-media features.

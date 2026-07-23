@@ -49,6 +49,14 @@ public class ConfigWindow : Window, IDisposable
         // UNIQUE MARKER: This should appear in logs if new DLL is loaded
         // Plugin.Log.Debug("[HFH] NEW DLL LOADED - If you see this, the fix is working");
         
+        ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.35f, 0.20f, 0.65f, 1.0f));
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.48f, 0.30f, 0.82f, 1.0f));
+        if (ImGui.Button("Guided Setup", new Vector2(180, 0)))
+            plugin.OpenSetupWizard(SetupWizardMode.Setup, selectedPresetIndex);
+        ImGui.PopStyleColor(2);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Create a reaction with a plain-language guided wizard");
+
         // Ko-fi donation button in upper right
         ImGui.SameLine(ImGui.GetWindowWidth() - 120);
         if (ImGui.SmallButton("\u2661 Ko-fi \u2661"))
@@ -707,7 +715,8 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Columns(1);
         ImGui.Separator();
         
-        if (ImGui.Button("+##addline", new Vector2(-1, 0)))
+        var addButtonWidth = (ImGui.GetContentRegionAvail().X - ImGui.GetStyle().ItemSpacing.X) / 2.0f;
+        if (ImGui.Button("+ Add Blank Rule", new Vector2(addButtonWidth, 0)))
         {
             preset.Lines.Add(new EmoteLine
             {
@@ -721,6 +730,10 @@ public class ConfigWindow : Window, IDisposable
             });
             plugin.ConfigManager.SaveCurrentAccount();
         }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Add Rule with Wizard", new Vector2(-1, 0)))
+            plugin.OpenSetupWizard(SetupWizardMode.AddRule, selectedPresetIndex);
     }
     
     public void Dispose()

@@ -1,91 +1,66 @@
 # Hello Fellow Human
 
+Build proximity and emote-triggered reactions for nearby players in FINAL FANTASY XIV. Hello Fellow Human lets you create presets of automatic social or roleplay responses without replacing the game’s normal emote and command systems.
 
----
+[Visit Aethertek for plugins and guides](https://aethertek.io/) · [Support development on Ko-fi](https://ko-fi.com/mcvaxius)
 
-**Help fund my AI overlords' coffee addiction so they can keep generating more plugins instead of taking over the world**
+## Installation
 
-[☕ Support development on Ko-fi](https://ko-fi.com/mcvaxius)
+Add this custom repository in Dalamud:
 
-[XA and I have created some Plugins and Guides here at -> aethertek.io](https://aethertek.io/)
-### Repo URL:
-```
+```text
 https://aethertek.io/x.json
 ```
 
----
+Then install **Hello Fellow Human** from the plugin installer.
 
-   ```
-   https://raw.githubusercontent.com/McVaxius/TheDumpsterFire/refs/heads/master/repo.json
-   ```
-FFXIV Dalamud plugin for automated proximity-based emote reactions.
+## Guided quick start
+
+1. Run `/hfh wizard` or `/hfh setup`, or select **Guided Setup** in the config window.
+2. Choose the destination preset and whether Setup mode should enable the account when finished.
+3. Choose a proximity trigger, one incoming emote, or `COPYCAT`, then choose any nearby player or a specific player.
+4. Enter the response command. A `COPYCAT` rule can leave its fallback command blank.
+5. Review timing, cooldown, range, weather, targeting, and optional nameplate glow, then select **Finish**.
+
+The wizard keeps its work in a draft. Back preserves the draft, while Cancel or closing the window leaves the configuration unchanged. Finish adds one editable rule to the chosen preset. The untouched `DEFAULT PRESET` example is replaced instead of leaving an extra sample row.
 
 ## Features
 
-- **Preset System**: Create multiple emote presets with custom configurations
-- **Distance-Based Triggers**: Emotes trigger when specific players are within range
-- **Emote-Based Triggers**: React to incoming emotes, including `COPYCAT` mode
-- **Configurable Timing**: Set wait times and repeat intervals per emote line
-- **Pulse Titles**: Optional glow/color nameplate pulse tied to the triggering response
-- **Loop-Aware COPYCAT**: Repeated looping emotes are detected so COPYCAT can fall back instead of endlessly mirroring
-- **Media Triggers**: Use `media:`, `video:`, `audio:`, or `sound:` commands to launch local files
-- **DTR Bar Integration**: Click to toggle on/off, shows current status and active preset
-- **Slash Commands**: Full command-line control
-- **Import/Export**: Share presets via base64 encoding
+- **Proximity reactions:** Respond when a specific player or any nearby player enters a configurable range.
+- **Incoming-emote reactions:** Respond when a selected emote is performed nearby, with a separate emote-detection range.
+- **COPYCAT:** Mirror incoming emotes and optionally use a fallback command when an emote cannot be mirrored or is already looping.
+- **Presets:** Keep multiple rule sets, switch the active preset, and import or export presets as base64 text.
+- **Per-rule tuning:** Configure wait time, cooldown, proximity or emote range, weather, and whether to target the triggering player before running the command.
+- **Optional nameplate glow:** Apply a temporary color effect to the triggering player when a rule runs.
+- **Advanced media commands:** Advanced rules can use `media:`, `video:`, `audio:`, or `sound:` to launch a local file by full path or relative to the plugin config folder.
+- **DTR integration:** Show plugin status and the active preset, and click the entry to toggle the current account on or off.
+- **Guided and advanced editing:** Use the wizard for a plain-language setup or the existing table editor for direct control of every rule.
 
-## Usage
+## Commands
 
-### Opening the Config
-- `/hfh` - Toggle config window
-- Right-click DTR bar entry
+- `/hfh` — Toggle the advanced config window.
+- `/hfh wizard` or `/hfh setup` — Open Guided Setup.
+- `/hfh on` or `/hfh enable` — Enable reactions for the current account.
+- `/hfh off` or `/hfh disable` — Disable reactions for the current account.
+- `/hfh preset <id>` — Switch the active preset by its displayed numeric ID.
 
-### Enabling/Disabling
-- `/hfh on` or `/hfh enable` - Enable the plugin
-- `/hfh off` or `/hfh disable` - Disable the plugin
-- Left-click DTR bar entry - Toggle on/off
+## Advanced editor
 
-### Preset Management
-- `/hfh preset <id>` - Switch to preset by cardinality (0, 1, 2, etc.)
-- Use the config UI to create, delete, and edit presets
+The **Presets** tab keeps the existing table editor for users who want direct control. Select a preset to make it active, use **Add Blank Rule** for an empty row, or use **Add Rule with Wizard** to build a validated row for that preset.
 
-## Configuration
+Each rule can define:
 
-### Left Panel
-- **New**: Create a new preset (uses DEFAULT PRESET as template)
-- **Delete**: Hold CTRL and click to delete selected preset (DEFAULT PRESET cannot be deleted)
-- **Preset List**: Click to select, shows cardinality [0], [1], etc.
+- proximity or incoming-emote trigger type;
+- any-player or specific-player audience;
+- response command and, for `COPYCAT`, an optional fallback;
+- wait time and cooldown;
+- proximity distance or incoming-emote range;
+- weather requirement;
+- target-before-command behavior; and
+- optional nameplate glow and color.
 
-### Right Panel
-- **Export**: Copy preset to clipboard as base64
-- **Import**: Paste base64 preset to load
-- **Reset Default**: (DEFAULT PRESET only) Reset to factory defaults
+Invalid rows appear in red and are ignored by the runtime engine until corrected. The advanced editor also provides preset import/export and a reset action for `DEFAULT PRESET`.
 
-### Emote Lines
-Each line has 5 fields:
-1. **Name**: Target player name (without @server)
-2. **Emote**: Slash command to execute (e.g., `/wave`, `/bow`)
-3. **Wait**: Seconds to wait after executing this emote
-4. **Repeat**: Seconds before this emote can trigger again
-5. **Distance**: Maximum distance (yalms) to trigger
+## Safety and scope
 
-Lines show in **red** if incomplete/invalid and won't be saved until properly filled.
-
-## How It Works
-
-1. Every second, the plugin checks all valid emote lines in the active preset
-2. For each line, it checks if the target player is within distance
-3. If the repeat interval has elapsed since last execution, the line becomes valid
-4. When multiple lines are valid, one is chosen randomly
-5. The plugin targets the player, executes the slash command, then waits
-6. No other emotes execute until the wait time expires
-
-## Technical Notes
-
-- Uses `ICommandManager.ProcessCommand()` for slash commands (learned from FrenRider)
-- Distance calculation via `Vector3.Distance()` between player positions
-- Randomized execution order prevents predictable patterns
-- Per-line cooldown tracking ensures repeat intervals are respected
-- Global wait state prevents spam
-
-## Version
-0.0.0.1
+Hello Fellow Human runs configured reactions through the existing plugin rule engine. Local media commands open files on the same computer, so use only paths and preset imports you trust. Configuration is stored per account; guided Add Rule mode never changes account enablement.

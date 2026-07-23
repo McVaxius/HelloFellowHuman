@@ -77,12 +77,14 @@ public sealed unsafe class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("HelloFellowHuman");
     
     private ConfigWindow ConfigWindow { get; init; }
+    private SetupWizardWindow SetupWizardWindow { get; init; }
     private EmoteEngine EmoteEngine { get; init; }
     public EmoteDetectionService EmoteDetectionService { get; init; }
     public WeatherService WeatherService { get; init; }
     private IDtrBarEntry? DtrEntry { get; set; }
     private bool wasLoggedIn;
     private int loginDetectionDelay;
+    private readonly bool hadStoredPluginConfiguration;
     
     // Track applied pulse titles to prevent spam and enable cleanup
     private readonly Dictionary<ulong, string> appliedTitles = new();
@@ -102,7 +104,9 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     public Plugin()
     {
-        Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        var storedConfiguration = PluginInterface.GetPluginConfig() as Configuration;
+        hadStoredPluginConfiguration = storedConfiguration != null;
+        Configuration = storedConfiguration ?? new Configuration();
         Configuration.Initialize();
         
         ConfigManager = new ConfigManager(PluginInterface, Log);
@@ -110,11 +114,13 @@ public sealed unsafe class Plugin : IDalamudPlugin
             ConfigManager.CurrentAccountId = Configuration.LastAccountId;
         
         ConfigWindow = new ConfigWindow(this);
+        SetupWizardWindow = new SetupWizardWindow(this);
         WindowSystem.AddWindow(ConfigWindow);
+        WindowSystem.AddWindow(SetupWizardWindow);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Toggle Hello Fellow Human config window. Use '/hfh on|off|enable|disable' to toggle plugin. Use '/hfh preset <id>' to select preset."
+            HelpMessage = "Toggle Hello Fellow Human config. Use '/hfh wizard' or '/hfh setup' for guided setup, '/hfh on|off' to toggle, or '/hfh preset <id>' to select a preset."
         });
 
         PluginInterface.UiBuilder.Draw += DrawUI;
@@ -211,11 +217,14 @@ public sealed unsafe class Plugin : IDalamudPlugin
             {
                 var contentId = PlayerState.ContentId;
                 Log.Info($"[HFH] OnLogin: Character={charName}@{worldName}, ContentId={contentId:X16}");
-                ConfigManager.EnsureAccountSelected(contentId, charName);
-                ConfigManager.MigrateFromLegacyConfig(Configuration);
+                var createdNewAccount = ConfigManager.EnsureAccountSelected(contentId, charName);
+                var migratedFromLegacy = hadStoredPluginConfiguration && ConfigManager.MigrateFromLegacyConfig(Configuration);
                 Configuration.LastAccountId = ConfigManager.CurrentAccountId;
                 SaveConfig();
                 Log.Info($"[HFH] Account selected: {ConfigManager.CurrentAccountId}");
+
+                if (createdNewAccount && !migratedFromLegacy)
+                    OpenSetupWizard(SetupWizardMode.Setup);
             }
         }
         catch (Exception ex)
@@ -255,6 +264,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         ClientState.Login -= OnLoginEvent;
         WindowSystem.RemoveAllWindows();
         ConfigWindow.Dispose();
+        SetupWizardWindow.Dispose();
         EmoteEngine.Dispose();
         EmoteDetectionService.Dispose();
         
@@ -273,6 +283,12 @@ public sealed unsafe class Plugin : IDalamudPlugin
         if (string.IsNullOrEmpty(argLower))
         {
             ToggleConfigUI();
+            return;
+        }
+
+        if (argLower == "wizard" || argLower == "setup")
+        {
+            OpenSetupWizard(SetupWizardMode.Setup);
             return;
         }
         
@@ -327,6 +343,9 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private void DrawUI() => WindowSystem.Draw();
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
+
+    internal void OpenSetupWizard(SetupWizardMode mode, int? presetIndex = null)
+        => SetupWizardWindow.Open(mode, presetIndex);
     
     public void SaveConfig()
     {
