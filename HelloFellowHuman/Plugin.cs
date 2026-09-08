@@ -66,9 +66,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     // Nameplate hook from Caraxi's pattern
     [Signature("40 53 55 57 41 56 48 81 EC ?? ?? ?? ?? 48 8B 84 24", DetourName = nameof(UpdateNameplateDetour))]
-    private Hook<UpdateNameplateDelegate>? updateNameplateHook;
-
-    private delegate void* UpdateNameplateDelegate(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex);
+    private Hook<RaptureAtkModule.Delegates.UpdateBattleCharaNameplates>? updateNameplateHook;
 
     private const string CommandName = "/hfh";
     
@@ -260,6 +258,9 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     public void Dispose()
     {
+        updateNameplateHook?.Dispose();
+        PluginInterface.UiBuilder.Draw -= DrawUI;
+        PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUI;
         Framework.Update -= OnFrameworkUpdate;
         ClientState.Login -= OnLoginEvent;
         WindowSystem.RemoveAllWindows();
@@ -356,7 +357,13 @@ public sealed unsafe class Plugin : IDalamudPlugin
     /// <summary>
     /// Nameplate hook detour for pulse animation (based on Caraxi's pattern)
     /// </summary>
-    public void* UpdateNameplateDetour(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex)
+    public int UpdateNameplateDetour(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex)
+    {
+        ApplyPulseTitle(namePlateInfo, battleChara);
+        return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+    }
+
+    private void ApplyPulseTitle(RaptureAtkModule.NamePlateInfo* namePlateInfo, BattleChara* battleChara)
     {
         try
         {
@@ -364,7 +371,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
             var now = DateTime.UtcNow;
             if ((now - lastHookCall).TotalMilliseconds < hookCallInterval)
             {
-                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+                return;
             }
             lastHookCall = now;
             
@@ -372,7 +379,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
             var currentAccount = ConfigManager.GetCurrentAccount();
             if (currentAccount == null || !currentAccount.Enabled) 
             {
-                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+                return;
             }
             
             // Skip during certain game states to prevent issues
@@ -389,19 +396,19 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 {
                     Log.Debug("[HFH] Game state prevents hook, returning early");
                 }
-                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+                return;
             }
 
             // Only process player nameplates
             if (battleChara == null) 
-                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+                return;
             
             var gameObject = &battleChara->Character.GameObject;
             var playerName = battleChara->NameString.ToString();
             
             // Only process ObjectKind.Pc with SubKind=4 (player characters)
             if (gameObject->ObjectKind != FFXIVClientStructs.FFXIV.Client.Game.Object.ObjectKind.Pc || gameObject->SubKind != 4)
-                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+                return;
             
             // Check for pulse animation
             var pulseTitle = EmoteEngine.GetPulseTitleForPlayer(playerName);
@@ -413,7 +420,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
                     appliedTitles.Remove(battleChara->EntityId);
                     Log.Debug($"[HFH] Restored original title for {playerName}");
                 }
-                return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
+                return;
             }
             
             // Apply pulse title without spamming logs every frame
@@ -449,7 +456,5 @@ public sealed unsafe class Plugin : IDalamudPlugin
         {
             Log.Error($"[HFH] Error in nameplate hook: {ex.Message}");
         }
-        
-        return updateNameplateHook!.Original(raptureAtkModule, namePlateInfo, numArray, stringArray, battleChara, numArrayIndex, stringArrayIndex);
     }
 }

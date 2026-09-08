@@ -1,3 +1,7 @@
+2026-09-08
+- Corrected the nameplate hook to use the generated integer-returning delegate and call the original exactly once.
+- Dispose the nameplate hook before dependent services and unsubscribe UI handlers on unload.
+
 2026-07-22
 - Added a five-stage guided setup and add-rule wizard with draft-only cancel/close behavior.
 - Added automatic first-time setup for genuinely new accounts, guided editor buttons, and /hfh wizard and /hfh setup aliases.
