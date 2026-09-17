@@ -1,3 +1,7 @@
+2026-09-17
+- Follow stable Dalamud in all GitHub build workflows using latest.zip and setup-dalamud's release branch. Plugin versions, action versions, and release behavior are unchanged.
+- Verified workflow YAML and run-block syntax, both existing Release x64 build command variants against Dalamud 15.0.3.5, and nonempty ZIP/JSON packages at version 1.0.0.7. Builds pass with the existing CS8603 and CS0649 warnings. GitHub verification awaits publication.
+
 2026-09-08
 - Corrected the nameplate hook to use the generated integer-returning delegate and call the original exactly once.
 - Dispose the nameplate hook before dependent services and unsubscribe UI handlers on unload.
