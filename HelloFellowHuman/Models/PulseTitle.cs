@@ -7,7 +7,7 @@ using SeStringBuilder = Lumina.Text.SeStringBuilder;
 namespace HelloFellowHuman.Models
 {
     /// <summary>
-    /// Simplified title generator based on Caraxi's CustomTitle pattern
+    /// Simplified title generator based on Honorific (Caraxi)'s CustomTitle pattern
     /// Used for pulse animation with color and glow effects
     /// </summary>
     public class PulseTitle
@@ -21,19 +21,19 @@ namespace HelloFellowHuman.Models
         public bool IncludeQuotes { get; set; } = false; // No quotes for pulse animation
 
         /// <summary>
-        /// Convert to SeString with color and glow effects (Caraxi's method)
+        /// Convert to SeString with color and glow effects using Honorific (Caraxi)'s method
         /// </summary>
         public SeString ToSeString()
         {
             var builder = new SeStringBuilder();
             
-            // Add color payload if color is specified (Caraxi pattern)
+            // Add color payload if color is specified, following Honorific (Caraxi)
             if (Color.HasValue)
             {
                 builder.PushColorRgba(new Vector4(Color.Value, 1));
             }
             
-            // Add glow payload if glow is specified (Caraxi pattern)
+            // Add glow payload if glow is specified, following Honorific (Caraxi)
             if (Glow.HasValue)
             {
                 builder.PushEdgeColorRgba(new Vector4(Glow.Value, 1));
@@ -42,7 +42,7 @@ namespace HelloFellowHuman.Models
             // Add the emoji/icon
             builder.Append(Emoji);
             
-            // Close glow and color payloads in reverse order (Caraxi pattern)
+            // Close glow and color payloads in reverse order, following Honorific (Caraxi)
             if (Glow.HasValue)
             {
                 builder.PopEdgeColor();
@@ -78,7 +78,7 @@ namespace HelloFellowHuman.Models
         }
         
         /// <summary>
-        /// Convert Vector3 color to hex string (based on Caraxi's pattern)
+        /// Convert Vector3 color to hex string based on Honorific (Caraxi)'s pattern
         /// </summary>
         public static string ColorToHex(Vector3? color)
         {

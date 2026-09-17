@@ -19,7 +19,7 @@ public class EmoteLine
     public string TriggerEmote { get; set; } = string.Empty; // e.g. "/wave" - the emote that triggers this response
     public bool TargetBeforeCommand { get; set; } = true; // If true, /target the player before executing the command
     
-    // Pulse Animation Properties (from Caraxi CustomTitle)
+    // Pulse Animation Properties from Honorific (Caraxi)'s CustomTitle
     public bool GlowEnabled { get; set; } = false; // Enable glow animation (renamed from PulseTarget)
     
     [JsonConverter(typeof(Vector3Converter))]

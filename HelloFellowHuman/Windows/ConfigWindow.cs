@@ -834,7 +834,7 @@ public class ConfigWindow : Window, IDisposable
     private const string IconGuideUrl = "https://na.finalfantasyxiv.com/lodestone/character/22423564/blog/4393835";
 
     /// <summary>
-    /// Color picker based on Caraxi's DrawColorPicker method with proper state management
+    /// Color picker based on Honorific (Caraxi)'s DrawColorPicker method with proper state management
     /// </summary>
     private bool DrawColorPicker(string id, ref Vector3? color, bool readOnly = false)
     {

@@ -64,7 +64,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] internal static ICondition Condition { get; private set; } = null!;
 
-    // Nameplate hook from Caraxi's pattern
+    // Nameplate hook from Honorific (Caraxi)'s pattern
     [Signature("40 53 55 57 41 56 48 81 EC ?? ?? ?? ?? 48 8B 84 24", DetourName = nameof(UpdateNameplateDetour))]
     private Hook<RaptureAtkModule.Delegates.UpdateBattleCharaNameplates>? updateNameplateHook;
 
@@ -355,7 +355,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     }
 
     /// <summary>
-    /// Nameplate hook detour for pulse animation (based on Caraxi's pattern)
+    /// Nameplate hook detour for pulse animation based on Honorific (Caraxi)'s pattern
     /// </summary>
     public int UpdateNameplateDetour(RaptureAtkModule* raptureAtkModule, RaptureAtkModule.NamePlateInfo* namePlateInfo, NumberArrayData* numArray, StringArrayData* stringArray, BattleChara* battleChara, int numArrayIndex, int stringArrayIndex)
     {
@@ -434,7 +434,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 // Always apply the title since SeString encoding is working
                 try
                 {
-                    // Set the title as prefix (Caraxi pattern)
+                    // Set the title as prefix, following Honorific (Caraxi)
                     namePlateInfo->DisplayTitle.SetString(titleBytes);
                     namePlateInfo->IsPrefix = true;
                     namePlateInfo->IsDirty = true;

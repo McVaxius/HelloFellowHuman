@@ -1,4 +1,5 @@
 2026-09-17
+- Removed the unused Honorific source reference copy and clarified Honorific (Caraxi) attribution comments. Runtime behavior and plugin version are unchanged.
 - Follow stable Dalamud in all GitHub build workflows using latest.zip and setup-dalamud's release branch. Plugin versions, action versions, and release behavior are unchanged.
 - Verified workflow YAML and run-block syntax, both existing Release x64 build command variants against Dalamud 15.0.3.5, and nonempty ZIP/JSON packages at version 1.0.0.7. Builds pass with the existing CS8603 and CS0649 warnings. GitHub verification awaits publication.
 
