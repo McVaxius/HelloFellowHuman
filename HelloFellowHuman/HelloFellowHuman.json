@@ -15,5 +15,5 @@
   "DalamudApiLevel": 15,
   "LoadPriority": 0,
   "IconUrl": "https://raw.githubusercontent.com/McVaxius/HelloFellowHuman/refs/heads/master/HelloFellowHuman/images/icon.png",
-  "AssemblyVersion": "1.0.0.6"
+  "AssemblyVersion": "1.0.0.7"
 }
