@@ -1,3 +1,6 @@
+2026-10-01
+- Build only the plugin project in GitHub Actions so test and regression projects do not block production artifacts.
+
 2026-09-17
 - Removed the unused Honorific source reference copy and clarified Honorific (Caraxi) attribution comments. Runtime behavior and plugin version are unchanged.
 - Follow stable Dalamud in all GitHub build workflows using latest.zip and setup-dalamud's release branch. Plugin versions, action versions, and release behavior are unchanged.

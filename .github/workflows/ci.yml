@@ -26,10 +26,10 @@ jobs:
           branch: release
 
       - name: Restore
-        run: dotnet restore .\HelloFellowHuman.sln
+        run: dotnet restore .\HelloFellowHuman\HelloFellowHuman.csproj
 
       - name: Build (Release)
-        run: dotnet build .\HelloFellowHuman.sln -c Release --no-restore -p:Platform=x64
+        run: dotnet build .\HelloFellowHuman\HelloFellowHuman.csproj -c Release --no-restore -p:Platform=x64
 
       - name: Upload packaged plugin zip
         uses: actions/upload-artifact@v4

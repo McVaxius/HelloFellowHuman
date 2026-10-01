@@ -9,7 +9,6 @@ on:
 
 env:
   PLUGIN_NAME: HelloFellowHuman
-  SOLUTION_NAME: HelloFellowHuman
   INTERNAL_NAME: HelloFellowHuman
   RELEASE_DIR: HelloFellowHuman\bin\x64\Release\HelloFellowHuman
 
@@ -34,8 +33,8 @@ jobs:
 
       - name: Build
         run: |
-          dotnet restore -r win ${{ env.SOLUTION_NAME }}.sln
-          dotnet build ${{ env.SOLUTION_NAME }}.sln --configuration Release -p:Platform=x64
+          dotnet restore -r win HelloFellowHuman/HelloFellowHuman.csproj
+          dotnet build HelloFellowHuman/HelloFellowHuman.csproj --configuration Release -p:Platform=x64
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: true
 
