@@ -1,4 +1,7 @@
 using Dalamud.Bindings.ImGui;
+using AethertekUI;
+using AethertekUI.Dalamud;
+using HelloFellowHuman.Ui;
 using Dalamud.Interface.Windowing;
 using HelloFellowHuman.Models;
 using HelloFellowHuman.Services;
@@ -42,6 +45,7 @@ internal sealed class SetupWizardDraft
 
 internal sealed class SetupWizardWindow : Window, IDisposable
 {
+    private readonly MaterialWindowMotion windowMotion = new();
     private const int StageCount = 5;
 
     private readonly Plugin plugin;
@@ -54,6 +58,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
         : base("Hello Fellow Human Guided Setup###HFHSetupWizard")
     {
         this.plugin = plugin;
+        Flags |= ImGuiWindowFlags.HorizontalScrollbar;
         Size = new Vector2(680, 520);
         SizeCondition = ImGuiCond.FirstUseEver;
     }
@@ -84,21 +89,27 @@ internal sealed class SetupWizardWindow : Window, IDisposable
         IsOpen = true;
     }
 
+    public override void PreDraw() => windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+
+    public override void PostDraw() => windowMotion.Restore(this);
+
     public override void Draw()
     {
+        windowMotion.DrawChrome();
+        UiGui.Title("Hello Fellow Human Guided Setup", "Hello Fellow Human — " + UiText.T("Guided Setup"));
         var account = plugin.ConfigManager.GetCurrentAccount();
         if (draft == null || account == null || account.Presets.Count == 0)
         {
-            ImGui.TextWrapped("Log in and select an account before using guided setup.");
-            if (ImGui.Button("Close"))
+            UiGui.TextWrapped("Log in and select an account before using guided setup.");
+            if (UiGui.Button("Close"))
                 DiscardAndClose();
             return;
         }
 
-        ImGui.Text(mode == SetupWizardMode.Setup ? "Guided Setup" : "Add Rule with Wizard");
+        UiGui.Text(mode == SetupWizardMode.Setup ? "Guided Setup" : "Add Rule with Wizard");
         ImGui.SameLine();
-        ImGui.TextDisabled($"- Step {stage + 1} of {StageCount}");
-        ImGui.ProgressBar((stage + 1) / (float)StageCount, new Vector2(-1, 0), StageTitle(stage));
+        UiGui.TextDisabled(UiText.Interpolated($"- Step {stage + 1} of {StageCount}"));
+        ImGui.ProgressBar((stage + 1) / (float)StageCount, new Vector2(-1, 0), UiText.T(StageTitle(stage)));
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
@@ -125,7 +136,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
         if (!string.IsNullOrEmpty(validationMessage))
         {
             ImGui.Spacing();
-            ImGui.TextColored(new Vector4(1.0f, 0.35f, 0.35f, 1.0f), validationMessage);
+            UiGui.TextColored(new Vector4(1.0f, 0.35f, 0.35f, 1.0f), validationMessage);
         }
 
         DrawNavigation();
@@ -133,7 +144,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
 
     private void DrawDestinationStage(AccountConfig account)
     {
-        ImGui.TextWrapped("Choose the preset that will receive this rule. Nothing is saved until Finish.");
+        UiGui.TextWrapped("Choose the preset that will receive this rule. Nothing is saved until Finish.");
         ImGui.Spacing();
 
         var presetNames = new string[account.Presets.Count];
@@ -142,34 +153,34 @@ internal sealed class SetupWizardWindow : Window, IDisposable
 
         ImGui.SetNextItemWidth(-1);
         var presetIndex = draft!.PresetIndex;
-        if (ImGui.Combo("Destination preset", ref presetIndex, presetNames, presetNames.Length))
+        if (UiGui.Combo("Destination preset", ref presetIndex, presetNames, presetNames.Length, presetNames))
             draft.PresetIndex = presetIndex;
 
         ImGui.Spacing();
         if (mode == SetupWizardMode.Setup)
         {
             var enableAccount = draft.EnableAccount;
-            if (ImGui.Checkbox("Enable automatic reactions when I finish", ref enableAccount))
+            if (UiGui.Checkbox("Enable automatic reactions when I finish", ref enableAccount))
                 draft.EnableAccount = enableAccount;
-            ImGui.TextDisabled("Clear this if you want to review the new rule in the advanced editor before enabling it.");
+            UiGui.TextDisabled("Clear this if you want to review the new rule in the advanced editor before enabling it.");
         }
         else
         {
-            var status = account.Enabled ? "enabled" : "disabled";
-            ImGui.TextWrapped($"This account is currently {status}. Add Rule mode will not change that setting.");
+            var status = UiText.T(account.Enabled ? "Enabled" : "Disabled");
+            UiGui.TextWrapped(UiText.F("This account is currently {0}. Add Rule mode will not change that setting.", status));
         }
     }
 
     private void DrawTriggerStage()
     {
-        ImGui.TextWrapped("Choose what starts the reaction.");
+        UiGui.TextWrapped("Choose what starts the reaction.");
         ImGui.Spacing();
 
-        if (ImGui.RadioButton("A player enters range", draft!.Trigger == SetupWizardTrigger.Proximity))
+        if (UiGui.RadioButton("A player enters range", draft!.Trigger == SetupWizardTrigger.Proximity))
             draft.Trigger = SetupWizardTrigger.Proximity;
-        if (ImGui.RadioButton("A selected emote is performed", draft.Trigger == SetupWizardTrigger.IncomingEmote))
+        if (UiGui.RadioButton("A selected emote is performed", draft.Trigger == SetupWizardTrigger.IncomingEmote))
             draft.Trigger = SetupWizardTrigger.IncomingEmote;
-        if (ImGui.RadioButton("COPYCAT any incoming emote", draft.Trigger == SetupWizardTrigger.Copycat))
+        if (UiGui.RadioButton("COPYCAT any incoming emote", draft.Trigger == SetupWizardTrigger.Copycat))
             draft.Trigger = SetupWizardTrigger.Copycat;
 
         if (draft.Trigger == SetupWizardTrigger.IncomingEmote)
@@ -180,17 +191,17 @@ internal sealed class SetupWizardWindow : Window, IDisposable
 
         ImGui.Spacing();
         ImGui.Separator();
-        ImGui.Text("Who can trigger it?");
-        if (ImGui.RadioButton("Any nearby player", !draft.SpecificPlayer))
+        UiGui.Text("Who can trigger it?");
+        if (UiGui.RadioButton("Any nearby player", !draft.SpecificPlayer))
             draft.SpecificPlayer = false;
-        if (ImGui.RadioButton("One specific player", draft.SpecificPlayer))
+        if (UiGui.RadioButton("One specific player", draft.SpecificPlayer))
             draft.SpecificPlayer = true;
 
         if (draft.SpecificPlayer)
         {
             var targetName = draft.TargetName;
             ImGui.SetNextItemWidth(-1);
-            if (ImGui.InputText("Player name (without @World)", ref targetName, 100))
+            if (UiGui.InputText("Player name (without @World)", ref targetName, 100))
                 draft.TargetName = targetName;
         }
     }
@@ -199,7 +210,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
     {
         var preview = string.IsNullOrWhiteSpace(draft!.TriggerEmote) ? "Select an emote" : draft.TriggerEmote;
         ImGui.SetNextItemWidth(-1);
-        if (!ImGui.BeginCombo("Incoming emote", preview))
+        if (!UiGui.BeginCombo("Incoming emote", preview))
             return;
 
         foreach (var emote in plugin.EmoteDetectionService.EmoteCommands)
@@ -208,7 +219,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
                 continue;
 
             var selected = string.Equals(emote, draft.TriggerEmote, StringComparison.Ordinal);
-            if (ImGui.Selectable(emote, selected))
+            if (MaterialText.Selectable(emote, selected))
                 draft.TriggerEmote = emote;
             if (selected)
                 ImGui.SetItemDefaultFocus();
@@ -221,53 +232,53 @@ internal sealed class SetupWizardWindow : Window, IDisposable
     {
         if (draft!.Trigger == SetupWizardTrigger.Copycat)
         {
-            ImGui.TextWrapped("COPYCAT mirrors the incoming emote. You may add a fallback command for an emote that cannot be mirrored or is already looping.");
+            UiGui.TextWrapped("COPYCAT mirrors the incoming emote. You may add a fallback command for an emote that cannot be mirrored or is already looping.");
             ImGui.Spacing();
             var fallback = draft.ResponseCommand;
             ImGui.SetNextItemWidth(-1);
-            if (ImGui.InputText("Optional fallback command", ref fallback, 200))
+            if (UiGui.InputText("Optional fallback command", ref fallback, 200))
                 draft.ResponseCommand = fallback;
-            ImGui.TextDisabled("Leave this blank for no fallback.");
+            UiGui.TextDisabled("Leave this blank for no fallback.");
         }
         else
         {
-            ImGui.TextWrapped("Enter the command to run when this rule triggers.");
+            UiGui.TextWrapped("Enter the command to run when this rule triggers.");
             ImGui.Spacing();
             var response = draft.ResponseCommand;
             ImGui.SetNextItemWidth(-1);
-            if (ImGui.InputText("Response command", ref response, 200))
+            if (UiGui.InputText("Response command", ref response, 200))
                 draft.ResponseCommand = response;
-            ImGui.TextDisabled("Example: /wave motion");
+            UiGui.TextDisabled("Example: /wave motion");
         }
     }
 
     private void DrawTuningStage()
     {
-        ImGui.TextWrapped("These defaults are ready to use. Adjust only what you need.");
+        UiGui.TextWrapped("These defaults are ready to use. Adjust only what you need.");
         ImGui.Spacing();
 
         var wait = draft!.WaitSeconds;
         ImGui.SetNextItemWidth(180);
-        if (ImGui.DragFloat("Wait after response (seconds)", ref wait, 0.1f, 0.0f, 60.0f, "%.1f"))
+        if (UiGui.DragFloat("Wait after response (seconds)", ref wait, 0.1f, 0.0f, 60.0f, "%.1f"))
             draft.WaitSeconds = wait;
 
         var cooldown = draft.CooldownSeconds;
         ImGui.SetNextItemWidth(180);
-        if (ImGui.DragFloat("Cooldown (seconds)", ref cooldown, 0.1f, 0.1f, 300.0f, "%.1f"))
+        if (UiGui.DragFloat("Cooldown (seconds)", ref cooldown, 0.1f, 0.1f, 300.0f, "%.1f"))
             draft.CooldownSeconds = cooldown;
 
         if (draft.Trigger == SetupWizardTrigger.Proximity)
         {
             var distance = draft.ProximityRange;
             ImGui.SetNextItemWidth(180);
-            if (ImGui.DragFloat("Proximity range (yalms)", ref distance, 0.1f, 0.1f, 100.0f, "%.1f"))
+            if (UiGui.DragFloat("Proximity range (yalms)", ref distance, 0.1f, 0.1f, 100.0f, "%.1f"))
                 draft.ProximityRange = distance;
         }
         else
         {
             var emoteRange = draft.EmoteRange;
             ImGui.SetNextItemWidth(180);
-            if (ImGui.DragFloat("Incoming-emote range (yalms)", ref emoteRange, 0.1f, 0.1f, 100.0f, "%.1f"))
+            if (UiGui.DragFloat("Incoming-emote range (yalms)", ref emoteRange, 0.1f, 0.1f, 100.0f, "%.1f"))
                 draft.EmoteRange = emoteRange;
         }
 
@@ -276,21 +287,21 @@ internal sealed class SetupWizardWindow : Window, IDisposable
         if (weatherIndex < 0)
             weatherIndex = 0;
         ImGui.SetNextItemWidth(260);
-        if (ImGui.Combo("Required weather", ref weatherIndex, weatherTypes.ToArray(), weatherTypes.Count))
+        if (UiGui.Combo("Required weather", ref weatherIndex, weatherTypes.ToArray(), weatherTypes.Count))
             draft.Weather = weatherTypes[weatherIndex];
 
         var targetBeforeCommand = draft.TargetBeforeCommand;
-        if (ImGui.Checkbox("Target the triggering player before the command", ref targetBeforeCommand))
+        if (UiGui.Checkbox("Target the triggering player before the command", ref targetBeforeCommand))
             draft.TargetBeforeCommand = targetBeforeCommand;
 
         var glowEnabled = draft.GlowEnabled;
-        if (ImGui.Checkbox("Show a temporary nameplate glow", ref glowEnabled))
+        if (UiGui.Checkbox("Show a temporary nameplate glow", ref glowEnabled))
             draft.GlowEnabled = glowEnabled;
 
         if (draft.GlowEnabled)
         {
             var glowColor = draft.GlowColor;
-            if (ImGui.ColorEdit3("Glow color", ref glowColor))
+            if (UiGui.ColorEdit3("Glow color", ref glowColor))
                 draft.GlowColor = glowColor;
         }
     }
@@ -299,29 +310,29 @@ internal sealed class SetupWizardWindow : Window, IDisposable
     {
         var presetName = draft!.PresetIndex >= 0 && draft.PresetIndex < account.Presets.Count
             ? account.Presets[draft.PresetIndex].Name
-            : "Unavailable";
+            : UiText.T("Unavailable");
 
-        ImGui.TextWrapped("Review the rule below. Finish applies it and saves once; Cancel or closing this window leaves configuration unchanged.");
+        UiGui.TextWrapped("Review the rule below. Finish applies it and saves once; Cancel or closing this window leaves configuration unchanged.");
         ImGui.Spacing();
         DrawReviewRow("Preset", presetName);
         if (mode == SetupWizardMode.Setup)
-            DrawReviewRow("Account after finish", draft.EnableAccount ? "Enabled" : "Disabled");
-        DrawReviewRow("Trigger", TriggerDescription());
-        DrawReviewRow("Audience", draft.SpecificPlayer ? draft.TargetName.Trim() : "Any nearby player");
+            DrawReviewRow("Account after finish", UiText.T(draft.EnableAccount ? "Enabled" : "Disabled"));
+        DrawReviewRow("Trigger", UiText.T(TriggerDescription()));
+        DrawReviewRow("Audience", draft.SpecificPlayer ? draft.TargetName.Trim() : UiText.T("Any nearby player"));
         if (draft.Trigger == SetupWizardTrigger.IncomingEmote)
             DrawReviewRow("Incoming emote", draft.TriggerEmote);
         DrawReviewRow(
             draft.Trigger == SetupWizardTrigger.Copycat ? "Fallback" : "Response",
-            string.IsNullOrWhiteSpace(draft.ResponseCommand) ? "None" : draft.ResponseCommand.Trim());
-        DrawReviewRow("Timing", $"Wait {draft.WaitSeconds:0.0}s; cooldown {draft.CooldownSeconds:0.0}s");
+            string.IsNullOrWhiteSpace(draft.ResponseCommand) ? UiText.T("None") : draft.ResponseCommand.Trim());
+        DrawReviewRow("Timing", UiText.Interpolated($"Wait {draft.WaitSeconds:0.0}s; cooldown {draft.CooldownSeconds:0.0}s"));
         DrawReviewRow(
             "Range",
             draft.Trigger == SetupWizardTrigger.Proximity
-                ? $"{draft.ProximityRange:0.0} yalms"
-                : $"{draft.EmoteRange:0.0} yalms");
-        DrawReviewRow("Weather", draft.Weather == "ALL" ? "Any weather" : draft.Weather);
-        DrawReviewRow("Target first", draft.TargetBeforeCommand ? "Yes" : "No");
-        DrawReviewRow("Nameplate glow", draft.GlowEnabled ? "On" : "Off");
+                ? UiText.Interpolated($"{draft.ProximityRange:0.0} yalms")
+                : UiText.Interpolated($"{draft.EmoteRange:0.0} yalms"));
+        DrawReviewRow("Weather", UiText.T(draft.Weather == "ALL" ? "Any weather" : draft.Weather));
+        DrawReviewRow("Target first", UiText.T(draft.TargetBeforeCommand ? "Yes" : "No"));
+        DrawReviewRow("Nameplate glow", UiText.T(draft.GlowEnabled ? "On" : "Off"));
     }
 
     private void DrawNavigation()
@@ -330,7 +341,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
         ImGui.Separator();
         ImGui.Spacing();
 
-        if (ImGui.Button("Cancel"))
+        if (UiGui.Button("Cancel"))
         {
             DiscardAndClose();
             return;
@@ -338,8 +349,8 @@ internal sealed class SetupWizardWindow : Window, IDisposable
 
         if (stage > 0)
         {
-            ImGui.SameLine();
-            if (ImGui.Button("Back"))
+            UiGui.SameLineIfFits(UiGui.ButtonWidth("Back"));
+            if (UiGui.Button("Back"))
             {
                 stage--;
                 validationMessage = string.Empty;
@@ -347,10 +358,10 @@ internal sealed class SetupWizardWindow : Window, IDisposable
             }
         }
 
-        ImGui.SameLine();
+        UiGui.SameLineIfFits(Math.Max(UiGui.ButtonWidth("Next"), UiGui.ButtonWidth("Finish")));
         if (stage < StageCount - 1)
         {
-            if (ImGui.Button("Next"))
+            if (UiGui.Button("Next"))
             {
                 if (ValidateStage(stage, out validationMessage))
                 {
@@ -359,7 +370,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
                 }
             }
         }
-        else if (ImGui.Button("Finish"))
+        else if (UiGui.Button("Finish"))
         {
             Finish();
         }
@@ -527,9 +538,9 @@ internal sealed class SetupWizardWindow : Window, IDisposable
 
     private static void DrawReviewRow(string label, string value)
     {
-        ImGui.TextDisabled($"{label}:");
+        MaterialText.TextDisabled(UiText.T(label) + ":");
         ImGui.SameLine();
-        ImGui.TextWrapped(value);
+        MaterialText.TextWrapped(value);
     }
 
     private static string StageTitle(int currentStage)

@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Presets" xml:space="preserve">
+    <value>预设</value>
+  </data>
+  <data name="Support on Ko-fi" xml:space="preserve">
+    <value>在 Ko-fi 支持</value>
+  </data>
+  <data name="Support development on Ko-fi" xml:space="preserve">
+    <value>在Ko-fi支持开发</value>
+  </data>
+  <data name="Compact mode" xml:space="preserve">
+    <value>紧凑模式</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="Krangle" xml:space="preserve">
+    <value>Krangle</value>
+  </data>
+  <data name="DTR Mode" xml:space="preserve">
+    <value>DTR模式</value>
+  </data>
+  <data name="DTR Icons (max 3 characters)" xml:space="preserve">
+    <value>DTR图标（最多3个字符）</value>
+  </data>
+  <data name="Copy Icon Guide Link" xml:space="preserve">
+    <value>复制图标指南链接</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>不可用</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="Preset" xml:space="preserve">
+    <value>预设</value>
+  </data>
+  <data name="Trigger" xml:space="preserve">
+    <value>触发器</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Teal" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>蓝色</value>
+  </data>
+  <data name="Pink" xml:space="preserve">
+    <value>粉色</value>
+  </data>
+  <data name="Custom RGB" xml:space="preserve">
+    <value>自定义 RGB</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>禁用</value>
+  </data>
+  <data name="Text Only" xml:space="preserve">
+    <value>仅文本</value>
+  </data>
+  <data name="Icon Only" xml:space="preserve">
+    <value>仅图标</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>开启</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="Loading UI fonts..." xml:space="preserve">
+    <value>正在加载字体…</value>
+  </data>
+  <data name="UI fonts failed to load. See the plugin log." xml:space="preserve">
+    <value>字体加载失败。请查看插件日志。</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="Guided Setup" xml:space="preserve">
+    <value>引导设置</value>
+  </data>
+  <data name="Create a reaction with a plain-language guided wizard" xml:space="preserve">
+    <value>通过简单易懂的向导创建反应</value>
+  </data>
+  <data name="Log in and select an account before editing presets." xml:space="preserve">
+    <value>编辑预设前，请登录并选择账户。</value>
+  </data>
+  <data name="Enable/disable the plugin's emote automation" xml:space="preserve">
+    <value>启用或禁用情感动作自动化</value>
+  </data>
+  <data name="DTR ON" xml:space="preserve">
+    <value>DTR 开启</value>
+  </data>
+  <data name="Show/hide the DTR bar entry (server info bar)" xml:space="preserve">
+    <value>显示或隐藏服务器信息栏中的 DTR 项</value>
+  </data>
+  <data name="Obfuscate player names with military/exercise words.&#10;Useful for screenshots." xml:space="preserve">
+    <value>使用军事或运动词语隐藏姓名。
+适合截图。</value>
+  </data>
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+    <value>DTR 显示模式：
+仅文本：'HFH: ON/OFF [preset]'
+图标和文本：'⚫ HFH'
+仅图标：'⚫'</value>
+  </data>
+  <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
+    <value>复制包含推荐字符的 Lodestone 博客链接</value>
+  </data>
+  <data name="ACTIVE" xml:space="preserve">
+    <value>使用中</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="+ New Preset" xml:space="preserve">
+    <value>+ 新建预设</value>
+  </data>
+  <data name="Enter preset name:" xml:space="preserve">
+    <value>输入预设名称：</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Preset Name" xml:space="preserve">
+    <value>预设名称</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="Reset Default" xml:space="preserve">
+    <value>重置默认预设</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>规则</value>
+  </data>
+  <data name="+ Add Blank Rule" xml:space="preserve">
+    <value>+ 添加空白规则</value>
+  </data>
+  <data name="Add Rule with Wizard" xml:space="preserve">
+    <value>使用向导添加规则</value>
+  </data>
+  <data name="Proximity = distance-based, Emote = responds to emotes directed at you" xml:space="preserve">
+    <value>邻近＝按距离触发；情感动作＝回应对你做出的情感动作</value>
+  </data>
+  <data name="ALL" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Check to target all nearby players" xml:space="preserve">
+    <value>勾选以对附近所有玩家生效</value>
+  </data>
+  <data name="ToT" xml:space="preserve">
+    <value>选中目标</value>
+  </data>
+  <data name="Target triggering player: if checked, /target the player before executing the slash command" xml:space="preserve">
+    <value>在执行命令前使用 /target 选中触发规则的玩家</value>
+  </data>
+  <data name="Target player name (without @server). For Emote type, leave blank to respond to anyone." xml:space="preserve">
+    <value>玩家姓名（不含 @server）。情感动作类型留空可回应任何人。</value>
+  </data>
+  <data name="Command" xml:space="preserve">
+    <value>命令</value>
+  </data>
+  <data name="Slash command to execute. Try '/wave motion' to emote without text!" xml:space="preserve">
+    <value>要执行的命令。可用 '/wave motion' 执行情感动作而不显示文本！</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>等待</value>
+  </data>
+  <data name="Seconds to wait after executing this emote" xml:space="preserve">
+    <value>执行此情感动作后等待的秒数</value>
+  </data>
+  <data name="Repeat" xml:space="preserve">
+    <value>重复</value>
+  </data>
+  <data name="Seconds before this emote can trigger again (Proximity only)" xml:space="preserve">
+    <value>再次触发前的秒数（仅邻近类型）</value>
+  </data>
+  <data name="Dist/Emote" xml:space="preserve">
+    <value>距离/情感动作</value>
+  </data>
+  <data name="Proximity: max distance (yalms). Emote: the trigger emote slash command.&#10;COPYCAT: Responds with ANY emote received (copies the emote)." xml:space="preserve">
+    <value>邻近：最大距离（星里）。情感动作：触发规则的命令。
+COPYCAT：复制任何收到的情感动作。</value>
+  </data>
+  <data name="Weather" xml:space="preserve">
+    <value>天气</value>
+  </data>
+  <data name="Weather condition required for this line to trigger (ALL = any weather)" xml:space="preserve">
+    <value>触发此规则所需的天气（全部＝任意天气）</value>
+  </data>
+  <data name="Emote Range" xml:space="preserve">
+    <value>情感动作范围</value>
+  </data>
+  <data name="Range for emote triggers in yalms (default: 10). Only applies to Emote type lines." xml:space="preserve">
+    <value>情感动作触发范围（星里，默认：10）。仅适用于情感动作类型。</value>
+  </data>
+  <data name="Glow" xml:space="preserve">
+    <value>发光</value>
+  </data>
+  <data name="Enable glow animation with color effect" xml:space="preserve">
+    <value>启用带颜色效果的发光动画</value>
+  </data>
+  <data name="Glow color (RGB)" xml:space="preserve">
+    <value>发光颜色（RGB）</value>
+  </data>
+  <data name="Krangle this name (permanent obfuscation)" xml:space="preserve">
+    <value>永久隐藏此姓名</value>
+  </data>
+  <data name="COPYCAT mode - fallback command when emote copying fails or the incoming emote is already looping.&#10;Use media:, video:, audio:, or sound: to launch a local file." xml:space="preserve">
+    <value>COPYCAT：复制失败或收到的情感动作已在循环时执行的备用命令。
+可用 media:、video:、audio: 或 sound: 打开本地文件。</value>
+  </data>
+  <data name="Slash command to execute.&#10;Use media:, video:, audio:, or sound: to launch a local file relative to the plugin config folder or by full path." xml:space="preserve">
+    <value>要执行的斜杠命令。
+可用 media:、video:、audio: 或 sound:，按完整路径或相对于插件配置文件夹的路径打开本地文件。</value>
+  </data>
+  <data name="The emote that triggers this response (e.g. /wave)" xml:space="preserve">
+    <value>触发此回应的情感动作（例如 /wave）</value>
+  </data>
+  <data name="Select weather condition for this line" xml:space="preserve">
+    <value>选择此规则的天气条件</value>
+  </data>
+  <data name="Range for emote triggers in yalms" xml:space="preserve">
+    <value>情感动作触发范围（星里）</value>
+  </data>
+  <data name="Emote range only applies to Emote type lines" xml:space="preserve">
+    <value>情感动作范围仅适用于情感动作类型</value>
+  </data>
+  <data name="Shown when HFH is {0}" xml:space="preserve">
+    <value>HFH 为 {0} 时显示</value>
+  </data>
+  <data name="No Colour" xml:space="preserve">
+    <value>无颜色</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="Clear selected colour" xml:space="preserve">
+    <value>清除所选颜色</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="Log in and select an account before using guided setup." xml:space="preserve">
+    <value>使用引导设置前，请登录并选择账户。</value>
+  </data>
+  <data name="Choose the preset that will receive this rule. Nothing is saved until Finish." xml:space="preserve">
+    <value>选择要添加此规则的预设。点击“完成”前不会保存。</value>
+  </data>
+  <data name="Destination preset" xml:space="preserve">
+    <value>目标预设</value>
+  </data>
+  <data name="Enable automatic reactions when I finish" xml:space="preserve">
+    <value>完成时启用自动反应</value>
+  </data>
+  <data name="Clear this if you want to review the new rule in the advanced editor before enabling it." xml:space="preserve">
+    <value>取消勾选可在启用前于高级编辑器中检查新规则。</value>
+  </data>
+  <data name="This account is currently {0}. Add Rule mode will not change that setting." xml:space="preserve">
+    <value>此账户目前为 {0}。添加规则模式不会更改此设置。</value>
+  </data>
+  <data name="Choose what starts the reaction." xml:space="preserve">
+    <value>选择触发反应的条件。</value>
+  </data>
+  <data name="A player enters range" xml:space="preserve">
+    <value>玩家进入范围</value>
+  </data>
+  <data name="A selected emote is performed" xml:space="preserve">
+    <value>执行了所选情感动作</value>
+  </data>
+  <data name="COPYCAT any incoming emote" xml:space="preserve">
+    <value>COPYCAT 任何收到的情感动作</value>
+  </data>
+  <data name="Who can trigger it?" xml:space="preserve">
+    <value>谁可以触发？</value>
+  </data>
+  <data name="Any nearby player" xml:space="preserve">
+    <value>附近的任何玩家</value>
+  </data>
+  <data name="One specific player" xml:space="preserve">
+    <value>某个特定玩家</value>
+  </data>
+  <data name="Player name (without @World)" xml:space="preserve">
+    <value>玩家姓名（不含 @World）</value>
+  </data>
+  <data name="Incoming emote" xml:space="preserve">
+    <value>收到的情感动作</value>
+  </data>
+  <data name="COPYCAT mirrors the incoming emote. You may add a fallback command for an emote that cannot be mirrored or is already looping." xml:space="preserve">
+    <value>COPYCAT 会模仿收到的情感动作。无法模仿或动作已在循环时，可设置备用命令。</value>
+  </data>
+  <data name="Optional fallback command" xml:space="preserve">
+    <value>备用命令（可选）</value>
+  </data>
+  <data name="Leave this blank for no fallback." xml:space="preserve">
+    <value>留空则不使用备用命令。</value>
+  </data>
+  <data name="Enter the command to run when this rule triggers." xml:space="preserve">
+    <value>输入规则触发时执行的命令。</value>
+  </data>
+  <data name="Response command" xml:space="preserve">
+    <value>回应命令</value>
+  </data>
+  <data name="Example: /wave motion" xml:space="preserve">
+    <value>示例：/wave motion</value>
+  </data>
+  <data name="These defaults are ready to use. Adjust only what you need." xml:space="preserve">
+    <value>这些默认值可直接使用。按需调整即可。</value>
+  </data>
+  <data name="Wait after response (seconds)" xml:space="preserve">
+    <value>回应后等待（秒）</value>
+  </data>
+  <data name="Cooldown (seconds)" xml:space="preserve">
+    <value>冷却时间（秒）</value>
+  </data>
+  <data name="Proximity range (yalms)" xml:space="preserve">
+    <value>邻近范围（星里）</value>
+  </data>
+  <data name="Incoming-emote range (yalms)" xml:space="preserve">
+    <value>收到的情感动作范围（星里）</value>
+  </data>
+  <data name="Required weather" xml:space="preserve">
+    <value>所需天气</value>
+  </data>
+  <data name="Target the triggering player before the command" xml:space="preserve">
+    <value>执行命令前选中触发规则的玩家</value>
+  </data>
+  <data name="Show a temporary nameplate glow" xml:space="preserve">
+    <value>使名牌暂时发光</value>
+  </data>
+  <data name="Glow color" xml:space="preserve">
+    <value>发光颜色</value>
+  </data>
+  <data name="Review the rule below. Finish applies it and saves once; Cancel or closing this window leaves configuration unchanged." xml:space="preserve">
+    <value>请检查规则。点击“完成”会应用并保存一次；取消或关闭窗口不会更改配置。</value>
+  </data>
+  <data name="The destination preset is no longer available. Reopen the wizard and try again." xml:space="preserve">
+    <value>目标预设已不可用。请重新打开向导并重试。</value>
+  </data>
+  <data name="The setup draft is unavailable." xml:space="preserve">
+    <value>设置草稿不可用。</value>
+  </data>
+  <data name="Choose an available destination preset." xml:space="preserve">
+    <value>请选择可用的目标预设。</value>
+  </data>
+  <data name="Enter a player name or choose Any nearby player." xml:space="preserve">
+    <value>输入玩家姓名，或选择“附近的任何玩家”。</value>
+  </data>
+  <data name="Choose the incoming emote that should trigger this rule." xml:space="preserve">
+    <value>请选择触发此规则的情感动作。</value>
+  </data>
+  <data name="Enter a response command." xml:space="preserve">
+    <value>请输入回应命令。</value>
+  </data>
+  <data name="Proximity range must be greater than zero." xml:space="preserve">
+    <value>邻近范围必须大于零。</value>
+  </data>
+  <data name="Incoming-emote range must be greater than zero." xml:space="preserve">
+    <value>收到的情感动作范围必须大于零。</value>
+  </data>
+  <data name="Account after finish" xml:space="preserve">
+    <value>完成后的账户</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>触发对象</value>
+  </data>
+  <data name="Timing" xml:space="preserve">
+    <value>时间设置</value>
+  </data>
+  <data name="Target first" xml:space="preserve">
+    <value>先选中目标</value>
+  </data>
+  <data name="Nameplate glow" xml:space="preserve">
+    <value>名牌发光</value>
+  </data>
+  <data name="Built-in preset" xml:space="preserve">
+    <value>内置预设</value>
+  </data>
+  <data name="User preset" xml:space="preserve">
+    <value>用户预设</value>
+  </data>
+  <data name="Editing the built-in preset." xml:space="preserve">
+    <value>正在编辑内置预设。</value>
+  </data>
+  <data name="Select an emote" xml:space="preserve">
+    <value>选择情感动作</value>
+  </data>
+  <data name="Icon+Text" xml:space="preserve">
+    <value>图标和文本</value>
+  </data>
+  <data name="Proximity" xml:space="preserve">
+    <value>邻近</value>
+  </data>
+  <data name="Emote" xml:space="preserve">
+    <value>情感动作</value>
+  </data>
+  <data name="Glow is disabled for this rule." xml:space="preserve">
+    <value>此规则的发光已禁用。</value>
+  </data>
+  <data name="Click to change color" xml:space="preserve">
+    <value>点击更改颜色</value>
+  </data>
+  <data name="Enabled Icon" xml:space="preserve">
+    <value>启用图标</value>
+  </data>
+  <data name="Enabled Icon Code" xml:space="preserve">
+    <value>启用图标代码</value>
+  </data>
+  <data name="Disabled Icon" xml:space="preserve">
+    <value>禁用图标</value>
+  </data>
+  <data name="Disabled Icon Code" xml:space="preserve">
+    <value>禁用图标代码</value>
+  </data>
+  <data name="Destination and enablement" xml:space="preserve">
+    <value>目标和启用</value>
+  </data>
+  <data name="Trigger and audience" xml:space="preserve">
+    <value>触发条件和对象</value>
+  </data>
+  <data name="Response" xml:space="preserve">
+    <value>回应</value>
+  </data>
+  <data name="Optional tuning" xml:space="preserve">
+    <value>可选调整</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="Selected incoming emote" xml:space="preserve">
+    <value>收到所选情感动作</value>
+  </data>
+  <data name="COPYCAT incoming emotes" xml:space="preserve">
+    <value>COPYCAT 收到的情感动作</value>
+  </data>
+  <data name="Player enters range" xml:space="preserve">
+    <value>玩家进入范围</value>
+  </data>
+  <data name="Any weather" xml:space="preserve">
+    <value>任意天气</value>
+  </data>
+  <data name="Fallback" xml:space="preserve">
+    <value>备用命令</value>
+  </data>
+  <data name="Wait {0:0.0}s; cooldown {1:0.0}s" xml:space="preserve">
+    <value>等待 {0:0.0}秒；冷却 {1:0.0}秒</value>
+  </data>
+  <data name="{0:0.0} yalms" xml:space="preserve">
+    <value>{0:0.0} 星里</value>
+  </data>
+  <data name="- Step {0} of {1}" xml:space="preserve">
+    <value>- 第 {0} 步，共 {1} 步</value>
+  </data>
+  <data name="A friendlier Eorzea, one emote at a time." xml:space="preserve">
+    <value>用一个个情感动作，让艾欧泽亚更友善。</value>
+  </data>
+  <data name="Define when and how to perform social interactions." xml:space="preserve">
+    <value>定义何时以及如何进行社交互动。</value>
+  </data>
+  <data name="Hold CTRL to delete" xml:space="preserve">
+    <value>按住 CTRL 删除</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>范围</value>
+  </data>
+  <data name="Customize the glyphs shown in icon modes when HFH is enabled/disabled." xml:space="preserve">
+    <value>自定义图标模式下 HFH 启用或禁用时显示的字符。</value>
+  </data>
+  <data name="(select)" xml:space="preserve">
+    <value>(选择)</value>
+  </data>
+  <data name="Clear Skies" xml:space="preserve">
+    <value>碧空</value>
+  </data>
+  <data name="Fair Skies" xml:space="preserve">
+    <value>晴朗</value>
+  </data>
+  <data name="Clouds" xml:space="preserve">
+    <value>阴云</value>
+  </data>
+  <data name="Fog" xml:space="preserve">
+    <value>薄雾</value>
+  </data>
+  <data name="Wind" xml:space="preserve">
+    <value>微风</value>
+  </data>
+  <data name="Gales" xml:space="preserve">
+    <value>强风</value>
+  </data>
+  <data name="Rain" xml:space="preserve">
+    <value>小雨</value>
+  </data>
+  <data name="Showers" xml:space="preserve">
+    <value>暴雨</value>
+  </data>
+  <data name="Thunder" xml:space="preserve">
+    <value>打雷</value>
+  </data>
+  <data name="Thunderstorms" xml:space="preserve">
+    <value>雷雨</value>
+  </data>
+  <data name="Dust Storms" xml:space="preserve">
+    <value>扬沙</value>
+  </data>
+  <data name="Sandstorms" xml:space="preserve">
+    <value>沙尘暴</value>
+  </data>
+  <data name="Hot Spells" xml:space="preserve">
+    <value>热风</value>
+  </data>
+  <data name="Heat Waves" xml:space="preserve">
+    <value>热浪</value>
+  </data>
+  <data name="Snow" xml:space="preserve">
+    <value>小雪</value>
+  </data>
+  <data name="Blizzards" xml:space="preserve">
+    <value>暴雪</value>
+  </data>
+  <data name="Gloom" xml:space="preserve">
+    <value>妖雾</value>
+  </data>
+  <data name="Auroras" xml:space="preserve">
+    <value>极光</value>
+  </data>
+  <data name="Darkness" xml:space="preserve">
+    <value>昏暗</value>
+  </data>
+  <data name="Tension" xml:space="preserve">
+    <value>紧张</value>
+  </data>
+  <data name="Storm Clouds" xml:space="preserve">
+    <value>雷云</value>
+  </data>
+  <data name="Rough Seas" xml:space="preserve">
+    <value>风暴</value>
+  </data>
+  <data name="Louring" xml:space="preserve">
+    <value>阴沉</value>
+  </data>
+  <data name="Wait must be zero or more, and cooldown must be greater than zero." xml:space="preserve">
+    <value>等待时间须大于等于零，冷却时间须大于零。</value>
+  </data>
+  <data name="Window appearance" xml:space="preserve"><value>窗口外观</value></data>
+  <data name="Compact visible on main window" xml:space="preserve"><value>在主窗口显示紧凑模式开关</value></data>
+  <data name="Language visible on main window" xml:space="preserve"><value>在主窗口显示语言选择</value></data>
+  <data name="Transparency" xml:space="preserve"><value>透明度</value></data>
+  <data name="Opacity (%)" xml:space="preserve"><value>不透明度 (%)</value></data>
+  <data name="Auto-fade when unfocused" xml:space="preserve"><value>失去焦点后自动淡化</value></data>
+  <data name="Unfocused opacity (%)" xml:space="preserve"><value>未聚焦时的不透明度 (%)</value></data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve"><value>失去焦点后的等待时间 (秒)</value></data>
+</root>

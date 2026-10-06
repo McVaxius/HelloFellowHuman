@@ -1,0 +1,622 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Presets" xml:space="preserve">
+    <value>प्रीसेट</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>कॉन्फ़िगरेशन</value>
+  </data>
+  <data name="Support on Ko-fi" xml:space="preserve">
+    <value>Ko-fi पर सहयोग करें</value>
+  </data>
+  <data name="Support development on Ko-fi" xml:space="preserve">
+    <value>Ko-fi पर विकास में सहयोग करें</value>
+  </data>
+  <data name="Guided Setup" xml:space="preserve">
+    <value>निर्देशित सेटअप</value>
+  </data>
+  <data name="Create a reaction with a plain-language guided wizard" xml:space="preserve">
+    <value>सरल भाषा वाले निर्देशित विज़ार्ड से प्रतिक्रिया बनाएँ</value>
+  </data>
+  <data name="Compact mode" xml:space="preserve">
+    <value>कॉम्पैक्ट मोड</value>
+  </data>
+  <data name="Log in and select an account before editing presets." xml:space="preserve">
+    <value>प्रीसेट संपादित करने से पहले लॉग इन करें और एक खाता चुनें।</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>सक्षम</value>
+  </data>
+  <data name="Enable/disable the plugin's emote automation" xml:space="preserve">
+    <value>प्लगइन की इमोट ऑटोमेशन सक्षम/अक्षम करें</value>
+  </data>
+  <data name="DTR ON" xml:space="preserve">
+    <value>DTR चालू</value>
+  </data>
+  <data name="Show/hide the DTR bar entry (server info bar)" xml:space="preserve">
+    <value>DTR बार प्रविष्टि दिखाएँ/छिपाएँ (सर्वर जानकारी बार)</value>
+  </data>
+  <data name="Krangle" xml:space="preserve">
+    <value>क्रैंगल</value>
+  </data>
+  <data name="Obfuscate player names with military/exercise words.&#xA;Useful for screenshots." xml:space="preserve">
+    <value>खिलाड़ियों के नाम सैन्य/व्यायाम शब्दों से छिपाएँ।
+स्क्रीनशॉट के लिए उपयोगी।</value>
+  </data>
+  <data name="DTR Mode" xml:space="preserve">
+    <value>DTR मोड</value>
+  </data>
+  <data name="DTR bar display mode:&#xA;Text Only: 'HFH: ON/OFF [preset]'&#xA;Icon+Text: '⚫ HFH'&#xA;Icon Only: '⚫'" xml:space="preserve">
+    <value>DTR बार प्रदर्शन मोड:
+केवल पाठ: 'HFH: ON/OFF [preset]'
+आइकन+पाठ: '⚫ HFH'
+केवल आइकन: '⚫'</value>
+  </data>
+  <data name="DTR Icons (max 3 characters)" xml:space="preserve">
+    <value>DTR आइकन (अधिकतम 3 अक्षर)</value>
+  </data>
+  <data name="Copy Icon Guide Link" xml:space="preserve">
+    <value>आइकन गाइड का लिंक कॉपी करें</value>
+  </data>
+  <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
+    <value>सुझाए गए ग्लिफ़ वाला Lodestone ब्लॉग लिंक कॉपी करता है</value>
+  </data>
+  <data name="ACTIVE" xml:space="preserve">
+    <value>सक्रिय</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>नया</value>
+  </data>
+  <data name="+ New Preset" xml:space="preserve">
+    <value>+ नया प्रीसेट</value>
+  </data>
+  <data name="Enter preset name:" xml:space="preserve">
+    <value>प्रीसेट का नाम दर्ज करें:</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>बनाएँ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>हटाएँ</value>
+  </data>
+  <data name="Preset Name" xml:space="preserve">
+    <value>प्रीसेट का नाम</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>निर्यात करें</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>आयात करें</value>
+  </data>
+  <data name="Reset Default" xml:space="preserve">
+    <value>डिफ़ॉल्ट बहाल करें</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>नियम</value>
+  </data>
+  <data name="+ Add Blank Rule" xml:space="preserve">
+    <value>+ खाली नियम जोड़ें</value>
+  </data>
+  <data name="Add Rule with Wizard" xml:space="preserve">
+    <value>विज़ार्ड से नियम जोड़ें</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>प्रकार</value>
+  </data>
+  <data name="Proximity = distance-based, Emote = responds to emotes directed at you" xml:space="preserve">
+    <value>निकटता = दूरी पर आधारित, इमोट = आपको लक्षित इमोट का जवाब देता है</value>
+  </data>
+  <data name="ALL" xml:space="preserve">
+    <value>सभी</value>
+  </data>
+  <data name="Check to target all nearby players" xml:space="preserve">
+    <value>आसपास के सभी खिलाड़ियों को लक्षित करने के लिए चुनें</value>
+  </data>
+  <data name="ToT" xml:space="preserve">
+    <value>लक्ष्य का लक्ष्य</value>
+  </data>
+  <data name="Target triggering player: if checked, /target the player before executing the slash command" xml:space="preserve">
+    <value>प्रतिक्रिया शुरू करने वाले खिलाड़ी को लक्षित करें: चुने होने पर स्लैश कमांड चलाने से पहले खिलाड़ी पर /target करें</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="Target player name (without @server). For Emote type, leave blank to respond to anyone." xml:space="preserve">
+    <value>लक्षित खिलाड़ी का नाम (@server के बिना)। इमोट प्रकार में किसी को भी जवाब देने के लिए खाली छोड़ें।</value>
+  </data>
+  <data name="Command" xml:space="preserve">
+    <value>कमांड</value>
+  </data>
+  <data name="Slash command to execute. Try '/wave motion' to emote without text!" xml:space="preserve">
+    <value>चलाने वाली स्लैश कमांड। बिना पाठ के इमोट करने के लिए '/wave motion' आज़माएँ!</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>प्रतीक्षा</value>
+  </data>
+  <data name="Seconds to wait after executing this emote" xml:space="preserve">
+    <value>यह इमोट चलाने के बाद प्रतीक्षा के सेकंड</value>
+  </data>
+  <data name="Repeat" xml:space="preserve">
+    <value>दोहराव</value>
+  </data>
+  <data name="Seconds before this emote can trigger again (Proximity only)" xml:space="preserve">
+    <value>इस इमोट के दोबारा शुरू हो सकने से पहले के सेकंड (केवल निकटता)</value>
+  </data>
+  <data name="Dist/Emote" xml:space="preserve">
+    <value>दूरी/इमोट</value>
+  </data>
+  <data name="Proximity: max distance (yalms). Emote: the trigger emote slash command.&#xA;COPYCAT: Responds with ANY emote received (copies the emote)." xml:space="preserve">
+    <value>निकटता: अधिकतम दूरी (याल्म)। इमोट: शुरू करने वाले इमोट की स्लैश कमांड।
+COPYCAT: प्राप्त किसी भी इमोट का जवाब देता है (इमोट की नकल करता है)।</value>
+  </data>
+  <data name="Weather" xml:space="preserve">
+    <value>मौसम</value>
+  </data>
+  <data name="Weather condition required for this line to trigger (ALL = any weather)" xml:space="preserve">
+    <value>इस पंक्ति के शुरू होने के लिए आवश्यक मौसम (सभी = कोई भी मौसम)</value>
+  </data>
+  <data name="Emote Range" xml:space="preserve">
+    <value>इमोट की सीमा</value>
+  </data>
+  <data name="Range for emote triggers in yalms (default: 10). Only applies to Emote type lines." xml:space="preserve">
+    <value>इमोट ट्रिगर की सीमा, याल्म में (डिफ़ॉल्ट: 10)। केवल इमोट प्रकार की पंक्तियों पर लागू।</value>
+  </data>
+  <data name="Glow" xml:space="preserve">
+    <value>चमक</value>
+  </data>
+  <data name="Enable glow animation with color effect" xml:space="preserve">
+    <value>रंग प्रभाव वाली चमक का एनीमेशन सक्षम करें</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>रंग</value>
+  </data>
+  <data name="Glow color (RGB)" xml:space="preserve">
+    <value>चमक का रंग (RGB)</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>निकालें</value>
+  </data>
+  <data name="Krangle this name (permanent obfuscation)" xml:space="preserve">
+    <value>इस नाम को क्रैंगल करें (स्थायी रूप से छिपाएँ)</value>
+  </data>
+  <data name="COPYCAT mode - fallback command when emote copying fails or the incoming emote is already looping.&#xA;Use media:, video:, audio:, or sound: to launch a local file." xml:space="preserve">
+    <value>COPYCAT मोड - इमोट की नकल विफल होने या आने वाला इमोट पहले से दोहराते रहने पर वैकल्पिक कमांड।
+स्थानीय फ़ाइल खोलने के लिए media:, video:, audio:, या sound: प्रयोग करें।</value>
+  </data>
+  <data name="Slash command to execute.&#xA;Use media:, video:, audio:, or sound: to launch a local file relative to the plugin config folder or by full path." xml:space="preserve">
+    <value>चलाने वाली स्लैश कमांड।
+प्लगइन के कॉन्फ़िगरेशन फ़ोल्डर के सापेक्ष या पूरे पथ से स्थानीय फ़ाइल खोलने के लिए media:, video:, audio:, या sound: प्रयोग करें।</value>
+  </data>
+  <data name="The emote that triggers this response (e.g. /wave)" xml:space="preserve">
+    <value>यह जवाब शुरू करने वाला इमोट (जैसे /wave)</value>
+  </data>
+  <data name="Select weather condition for this line" xml:space="preserve">
+    <value>इस पंक्ति के लिए मौसम चुनें</value>
+  </data>
+  <data name="Range for emote triggers in yalms" xml:space="preserve">
+    <value>इमोट ट्रिगर की सीमा, याल्म में</value>
+  </data>
+  <data name="Emote range only applies to Emote type lines" xml:space="preserve">
+    <value>इमोट की सीमा केवल इमोट प्रकार की पंक्तियों पर लागू होती है</value>
+  </data>
+  <data name="Shown when HFH is {0}" xml:space="preserve">
+    <value>HFH के {0} होने पर दिखाया जाता है</value>
+  </data>
+  <data name="No Colour" xml:space="preserve">
+    <value>कोई रंग नहीं</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>साफ़ करें</value>
+  </data>
+  <data name="Clear selected colour" xml:space="preserve">
+    <value>चुना हुआ रंग हटाएँ</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>पुष्टि करें</value>
+  </data>
+  <data name="Log in and select an account before using guided setup." xml:space="preserve">
+    <value>निर्देशित सेटअप प्रयोग करने से पहले लॉग इन करें और एक खाता चुनें।</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+  <data name="Choose the preset that will receive this rule. Nothing is saved until Finish." xml:space="preserve">
+    <value>वह प्रीसेट चुनें जिसमें यह नियम जुड़ेगा। पूरा करें दबाने तक कुछ सहेजा नहीं जाता।</value>
+  </data>
+  <data name="Destination preset" xml:space="preserve">
+    <value>गंतव्य प्रीसेट</value>
+  </data>
+  <data name="Enable automatic reactions when I finish" xml:space="preserve">
+    <value>पूरा करने पर स्वचालित प्रतिक्रियाएँ सक्षम करें</value>
+  </data>
+  <data name="Clear this if you want to review the new rule in the advanced editor before enabling it." xml:space="preserve">
+    <value>सक्षम करने से पहले उन्नत संपादक में नया नियम जाँचना चाहते हों तो इसे हटाएँ।</value>
+  </data>
+  <data name="This account is currently {0}. Add Rule mode will not change that setting." xml:space="preserve">
+    <value>यह खाता अभी {0} है। नियम जोड़ें मोड इस सेटिंग को नहीं बदलेगा।</value>
+  </data>
+  <data name="Choose what starts the reaction." xml:space="preserve">
+    <value>चुनें कि प्रतिक्रिया किससे शुरू होगी।</value>
+  </data>
+  <data name="A player enters range" xml:space="preserve">
+    <value>कोई खिलाड़ी सीमा में आता है</value>
+  </data>
+  <data name="A selected emote is performed" xml:space="preserve">
+    <value>चुना हुआ इमोट किया जाता है</value>
+  </data>
+  <data name="COPYCAT any incoming emote" xml:space="preserve">
+    <value>किसी भी आने वाले इमोट की COPYCAT नकल</value>
+  </data>
+  <data name="Who can trigger it?" xml:space="preserve">
+    <value>इसे कौन शुरू कर सकता है?</value>
+  </data>
+  <data name="Any nearby player" xml:space="preserve">
+    <value>आसपास का कोई भी खिलाड़ी</value>
+  </data>
+  <data name="One specific player" xml:space="preserve">
+    <value>एक विशिष्ट खिलाड़ी</value>
+  </data>
+  <data name="Player name (without @World)" xml:space="preserve">
+    <value>खिलाड़ी का नाम (@World के बिना)</value>
+  </data>
+  <data name="Incoming emote" xml:space="preserve">
+    <value>आने वाला इमोट</value>
+  </data>
+  <data name="COPYCAT mirrors the incoming emote. You may add a fallback command for an emote that cannot be mirrored or is already looping." xml:space="preserve">
+    <value>COPYCAT आने वाले इमोट की नकल करता है। जिस इमोट की नकल नहीं हो सकती या जो पहले से दोहराता रहता है, उसके लिए वैकल्पिक कमांड जोड़ सकते हैं।</value>
+  </data>
+  <data name="Optional fallback command" xml:space="preserve">
+    <value>वैकल्पिक कमांड</value>
+  </data>
+  <data name="Leave this blank for no fallback." xml:space="preserve">
+    <value>कोई विकल्प नहीं चाहिए तो इसे खाली छोड़ें।</value>
+  </data>
+  <data name="Enter the command to run when this rule triggers." xml:space="preserve">
+    <value>यह नियम शुरू होने पर चलाने वाली कमांड दर्ज करें।</value>
+  </data>
+  <data name="Response command" xml:space="preserve">
+    <value>जवाब की कमांड</value>
+  </data>
+  <data name="Example: /wave motion" xml:space="preserve">
+    <value>उदाहरण: /wave motion</value>
+  </data>
+  <data name="These defaults are ready to use. Adjust only what you need." xml:space="preserve">
+    <value>ये डिफ़ॉल्ट प्रयोग के लिए तैयार हैं। केवल आवश्यक बदलाव करें।</value>
+  </data>
+  <data name="Wait after response (seconds)" xml:space="preserve">
+    <value>जवाब के बाद प्रतीक्षा (सेकंड)</value>
+  </data>
+  <data name="Cooldown (seconds)" xml:space="preserve">
+    <value>कूलडाउन (सेकंड)</value>
+  </data>
+  <data name="Proximity range (yalms)" xml:space="preserve">
+    <value>निकटता की सीमा (याल्म)</value>
+  </data>
+  <data name="Incoming-emote range (yalms)" xml:space="preserve">
+    <value>आने वाले इमोट की सीमा (याल्म)</value>
+  </data>
+  <data name="Required weather" xml:space="preserve">
+    <value>आवश्यक मौसम</value>
+  </data>
+  <data name="Target the triggering player before the command" xml:space="preserve">
+    <value>कमांड से पहले प्रतिक्रिया शुरू करने वाले खिलाड़ी को लक्षित करें</value>
+  </data>
+  <data name="Show a temporary nameplate glow" xml:space="preserve">
+    <value>नेमप्लेट पर अस्थायी चमक दिखाएँ</value>
+  </data>
+  <data name="Glow color" xml:space="preserve">
+    <value>चमक का रंग</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>अनुपलब्ध</value>
+  </data>
+  <data name="Review the rule below. Finish applies it and saves once; Cancel or closing this window leaves configuration unchanged." xml:space="preserve">
+    <value>नीचे दिए नियम की समीक्षा करें। पूरा करें इसे लागू करके एक बार सहेजता है; रद्द करने या यह विंडो बंद करने पर कॉन्फ़िगरेशन नहीं बदलता।</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>कोई नहीं</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>पीछे</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>अगला</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>पूरा करें</value>
+  </data>
+  <data name="The destination preset is no longer available. Reopen the wizard and try again." xml:space="preserve">
+    <value>गंतव्य प्रीसेट अब उपलब्ध नहीं है। विज़ार्ड फिर खोलकर दोबारा प्रयास करें।</value>
+  </data>
+  <data name="The setup draft is unavailable." xml:space="preserve">
+    <value>सेटअप का ड्राफ़्ट उपलब्ध नहीं है।</value>
+  </data>
+  <data name="Choose an available destination preset." xml:space="preserve">
+    <value>उपलब्ध गंतव्य प्रीसेट चुनें।</value>
+  </data>
+  <data name="Enter a player name or choose Any nearby player." xml:space="preserve">
+    <value>खिलाड़ी का नाम दर्ज करें या आसपास का कोई भी खिलाड़ी चुनें।</value>
+  </data>
+  <data name="Choose the incoming emote that should trigger this rule." xml:space="preserve">
+    <value>यह नियम शुरू करने वाला आने वाला इमोट चुनें।</value>
+  </data>
+  <data name="Enter a response command." xml:space="preserve">
+    <value>जवाब की कमांड दर्ज करें।</value>
+  </data>
+  <data name="Wait must be zero or more, and cooldown must be greater than zero." xml:space="preserve">
+    <value>प्रतीक्षा शून्य या अधिक और कूलडाउन शून्य से अधिक होना चाहिए।</value>
+  </data>
+  <data name="Proximity range must be greater than zero." xml:space="preserve">
+    <value>निकटता की सीमा शून्य से अधिक होनी चाहिए।</value>
+  </data>
+  <data name="Incoming-emote range must be greater than zero." xml:space="preserve">
+    <value>आने वाले इमोट की सीमा शून्य से अधिक होनी चाहिए।</value>
+  </data>
+  <data name="Preset" xml:space="preserve">
+    <value>प्रीसेट</value>
+  </data>
+  <data name="Account after finish" xml:space="preserve">
+    <value>पूरा करने के बाद खाता</value>
+  </data>
+  <data name="Trigger" xml:space="preserve">
+    <value>ट्रिगर</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>लक्षित लोग</value>
+  </data>
+  <data name="Timing" xml:space="preserve">
+    <value>समय</value>
+  </data>
+  <data name="Target first" xml:space="preserve">
+    <value>पहले लक्षित करें</value>
+  </data>
+  <data name="Nameplate glow" xml:space="preserve">
+    <value>नेमप्लेट की चमक</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>भाषा</value>
+  </data>
+  <data name="Teal" xml:space="preserve">
+    <value>टील</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>नीला</value>
+  </data>
+  <data name="Pink" xml:space="preserve">
+    <value>गुलाबी</value>
+  </data>
+  <data name="Custom RGB" xml:space="preserve">
+    <value>कस्टम RGB</value>
+  </data>
+  <data name="Built-in preset" xml:space="preserve">
+    <value>अंतर्निहित प्रीसेट</value>
+  </data>
+  <data name="User preset" xml:space="preserve">
+    <value>उपयोगकर्ता का प्रीसेट</value>
+  </data>
+  <data name="Editing the built-in preset." xml:space="preserve">
+    <value>अंतर्निहित प्रीसेट संपादित किया जा रहा है।</value>
+  </data>
+  <data name="Select an emote" xml:space="preserve">
+    <value>इमोट चुनें</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>अक्षम</value>
+  </data>
+  <data name="Text Only" xml:space="preserve">
+    <value>केवल पाठ</value>
+  </data>
+  <data name="Icon+Text" xml:space="preserve">
+    <value>आइकन+पाठ</value>
+  </data>
+  <data name="Icon Only" xml:space="preserve">
+    <value>केवल आइकन</value>
+  </data>
+  <data name="Proximity" xml:space="preserve">
+    <value>निकटता</value>
+  </data>
+  <data name="Emote" xml:space="preserve">
+    <value>इमोट</value>
+  </data>
+  <data name="Glow is disabled for this rule." xml:space="preserve">
+    <value>इस नियम के लिए चमक अक्षम है।</value>
+  </data>
+  <data name="Click to change color" xml:space="preserve">
+    <value>रंग बदलने के लिए क्लिक करें</value>
+  </data>
+  <data name="Enabled Icon" xml:space="preserve">
+    <value>सक्षम होने का आइकन</value>
+  </data>
+  <data name="Enabled Icon Code" xml:space="preserve">
+    <value>सक्षम होने के आइकन का कोड</value>
+  </data>
+  <data name="Disabled Icon" xml:space="preserve">
+    <value>अक्षम होने का आइकन</value>
+  </data>
+  <data name="Disabled Icon Code" xml:space="preserve">
+    <value>अक्षम होने के आइकन का कोड</value>
+  </data>
+  <data name="Destination and enablement" xml:space="preserve">
+    <value>गंतव्य और सक्षम करना</value>
+  </data>
+  <data name="Trigger and audience" xml:space="preserve">
+    <value>ट्रिगर और लक्षित लोग</value>
+  </data>
+  <data name="Response" xml:space="preserve">
+    <value>जवाब</value>
+  </data>
+  <data name="Optional tuning" xml:space="preserve">
+    <value>वैकल्पिक समायोजन</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>समीक्षा</value>
+  </data>
+  <data name="Selected incoming emote" xml:space="preserve">
+    <value>चुना हुआ आने वाला इमोट</value>
+  </data>
+  <data name="COPYCAT incoming emotes" xml:space="preserve">
+    <value>आने वाले इमोट की COPYCAT नकल</value>
+  </data>
+  <data name="Player enters range" xml:space="preserve">
+    <value>खिलाड़ी सीमा में आता है</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>हाँ</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>नहीं</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="Any weather" xml:space="preserve">
+    <value>कोई भी मौसम</value>
+  </data>
+  <data name="Fallback" xml:space="preserve">
+    <value>विकल्प</value>
+  </data>
+  <data name="Wait {0:0.0}s; cooldown {1:0.0}s" xml:space="preserve">
+    <value>प्रतीक्षा {0:0.0}s; कूलडाउन {1:0.0}s</value>
+  </data>
+  <data name="{0:0.0} yalms" xml:space="preserve">
+    <value>{0:0.0} याल्म</value>
+  </data>
+  <data name="- Step {0} of {1}" xml:space="preserve">
+    <value>- चरण {0}, कुल {1}</value>
+  </data>
+  <data name="Loading UI fonts..." xml:space="preserve">
+    <value>UI फ़ॉन्ट लोड हो रहे हैं...</value>
+  </data>
+  <data name="UI fonts failed to load. See the plugin log." xml:space="preserve">
+    <value>UI फ़ॉन्ट लोड नहीं हो सके। प्लगइन लॉग देखें।</value>
+  </data>
+  <data name="A friendlier Eorzea, one emote at a time." xml:space="preserve">
+    <value>एक-एक इमोट से और मैत्रीपूर्ण Eorzea।</value>
+  </data>
+  <data name="Define when and how to perform social interactions." xml:space="preserve">
+    <value>सामाजिक संवाद कब और कैसे हों, तय करें।</value>
+  </data>
+  <data name="Hold CTRL to delete" xml:space="preserve">
+    <value>हटाने के लिए CTRL दबाए रखें</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>सीमा</value>
+  </data>
+  <data name="Customize the glyphs shown in icon modes when HFH is enabled/disabled." xml:space="preserve">
+    <value>HFH सक्षम/अक्षम होने पर आइकन मोड में दिखने वाले ग्लिफ़ चुनें।</value>
+  </data>
+  <data name="(select)" xml:space="preserve">
+    <value>(चुनें)</value>
+  </data>
+  <data name="Clear Skies" xml:space="preserve">
+    <value>साफ़ आकाश</value>
+  </data>
+  <data name="Fair Skies" xml:space="preserve">
+    <value>सुहाना आकाश</value>
+  </data>
+  <data name="Clouds" xml:space="preserve">
+    <value>बादल</value>
+  </data>
+  <data name="Fog" xml:space="preserve">
+    <value>कोहरा</value>
+  </data>
+  <data name="Wind" xml:space="preserve">
+    <value>हवा</value>
+  </data>
+  <data name="Gales" xml:space="preserve">
+    <value>तेज़ हवाएँ</value>
+  </data>
+  <data name="Rain" xml:space="preserve">
+    <value>बारिश</value>
+  </data>
+  <data name="Showers" xml:space="preserve">
+    <value>बौछारें</value>
+  </data>
+  <data name="Thunder" xml:space="preserve">
+    <value>गरज</value>
+  </data>
+  <data name="Thunderstorms" xml:space="preserve">
+    <value>गरज वाले तूफ़ान</value>
+  </data>
+  <data name="Dust Storms" xml:space="preserve">
+    <value>धूल के तूफ़ान</value>
+  </data>
+  <data name="Sandstorms" xml:space="preserve">
+    <value>रेत के तूफ़ान</value>
+  </data>
+  <data name="Hot Spells" xml:space="preserve">
+    <value>गर्म मौसम</value>
+  </data>
+  <data name="Heat Waves" xml:space="preserve">
+    <value>लू</value>
+  </data>
+  <data name="Snow" xml:space="preserve">
+    <value>बर्फ़</value>
+  </data>
+  <data name="Blizzards" xml:space="preserve">
+    <value>बर्फ़ीले तूफ़ान</value>
+  </data>
+  <data name="Gloom" xml:space="preserve">
+    <value>उदासी</value>
+  </data>
+  <data name="Auroras" xml:space="preserve">
+    <value>ध्रुवीय ज्योति</value>
+  </data>
+  <data name="Darkness" xml:space="preserve">
+    <value>अंधकार</value>
+  </data>
+  <data name="Tension" xml:space="preserve">
+    <value>तनाव</value>
+  </data>
+  <data name="Storm Clouds" xml:space="preserve">
+    <value>तूफ़ानी बादल</value>
+  </data>
+  <data name="Rough Seas" xml:space="preserve">
+    <value>उग्र समुद्र</value>
+  </data>
+  <data name="Louring" xml:space="preserve">
+    <value>घने काले बादल</value>
+  </data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>विंडो का रूप</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>मुख्य विंडो पर कॉम्पैक्ट नियंत्रण दिखाएँ</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>मुख्य विंडो पर भाषा नियंत्रण दिखाएँ</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>पारदर्शिता</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>अपारदर्शिता (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>फ़ोकस हटने पर स्वतः धुंधला करें</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>फ़ोकस हटने पर अपारदर्शिता (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>फ़ोकस हटने की देरी (सेकंड)</value>
+  </data>
+</root>

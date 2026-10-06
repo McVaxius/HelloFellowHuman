@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Presets" xml:space="preserve">
+    <value>Zestawy</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>Konfiguracja</value>
+  </data>
+  <data name="Support on Ko-fi" xml:space="preserve">
+    <value>Wesprzyj na Ko-fi</value>
+  </data>
+  <data name="Support development on Ko-fi" xml:space="preserve">
+    <value>Wesprzyj rozwój na Ko-fi</value>
+  </data>
+  <data name="Guided Setup" xml:space="preserve">
+    <value>Konfiguracja z przewodnikiem</value>
+  </data>
+  <data name="Create a reaction with a plain-language guided wizard" xml:space="preserve">
+    <value>Utwórz reakcję za pomocą kreatora z prostymi objaśnieniami</value>
+  </data>
+  <data name="Compact mode" xml:space="preserve">
+    <value>Tryb kompaktowy</value>
+  </data>
+  <data name="Log in and select an account before editing presets." xml:space="preserve">
+    <value>Zaloguj się i wybierz konto przed edycją zestawów.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Włączone</value>
+  </data>
+  <data name="Enable/disable the plugin's emote automation" xml:space="preserve">
+    <value>Włącz/wyłącz automatyczne emotki wtyczki</value>
+  </data>
+  <data name="DTR ON" xml:space="preserve">
+    <value>DTR WŁ.</value>
+  </data>
+  <data name="Show/hide the DTR bar entry (server info bar)" xml:space="preserve">
+    <value>Pokaż/ukryj wpis na pasku DTR (pasku informacji o serwerze)</value>
+  </data>
+  <data name="Krangle" xml:space="preserve">
+    <value>Krangle</value>
+  </data>
+  <data name="Obfuscate player names with military/exercise words.&#xA;Useful for screenshots." xml:space="preserve">
+    <value>Ukryj nazwy graczy za pomocą terminów wojskowych/z ćwiczeń.
+Przydatne do zrzutów ekranu.</value>
+  </data>
+  <data name="DTR Mode" xml:space="preserve">
+    <value>Tryb DTR</value>
+  </data>
+  <data name="DTR bar display mode:&#xA;Text Only: 'HFH: ON/OFF [preset]'&#xA;Icon+Text: '⚫ HFH'&#xA;Icon Only: '⚫'" xml:space="preserve">
+    <value>Tryb wyświetlania paska DTR:
+Tylko tekst: 'HFH: WŁ./WYŁ. [zestaw]'
+Ikona + tekst: '⚫ HFH'
+Tylko ikona: '⚫'</value>
+  </data>
+  <data name="DTR Icons (max 3 characters)" xml:space="preserve">
+    <value>Ikony DTR (maks. 3 znaki)</value>
+  </data>
+  <data name="Copy Icon Guide Link" xml:space="preserve">
+    <value>Kopiuj link do przewodnika po ikonach</value>
+  </data>
+  <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
+    <value>Kopiuje link do wpisu na blogu Lodestone z sugerowanymi glifami</value>
+  </data>
+  <data name="ACTIVE" xml:space="preserve">
+    <value>AKTYWNY</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Nowy</value>
+  </data>
+  <data name="+ New Preset" xml:space="preserve">
+    <value>+ Nowy zestaw</value>
+  </data>
+  <data name="Enter preset name:" xml:space="preserve">
+    <value>Wpisz nazwę zestawu:</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Utwórz</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="Preset Name" xml:space="preserve">
+    <value>Nazwa zestawu</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Eksportuj</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Importuj</value>
+  </data>
+  <data name="Reset Default" xml:space="preserve">
+    <value>Przywróć domyślny</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>Reguły</value>
+  </data>
+  <data name="+ Add Blank Rule" xml:space="preserve">
+    <value>+ Dodaj pustą regułę</value>
+  </data>
+  <data name="Add Rule with Wizard" xml:space="preserve">
+    <value>Dodaj regułę z kreatorem</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Proximity = distance-based, Emote = responds to emotes directed at you" xml:space="preserve">
+    <value>Bliskość = na podstawie odległości; Emotka = odpowiada na emotki skierowane do ciebie</value>
+  </data>
+  <data name="ALL" xml:space="preserve">
+    <value>WSZYSTKIE</value>
+  </data>
+  <data name="Check to target all nearby players" xml:space="preserve">
+    <value>Zaznacz, aby wybierać wszystkich pobliskich graczy</value>
+  </data>
+  <data name="ToT" xml:space="preserve">
+    <value>ToT</value>
+  </data>
+  <data name="Target triggering player: if checked, /target the player before executing the slash command" xml:space="preserve">
+    <value>Wybierz gracza wyzwalającego: po zaznaczeniu użyj /target przed wykonaniem polecenia</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="Target player name (without @server). For Emote type, leave blank to respond to anyone." xml:space="preserve">
+    <value>Nazwa docelowego gracza (bez @server). Dla typu Emotka pozostaw puste, aby odpowiadać każdemu.</value>
+  </data>
+  <data name="Command" xml:space="preserve">
+    <value>Polecenie</value>
+  </data>
+  <data name="Slash command to execute. Try '/wave motion' to emote without text!" xml:space="preserve">
+    <value>Polecenie zaczynające się od /. Spróbuj '/wave motion', aby wykonać emotkę bez tekstu!</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Czekaj</value>
+  </data>
+  <data name="Seconds to wait after executing this emote" xml:space="preserve">
+    <value>Liczba sekund oczekiwania po wykonaniu tej emotki</value>
+  </data>
+  <data name="Repeat" xml:space="preserve">
+    <value>Powtórzenie</value>
+  </data>
+  <data name="Seconds before this emote can trigger again (Proximity only)" xml:space="preserve">
+    <value>Liczba sekund, po których emotka może zostać ponownie wyzwolona (tylko Bliskość)</value>
+  </data>
+  <data name="Dist/Emote" xml:space="preserve">
+    <value>Odległość/Emotka</value>
+  </data>
+  <data name="Proximity: max distance (yalms). Emote: the trigger emote slash command.&#xA;COPYCAT: Responds with ANY emote received (copies the emote)." xml:space="preserve">
+    <value>Bliskość: maks. odległość (yalmy). Emotka: polecenie emotki wyzwalającej.
+COPYCAT: Odpowiada na KAŻDĄ otrzymaną emotkę (kopiuje emotkę).</value>
+  </data>
+  <data name="Weather" xml:space="preserve">
+    <value>Pogoda</value>
+  </data>
+  <data name="Weather condition required for this line to trigger (ALL = any weather)" xml:space="preserve">
+    <value>Warunek pogodowy wymagany do wyzwolenia tej linii (WSZYSTKIE = dowolna pogoda)</value>
+  </data>
+  <data name="Emote Range" xml:space="preserve">
+    <value>Zasięg emotki</value>
+  </data>
+  <data name="Range for emote triggers in yalms (default: 10). Only applies to Emote type lines." xml:space="preserve">
+    <value>Zasięg wyzwalania emotek w yalmach (domyślnie: 10). Dotyczy tylko linii typu Emotka.</value>
+  </data>
+  <data name="Glow" xml:space="preserve">
+    <value>Poświata</value>
+  </data>
+  <data name="Enable glow animation with color effect" xml:space="preserve">
+    <value>Włącz animację poświaty z efektem kolorystycznym</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Kolor</value>
+  </data>
+  <data name="Glow color (RGB)" xml:space="preserve">
+    <value>Kolor poświaty (RGB)</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="Krangle this name (permanent obfuscation)" xml:space="preserve">
+    <value>Trwale ukryj tę nazwę za pomocą Krangle</value>
+  </data>
+  <data name="COPYCAT mode - fallback command when emote copying fails or the incoming emote is already looping.&#xA;Use media:, video:, audio:, or sound: to launch a local file." xml:space="preserve">
+    <value>Tryb COPYCAT - polecenie zastępcze, gdy kopiowanie emotki się nie powiedzie lub otrzymana emotka już się powtarza.
+Użyj media:, video:, audio: lub sound:, aby otworzyć plik lokalny.</value>
+  </data>
+  <data name="Slash command to execute.&#xA;Use media:, video:, audio:, or sound: to launch a local file relative to the plugin config folder or by full path." xml:space="preserve">
+    <value>Polecenie zaczynające się od /.
+Użyj media:, video:, audio: lub sound:, aby otworzyć plik lokalny względem folderu konfiguracji wtyczki lub przez pełną ścieżkę.</value>
+  </data>
+  <data name="The emote that triggers this response (e.g. /wave)" xml:space="preserve">
+    <value>Emotka wyzwalająca tę odpowiedź (np. /wave)</value>
+  </data>
+  <data name="Select weather condition for this line" xml:space="preserve">
+    <value>Wybierz warunek pogodowy dla tej linii</value>
+  </data>
+  <data name="Range for emote triggers in yalms" xml:space="preserve">
+    <value>Zasięg wyzwalania emotek w yalmach</value>
+  </data>
+  <data name="Emote range only applies to Emote type lines" xml:space="preserve">
+    <value>Zasięg emotki dotyczy tylko linii typu Emotka</value>
+  </data>
+  <data name="Shown when HFH is {0}" xml:space="preserve">
+    <value>Wyświetlane, gdy HFH jest {0}</value>
+  </data>
+  <data name="No Colour" xml:space="preserve">
+    <value>Bez koloru</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
+  <data name="Clear selected colour" xml:space="preserve">
+    <value>Wyczyść wybrany kolor</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Potwierdź</value>
+  </data>
+  <data name="Log in and select an account before using guided setup." xml:space="preserve">
+    <value>Zaloguj się i wybierz konto przed użyciem konfiguracji z przewodnikiem.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="Choose the preset that will receive this rule. Nothing is saved until Finish." xml:space="preserve">
+    <value>Wybierz zestaw, który otrzyma tę regułę. Nic nie zostanie zapisane przed wybraniem Zakończ.</value>
+  </data>
+  <data name="Destination preset" xml:space="preserve">
+    <value>Zestaw docelowy</value>
+  </data>
+  <data name="Enable automatic reactions when I finish" xml:space="preserve">
+    <value>Włącz automatyczne reakcje po zakończeniu</value>
+  </data>
+  <data name="Clear this if you want to review the new rule in the advanced editor before enabling it." xml:space="preserve">
+    <value>Odznacz, jeśli chcesz sprawdzić nową regułę w zaawansowanym edytorze przed jej włączeniem.</value>
+  </data>
+  <data name="This account is currently {0}. Add Rule mode will not change that setting." xml:space="preserve">
+    <value>To konto jest obecnie {0}. Tryb Dodaj regułę nie zmieni tego ustawienia.</value>
+  </data>
+  <data name="Choose what starts the reaction." xml:space="preserve">
+    <value>Wybierz, co rozpoczyna reakcję.</value>
+  </data>
+  <data name="A player enters range" xml:space="preserve">
+    <value>Gracz wchodzi w zasięg</value>
+  </data>
+  <data name="A selected emote is performed" xml:space="preserve">
+    <value>Wykonywana jest wybrana emotka</value>
+  </data>
+  <data name="COPYCAT any incoming emote" xml:space="preserve">
+    <value>COPYCAT dowolnej otrzymanej emotki</value>
+  </data>
+  <data name="Who can trigger it?" xml:space="preserve">
+    <value>Kto może wyzwolić reakcję?</value>
+  </data>
+  <data name="Any nearby player" xml:space="preserve">
+    <value>Dowolny pobliski gracz</value>
+  </data>
+  <data name="One specific player" xml:space="preserve">
+    <value>Jeden konkretny gracz</value>
+  </data>
+  <data name="Player name (without @World)" xml:space="preserve">
+    <value>Nazwa gracza (bez @World)</value>
+  </data>
+  <data name="Incoming emote" xml:space="preserve">
+    <value>Otrzymana emotka</value>
+  </data>
+  <data name="COPYCAT mirrors the incoming emote. You may add a fallback command for an emote that cannot be mirrored or is already looping." xml:space="preserve">
+    <value>COPYCAT naśladuje otrzymaną emotkę. Możesz dodać polecenie zastępcze dla emotki, której nie można naśladować lub która już się powtarza.</value>
+  </data>
+  <data name="Optional fallback command" xml:space="preserve">
+    <value>Opcjonalne polecenie zastępcze</value>
+  </data>
+  <data name="Leave this blank for no fallback." xml:space="preserve">
+    <value>Pozostaw puste, aby nie używać polecenia zastępczego.</value>
+  </data>
+  <data name="Enter the command to run when this rule triggers." xml:space="preserve">
+    <value>Wpisz polecenie wykonywane po wyzwoleniu tej reguły.</value>
+  </data>
+  <data name="Response command" xml:space="preserve">
+    <value>Polecenie odpowiedzi</value>
+  </data>
+  <data name="Example: /wave motion" xml:space="preserve">
+    <value>Przykład: /wave motion</value>
+  </data>
+  <data name="These defaults are ready to use. Adjust only what you need." xml:space="preserve">
+    <value>Te ustawienia domyślne są gotowe do użycia. Zmień tylko to, czego potrzebujesz.</value>
+  </data>
+  <data name="Wait after response (seconds)" xml:space="preserve">
+    <value>Oczekiwanie po odpowiedzi (sekundy)</value>
+  </data>
+  <data name="Cooldown (seconds)" xml:space="preserve">
+    <value>Przerwa między aktywacjami (sekundy)</value>
+  </data>
+  <data name="Proximity range (yalms)" xml:space="preserve">
+    <value>Zasięg bliskości (yalmy)</value>
+  </data>
+  <data name="Incoming-emote range (yalms)" xml:space="preserve">
+    <value>Zasięg otrzymanych emotek (yalmy)</value>
+  </data>
+  <data name="Required weather" xml:space="preserve">
+    <value>Wymagana pogoda</value>
+  </data>
+  <data name="Target the triggering player before the command" xml:space="preserve">
+    <value>Wybierz gracza wyzwalającego przed poleceniem</value>
+  </data>
+  <data name="Show a temporary nameplate glow" xml:space="preserve">
+    <value>Pokaż tymczasową poświatę na etykiecie z nazwą</value>
+  </data>
+  <data name="Glow color" xml:space="preserve">
+    <value>Kolor poświaty</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Niedostępne</value>
+  </data>
+  <data name="Review the rule below. Finish applies it and saves once; Cancel or closing this window leaves configuration unchanged." xml:space="preserve">
+    <value>Sprawdź poniższą regułę. Zakończ stosuje ją i zapisuje raz; Anuluj lub zamknięcie okna pozostawia konfigurację bez zmian.</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Brak</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Wstecz</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Dalej</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Zakończ</value>
+  </data>
+  <data name="The destination preset is no longer available. Reopen the wizard and try again." xml:space="preserve">
+    <value>Zestaw docelowy nie jest już dostępny. Otwórz kreator ponownie i spróbuj jeszcze raz.</value>
+  </data>
+  <data name="The setup draft is unavailable." xml:space="preserve">
+    <value>Szkic konfiguracji jest niedostępny.</value>
+  </data>
+  <data name="Choose an available destination preset." xml:space="preserve">
+    <value>Wybierz dostępny zestaw docelowy.</value>
+  </data>
+  <data name="Enter a player name or choose Any nearby player." xml:space="preserve">
+    <value>Wpisz nazwę gracza lub wybierz Dowolny pobliski gracz.</value>
+  </data>
+  <data name="Choose the incoming emote that should trigger this rule." xml:space="preserve">
+    <value>Wybierz otrzymaną emotkę, która ma wyzwalać tę regułę.</value>
+  </data>
+  <data name="Enter a response command." xml:space="preserve">
+    <value>Wpisz polecenie odpowiedzi.</value>
+  </data>
+  <data name="Wait must be zero or more, and cooldown must be greater than zero." xml:space="preserve">
+    <value>Czas oczekiwania musi być równy zero lub większy, a przerwa między aktywacjami większa od zera.</value>
+  </data>
+  <data name="Proximity range must be greater than zero." xml:space="preserve">
+    <value>Zasięg bliskości musi być większy od zera.</value>
+  </data>
+  <data name="Incoming-emote range must be greater than zero." xml:space="preserve">
+    <value>Zasięg otrzymanych emotek musi być większy od zera.</value>
+  </data>
+  <data name="Preset" xml:space="preserve">
+    <value>Zestaw</value>
+  </data>
+  <data name="Account after finish" xml:space="preserve">
+    <value>Konto po zakończeniu</value>
+  </data>
+  <data name="Trigger" xml:space="preserve">
+    <value>Wyzwalacz</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>Odbiorcy</value>
+  </data>
+  <data name="Timing" xml:space="preserve">
+    <value>Czas</value>
+  </data>
+  <data name="Target first" xml:space="preserve">
+    <value>Najpierw wybierz cel</value>
+  </data>
+  <data name="Nameplate glow" xml:space="preserve">
+    <value>Poświata etykiety z nazwą</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="Teal" xml:space="preserve">
+    <value>Turkusowy</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Niebieski</value>
+  </data>
+  <data name="Pink" xml:space="preserve">
+    <value>Różowy</value>
+  </data>
+  <data name="Custom RGB" xml:space="preserve">
+    <value>Własny RGB</value>
+  </data>
+  <data name="Built-in preset" xml:space="preserve">
+    <value>Wbudowany zestaw</value>
+  </data>
+  <data name="User preset" xml:space="preserve">
+    <value>Zestaw użytkownika</value>
+  </data>
+  <data name="Editing the built-in preset." xml:space="preserve">
+    <value>Edycja wbudowanego zestawu.</value>
+  </data>
+  <data name="Select an emote" xml:space="preserve">
+    <value>Wybierz emotkę</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Wyłączone</value>
+  </data>
+  <data name="Text Only" xml:space="preserve">
+    <value>Tylko tekst</value>
+  </data>
+  <data name="Icon+Text" xml:space="preserve">
+    <value>Ikona + tekst</value>
+  </data>
+  <data name="Icon Only" xml:space="preserve">
+    <value>Tylko ikona</value>
+  </data>
+  <data name="Proximity" xml:space="preserve">
+    <value>Bliskość</value>
+  </data>
+  <data name="Emote" xml:space="preserve">
+    <value>Emotka</value>
+  </data>
+  <data name="Glow is disabled for this rule." xml:space="preserve">
+    <value>Poświata jest wyłączona dla tej reguły.</value>
+  </data>
+  <data name="Click to change color" xml:space="preserve">
+    <value>Kliknij, aby zmienić kolor</value>
+  </data>
+  <data name="Enabled Icon" xml:space="preserve">
+    <value>Ikona włączenia</value>
+  </data>
+  <data name="Enabled Icon Code" xml:space="preserve">
+    <value>Kod ikony włączenia</value>
+  </data>
+  <data name="Disabled Icon" xml:space="preserve">
+    <value>Ikona wyłączenia</value>
+  </data>
+  <data name="Disabled Icon Code" xml:space="preserve">
+    <value>Kod ikony wyłączenia</value>
+  </data>
+  <data name="Destination and enablement" xml:space="preserve">
+    <value>Cel i włączenie</value>
+  </data>
+  <data name="Trigger and audience" xml:space="preserve">
+    <value>Wyzwalacz i odbiorcy</value>
+  </data>
+  <data name="Response" xml:space="preserve">
+    <value>Odpowiedź</value>
+  </data>
+  <data name="Optional tuning" xml:space="preserve">
+    <value>Opcjonalne dostosowanie</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Przegląd</value>
+  </data>
+  <data name="Selected incoming emote" xml:space="preserve">
+    <value>Wybrana otrzymana emotka</value>
+  </data>
+  <data name="COPYCAT incoming emotes" xml:space="preserve">
+    <value>COPYCAT otrzymanych emotek</value>
+  </data>
+  <data name="Player enters range" xml:space="preserve">
+    <value>Gracz wchodzi w zasięg</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Tak</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Wł.</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Wył.</value>
+  </data>
+  <data name="Any weather" xml:space="preserve">
+    <value>Dowolna pogoda</value>
+  </data>
+  <data name="Fallback" xml:space="preserve">
+    <value>Zastępstwo</value>
+  </data>
+  <data name="Wait {0:0.0}s; cooldown {1:0.0}s" xml:space="preserve">
+    <value>Czekaj {0:0.0}s; przerwa {1:0.0}s</value>
+  </data>
+  <data name="{0:0.0} yalms" xml:space="preserve">
+    <value>{0:0.0} yalmów</value>
+  </data>
+  <data name="- Step {0} of {1}" xml:space="preserve">
+    <value>- Krok {0} z {1}</value>
+  </data>
+  <data name="Loading UI fonts..." xml:space="preserve">
+    <value>Ładowanie czcionek interfejsu...</value>
+  </data>
+  <data name="UI fonts failed to load. See the plugin log." xml:space="preserve">
+    <value>Nie udało się wczytać czcionek interfejsu. Sprawdź dziennik wtyczki.</value>
+  </data>
+  <data name="A friendlier Eorzea, one emote at a time." xml:space="preserve">
+    <value>Przyjaźniejsza Eorzea, emotka po emotce.</value>
+  </data>
+  <data name="Define when and how to perform social interactions." xml:space="preserve">
+    <value>Określ, kiedy i jak wykonywać interakcje społeczne.</value>
+  </data>
+  <data name="Hold CTRL to delete" xml:space="preserve">
+    <value>Przytrzymaj CTRL, aby usunąć</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>Zasięg</value>
+  </data>
+  <data name="Customize the glyphs shown in icon modes when HFH is enabled/disabled." xml:space="preserve">
+    <value>Dostosuj glify w trybach ikon, gdy HFH jest włączone/wyłączone.</value>
+  </data>
+  <data name="(select)" xml:space="preserve">
+    <value>(wybierz)</value>
+  </data>
+  <data name="Clear Skies" xml:space="preserve">
+    <value>Czyste niebo</value>
+  </data>
+  <data name="Fair Skies" xml:space="preserve">
+    <value>Pogodne niebo</value>
+  </data>
+  <data name="Clouds" xml:space="preserve">
+    <value>Chmury</value>
+  </data>
+  <data name="Fog" xml:space="preserve">
+    <value>Mgła</value>
+  </data>
+  <data name="Wind" xml:space="preserve">
+    <value>Wiatr</value>
+  </data>
+  <data name="Gales" xml:space="preserve">
+    <value>Wichura</value>
+  </data>
+  <data name="Rain" xml:space="preserve">
+    <value>Deszcz</value>
+  </data>
+  <data name="Showers" xml:space="preserve">
+    <value>Przelotne ulewy</value>
+  </data>
+  <data name="Thunder" xml:space="preserve">
+    <value>Grzmoty</value>
+  </data>
+  <data name="Thunderstorms" xml:space="preserve">
+    <value>Burze</value>
+  </data>
+  <data name="Dust Storms" xml:space="preserve">
+    <value>Burze pyłowe</value>
+  </data>
+  <data name="Sandstorms" xml:space="preserve">
+    <value>Burze piaskowe</value>
+  </data>
+  <data name="Hot Spells" xml:space="preserve">
+    <value>Upały</value>
+  </data>
+  <data name="Heat Waves" xml:space="preserve">
+    <value>Fale gorąca</value>
+  </data>
+  <data name="Snow" xml:space="preserve">
+    <value>Śnieg</value>
+  </data>
+  <data name="Blizzards" xml:space="preserve">
+    <value>Zamiecie</value>
+  </data>
+  <data name="Gloom" xml:space="preserve">
+    <value>Mrok</value>
+  </data>
+  <data name="Auroras" xml:space="preserve">
+    <value>Zorze</value>
+  </data>
+  <data name="Darkness" xml:space="preserve">
+    <value>Ciemność</value>
+  </data>
+  <data name="Tension" xml:space="preserve">
+    <value>Napięcie</value>
+  </data>
+  <data name="Storm Clouds" xml:space="preserve">
+    <value>Chmury burzowe</value>
+  </data>
+  <data name="Rough Seas" xml:space="preserve">
+    <value>Wzburzone morze</value>
+  </data>
+  <data name="Louring" xml:space="preserve">
+    <value>Ponure niebo</value>
+  </data>
+  <data name="Window appearance" xml:space="preserve"><value>Wygląd okna</value></data>
+  <data name="Compact visible on main window" xml:space="preserve"><value>Pokaż tryb kompaktowy w oknie głównym</value></data>
+  <data name="Language visible on main window" xml:space="preserve"><value>Pokaż wybór języka w oknie głównym</value></data>
+  <data name="Transparency" xml:space="preserve"><value>Przezroczystość</value></data>
+  <data name="Opacity (%)" xml:space="preserve"><value>Nieprzezroczystość (%)</value></data>
+  <data name="Auto-fade when unfocused" xml:space="preserve"><value>Automatycznie przygaszaj bez fokusu</value></data>
+  <data name="Unfocused opacity (%)" xml:space="preserve"><value>Nieprzezroczystość bez fokusu (%)</value></data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve"><value>Opóźnienie bez fokusu (sekundy)</value></data>
+</root>

@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Presets" xml:space="preserve">
+    <value>프리셋</value>
+  </data>
+  <data name="Support on Ko-fi" xml:space="preserve">
+    <value>Ko-fi에서 후원</value>
+  </data>
+  <data name="Support development on Ko-fi" xml:space="preserve">
+    <value>Ko-fi에서 개발 후원</value>
+  </data>
+  <data name="Compact mode" xml:space="preserve">
+    <value>컴팩트 모드</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>활성화</value>
+  </data>
+  <data name="Krangle" xml:space="preserve">
+    <value>Krangle</value>
+  </data>
+  <data name="DTR Mode" xml:space="preserve">
+    <value>DTR 모드</value>
+  </data>
+  <data name="DTR Icons (max 3 characters)" xml:space="preserve">
+    <value>DTR 아이콘(최대 3자)</value>
+  </data>
+  <data name="Copy Icon Guide Link" xml:space="preserve">
+    <value>아이콘 안내 링크 복사</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>종류</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>이름</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>색상</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>제거</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>사용 불가</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>없음</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>다음</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>완료</value>
+  </data>
+  <data name="Preset" xml:space="preserve">
+    <value>프리셋</value>
+  </data>
+  <data name="Trigger" xml:space="preserve">
+    <value>트리거</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="Teal" xml:space="preserve">
+    <value>청록색</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>파란색</value>
+  </data>
+  <data name="Pink" xml:space="preserve">
+    <value>분홍색</value>
+  </data>
+  <data name="Custom RGB" xml:space="preserve">
+    <value>사용자 지정 RGB</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>비활성</value>
+  </data>
+  <data name="Text Only" xml:space="preserve">
+    <value>텍스트만</value>
+  </data>
+  <data name="Icon Only" xml:space="preserve">
+    <value>아이콘만</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>예</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>아니요</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>켜짐</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>꺼짐</value>
+  </data>
+  <data name="Loading UI fonts..." xml:space="preserve">
+    <value>글꼴 불러오는 중…</value>
+  </data>
+  <data name="UI fonts failed to load. See the plugin log." xml:space="preserve">
+    <value>글꼴을 불러오지 못했습니다. 플러그인 로그를 확인하세요.</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="Guided Setup" xml:space="preserve">
+    <value>설정 마법사</value>
+  </data>
+  <data name="Create a reaction with a plain-language guided wizard" xml:space="preserve">
+    <value>알기 쉬운 마법사로 반응 만들기</value>
+  </data>
+  <data name="Log in and select an account before editing presets." xml:space="preserve">
+    <value>프리셋을 편집하기 전에 로그인하고 계정을 선택하세요.</value>
+  </data>
+  <data name="Enable/disable the plugin's emote automation" xml:space="preserve">
+    <value>플러그인의 감정 표현 자동화 켜기/끄기</value>
+  </data>
+  <data name="DTR ON" xml:space="preserve">
+    <value>DTR 켜짐</value>
+  </data>
+  <data name="Show/hide the DTR bar entry (server info bar)" xml:space="preserve">
+    <value>서버 정보 표시줄의 DTR 항목 표시/숨기기</value>
+  </data>
+  <data name="Obfuscate player names with military/exercise words.&#10;Useful for screenshots." xml:space="preserve">
+    <value>군사/운동 용어로 이름을 가립니다.
+스크린샷에 유용합니다.</value>
+  </data>
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+    <value>DTR 표시 모드:
+텍스트만: 'HFH: ON/OFF [preset]'
+아이콘+텍스트: '⚫ HFH'
+아이콘만: '⚫'</value>
+  </data>
+  <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
+    <value>권장 글리프가 있는 Lodestone 블로그 링크 복사</value>
+  </data>
+  <data name="ACTIVE" xml:space="preserve">
+    <value>활성</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>새로 만들기</value>
+  </data>
+  <data name="+ New Preset" xml:space="preserve">
+    <value>+ 새 프리셋</value>
+  </data>
+  <data name="Enter preset name:" xml:space="preserve">
+    <value>프리셋 이름 입력:</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>만들기</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="Preset Name" xml:space="preserve">
+    <value>프리셋 이름</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>내보내기</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>가져오기</value>
+  </data>
+  <data name="Reset Default" xml:space="preserve">
+    <value>기본값 초기화</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>규칙</value>
+  </data>
+  <data name="+ Add Blank Rule" xml:space="preserve">
+    <value>+ 빈 규칙 추가</value>
+  </data>
+  <data name="Add Rule with Wizard" xml:space="preserve">
+    <value>마법사로 규칙 추가</value>
+  </data>
+  <data name="Proximity = distance-based, Emote = responds to emotes directed at you" xml:space="preserve">
+    <value>근접 = 거리 기반, 감정 표현 = 자신을 향한 감정 표현에 반응</value>
+  </data>
+  <data name="ALL" xml:space="preserve">
+    <value>모두</value>
+  </data>
+  <data name="Check to target all nearby players" xml:space="preserve">
+    <value>근처의 모든 플레이어를 대상으로 하려면 선택</value>
+  </data>
+  <data name="ToT" xml:space="preserve">
+    <value>대상 지정</value>
+  </data>
+  <data name="Target triggering player: if checked, /target the player before executing the slash command" xml:space="preserve">
+    <value>명령 실행 전에 /target으로 규칙을 발동한 플레이어를 지정</value>
+  </data>
+  <data name="Target player name (without @server). For Emote type, leave blank to respond to anyone." xml:space="preserve">
+    <value>이름(@server 제외). 감정 표현 유형에서 누구에게나 반응하려면 비워 두세요.</value>
+  </data>
+  <data name="Command" xml:space="preserve">
+    <value>명령</value>
+  </data>
+  <data name="Slash command to execute. Try '/wave motion' to emote without text!" xml:space="preserve">
+    <value>실행할 명령. 텍스트 없는 감정 표현에는 '/wave motion'을 사용하세요!</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>대기</value>
+  </data>
+  <data name="Seconds to wait after executing this emote" xml:space="preserve">
+    <value>이 감정 표현 실행 후 대기할 초</value>
+  </data>
+  <data name="Repeat" xml:space="preserve">
+    <value>반복</value>
+  </data>
+  <data name="Seconds before this emote can trigger again (Proximity only)" xml:space="preserve">
+    <value>다시 발동할 수 있을 때까지의 초(근접 유형만)</value>
+  </data>
+  <data name="Dist/Emote" xml:space="preserve">
+    <value>거리/감정 표현</value>
+  </data>
+  <data name="Proximity: max distance (yalms). Emote: the trigger emote slash command.&#10;COPYCAT: Responds with ANY emote received (copies the emote)." xml:space="preserve">
+    <value>근접: 최대 거리(얄름). 감정 표현: 발동할 감정 표현 명령.
+COPYCAT: 받은 모든 감정 표현을 복사합니다.</value>
+  </data>
+  <data name="Weather" xml:space="preserve">
+    <value>날씨</value>
+  </data>
+  <data name="Weather condition required for this line to trigger (ALL = any weather)" xml:space="preserve">
+    <value>이 규칙의 발동에 필요한 날씨(모두 = 모든 날씨)</value>
+  </data>
+  <data name="Emote Range" xml:space="preserve">
+    <value>감정 표현 범위</value>
+  </data>
+  <data name="Range for emote triggers in yalms (default: 10). Only applies to Emote type lines." xml:space="preserve">
+    <value>감정 표현 발동 범위(얄름, 기본값: 10). 감정 표현 유형에만 적용됩니다.</value>
+  </data>
+  <data name="Glow" xml:space="preserve">
+    <value>발광</value>
+  </data>
+  <data name="Enable glow animation with color effect" xml:space="preserve">
+    <value>색상 효과가 있는 발광 애니메이션 켜기</value>
+  </data>
+  <data name="Glow color (RGB)" xml:space="preserve">
+    <value>발광 색상(RGB)</value>
+  </data>
+  <data name="Krangle this name (permanent obfuscation)" xml:space="preserve">
+    <value>이 이름을 영구적으로 가리기</value>
+  </data>
+  <data name="COPYCAT mode - fallback command when emote copying fails or the incoming emote is already looping.&#10;Use media:, video:, audio:, or sound: to launch a local file." xml:space="preserve">
+    <value>COPYCAT: 복사에 실패하거나 받은 감정 표현이 이미 반복 중일 때 사용할 대체 명령.
+media:, video:, audio:, sound:로 로컬 파일을 실행할 수 있습니다.</value>
+  </data>
+  <data name="Slash command to execute.&#10;Use media:, video:, audio:, or sound: to launch a local file relative to the plugin config folder or by full path." xml:space="preserve">
+    <value>실행할 슬래시 명령.
+media:, video:, audio:, sound:로 플러그인 설정 폴더 기준 상대 경로나 전체 경로의 로컬 파일을 실행할 수 있습니다.</value>
+  </data>
+  <data name="The emote that triggers this response (e.g. /wave)" xml:space="preserve">
+    <value>이 반응을 발동할 감정 표현(예: /wave)</value>
+  </data>
+  <data name="Select weather condition for this line" xml:space="preserve">
+    <value>이 규칙의 날씨 조건 선택</value>
+  </data>
+  <data name="Range for emote triggers in yalms" xml:space="preserve">
+    <value>감정 표현 발동 범위(얄름)</value>
+  </data>
+  <data name="Emote range only applies to Emote type lines" xml:space="preserve">
+    <value>감정 표현 범위는 감정 표현 유형에만 적용됩니다</value>
+  </data>
+  <data name="Shown when HFH is {0}" xml:space="preserve">
+    <value>HFH 상태가 {0}일 때 표시</value>
+  </data>
+  <data name="No Colour" xml:space="preserve">
+    <value>색상 없음</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>지우기</value>
+  </data>
+  <data name="Clear selected colour" xml:space="preserve">
+    <value>선택한 색상 지우기</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="Log in and select an account before using guided setup." xml:space="preserve">
+    <value>설정 마법사를 사용하기 전에 로그인하고 계정을 선택하세요.</value>
+  </data>
+  <data name="Choose the preset that will receive this rule. Nothing is saved until Finish." xml:space="preserve">
+    <value>규칙을 추가할 프리셋을 선택하세요. 완료 전까지는 저장되지 않습니다.</value>
+  </data>
+  <data name="Destination preset" xml:space="preserve">
+    <value>대상 프리셋</value>
+  </data>
+  <data name="Enable automatic reactions when I finish" xml:space="preserve">
+    <value>완료 시 자동 반응 켜기</value>
+  </data>
+  <data name="Clear this if you want to review the new rule in the advanced editor before enabling it." xml:space="preserve">
+    <value>활성화 전에 고급 편집기에서 새 규칙을 확인하려면 선택을 해제하세요.</value>
+  </data>
+  <data name="This account is currently {0}. Add Rule mode will not change that setting." xml:space="preserve">
+    <value>이 계정의 현재 상태는 {0}입니다. 규칙 추가 모드에서는 이 설정을 변경하지 않습니다.</value>
+  </data>
+  <data name="Choose what starts the reaction." xml:space="preserve">
+    <value>반응을 시작할 조건을 선택하세요.</value>
+  </data>
+  <data name="A player enters range" xml:space="preserve">
+    <value>플레이어가 범위 안에 들어옴</value>
+  </data>
+  <data name="A selected emote is performed" xml:space="preserve">
+    <value>선택한 감정 표현이 수행됨</value>
+  </data>
+  <data name="COPYCAT any incoming emote" xml:space="preserve">
+    <value>받은 모든 감정 표현을 COPYCAT</value>
+  </data>
+  <data name="Who can trigger it?" xml:space="preserve">
+    <value>누가 발동할 수 있나요?</value>
+  </data>
+  <data name="Any nearby player" xml:space="preserve">
+    <value>근처의 모든 플레이어</value>
+  </data>
+  <data name="One specific player" xml:space="preserve">
+    <value>특정 플레이어 한 명</value>
+  </data>
+  <data name="Player name (without @World)" xml:space="preserve">
+    <value>플레이어 이름(@World 제외)</value>
+  </data>
+  <data name="Incoming emote" xml:space="preserve">
+    <value>받은 감정 표현</value>
+  </data>
+  <data name="COPYCAT mirrors the incoming emote. You may add a fallback command for an emote that cannot be mirrored or is already looping." xml:space="preserve">
+    <value>COPYCAT은 받은 감정 표현을 따라 합니다. 복사할 수 없거나 이미 반복 중일 때 사용할 대체 명령을 추가할 수 있습니다.</value>
+  </data>
+  <data name="Optional fallback command" xml:space="preserve">
+    <value>선택적 대체 명령</value>
+  </data>
+  <data name="Leave this blank for no fallback." xml:space="preserve">
+    <value>대체 명령을 사용하지 않으려면 비워 두세요.</value>
+  </data>
+  <data name="Enter the command to run when this rule triggers." xml:space="preserve">
+    <value>규칙이 발동하면 실행할 명령을 입력하세요.</value>
+  </data>
+  <data name="Response command" xml:space="preserve">
+    <value>반응 명령</value>
+  </data>
+  <data name="Example: /wave motion" xml:space="preserve">
+    <value>예: /wave motion</value>
+  </data>
+  <data name="These defaults are ready to use. Adjust only what you need." xml:space="preserve">
+    <value>이 기본값은 바로 사용할 수 있습니다. 필요한 항목만 조정하세요.</value>
+  </data>
+  <data name="Wait after response (seconds)" xml:space="preserve">
+    <value>반응 후 대기(초)</value>
+  </data>
+  <data name="Cooldown (seconds)" xml:space="preserve">
+    <value>재사용 대기시간(초)</value>
+  </data>
+  <data name="Proximity range (yalms)" xml:space="preserve">
+    <value>근접 범위(얄름)</value>
+  </data>
+  <data name="Incoming-emote range (yalms)" xml:space="preserve">
+    <value>받은 감정 표현 범위(얄름)</value>
+  </data>
+  <data name="Required weather" xml:space="preserve">
+    <value>필요한 날씨</value>
+  </data>
+  <data name="Target the triggering player before the command" xml:space="preserve">
+    <value>명령 전에 규칙을 발동한 플레이어 지정</value>
+  </data>
+  <data name="Show a temporary nameplate glow" xml:space="preserve">
+    <value>이름표에 일시적인 발광 표시</value>
+  </data>
+  <data name="Glow color" xml:space="preserve">
+    <value>발광 색상</value>
+  </data>
+  <data name="Review the rule below. Finish applies it and saves once; Cancel or closing this window leaves configuration unchanged." xml:space="preserve">
+    <value>규칙을 확인하세요. 완료하면 적용하고 한 번 저장합니다. 취소하거나 창을 닫으면 설정이 변경되지 않습니다.</value>
+  </data>
+  <data name="The destination preset is no longer available. Reopen the wizard and try again." xml:space="preserve">
+    <value>대상 프리셋을 더 이상 사용할 수 없습니다. 마법사를 다시 열고 재시도하세요.</value>
+  </data>
+  <data name="The setup draft is unavailable." xml:space="preserve">
+    <value>설정 초안을 사용할 수 없습니다.</value>
+  </data>
+  <data name="Choose an available destination preset." xml:space="preserve">
+    <value>사용 가능한 대상 프리셋을 선택하세요.</value>
+  </data>
+  <data name="Enter a player name or choose Any nearby player." xml:space="preserve">
+    <value>플레이어 이름을 입력하거나 근처의 모든 플레이어를 선택하세요.</value>
+  </data>
+  <data name="Choose the incoming emote that should trigger this rule." xml:space="preserve">
+    <value>이 규칙을 발동할 받은 감정 표현을 선택하세요.</value>
+  </data>
+  <data name="Enter a response command." xml:space="preserve">
+    <value>반응 명령을 입력하세요.</value>
+  </data>
+  <data name="Proximity range must be greater than zero." xml:space="preserve">
+    <value>근접 범위는 0보다 커야 합니다.</value>
+  </data>
+  <data name="Incoming-emote range must be greater than zero." xml:space="preserve">
+    <value>받은 감정 표현 범위는 0보다 커야 합니다.</value>
+  </data>
+  <data name="Account after finish" xml:space="preserve">
+    <value>완료 후 계정</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>반응 대상</value>
+  </data>
+  <data name="Timing" xml:space="preserve">
+    <value>시간 설정</value>
+  </data>
+  <data name="Target first" xml:space="preserve">
+    <value>먼저 대상 지정</value>
+  </data>
+  <data name="Nameplate glow" xml:space="preserve">
+    <value>이름표 발광</value>
+  </data>
+  <data name="Built-in preset" xml:space="preserve">
+    <value>내장 프리셋</value>
+  </data>
+  <data name="User preset" xml:space="preserve">
+    <value>사용자 프리셋</value>
+  </data>
+  <data name="Editing the built-in preset." xml:space="preserve">
+    <value>내장 프리셋을 편집 중입니다.</value>
+  </data>
+  <data name="Select an emote" xml:space="preserve">
+    <value>감정 표현 선택</value>
+  </data>
+  <data name="Icon+Text" xml:space="preserve">
+    <value>아이콘+텍스트</value>
+  </data>
+  <data name="Proximity" xml:space="preserve">
+    <value>근접</value>
+  </data>
+  <data name="Emote" xml:space="preserve">
+    <value>감정 표현</value>
+  </data>
+  <data name="Glow is disabled for this rule." xml:space="preserve">
+    <value>이 규칙의 발광이 꺼져 있습니다.</value>
+  </data>
+  <data name="Click to change color" xml:space="preserve">
+    <value>클릭하여 색상 변경</value>
+  </data>
+  <data name="Enabled Icon" xml:space="preserve">
+    <value>활성화 아이콘</value>
+  </data>
+  <data name="Enabled Icon Code" xml:space="preserve">
+    <value>활성화 아이콘 코드</value>
+  </data>
+  <data name="Disabled Icon" xml:space="preserve">
+    <value>비활성화 아이콘</value>
+  </data>
+  <data name="Disabled Icon Code" xml:space="preserve">
+    <value>비활성화 아이콘 코드</value>
+  </data>
+  <data name="Destination and enablement" xml:space="preserve">
+    <value>대상 및 활성화</value>
+  </data>
+  <data name="Trigger and audience" xml:space="preserve">
+    <value>발동 조건 및 대상</value>
+  </data>
+  <data name="Response" xml:space="preserve">
+    <value>반응</value>
+  </data>
+  <data name="Optional tuning" xml:space="preserve">
+    <value>선택적 조정</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>검토</value>
+  </data>
+  <data name="Selected incoming emote" xml:space="preserve">
+    <value>선택한 감정 표현 받기</value>
+  </data>
+  <data name="COPYCAT incoming emotes" xml:space="preserve">
+    <value>받은 감정 표현 COPYCAT</value>
+  </data>
+  <data name="Player enters range" xml:space="preserve">
+    <value>플레이어가 범위 안에 들어옴</value>
+  </data>
+  <data name="Any weather" xml:space="preserve">
+    <value>모든 날씨</value>
+  </data>
+  <data name="Fallback" xml:space="preserve">
+    <value>대체 명령</value>
+  </data>
+  <data name="Wait {0:0.0}s; cooldown {1:0.0}s" xml:space="preserve">
+    <value>대기 {0:0.0}초; 재사용 {1:0.0}초</value>
+  </data>
+  <data name="{0:0.0} yalms" xml:space="preserve">
+    <value>{0:0.0} 얄름</value>
+  </data>
+  <data name="- Step {0} of {1}" xml:space="preserve">
+    <value>- {1}단계 중 {0}단계</value>
+  </data>
+  <data name="A friendlier Eorzea, one emote at a time." xml:space="preserve">
+    <value>감정 표현 하나씩, 더 다정한 에오르제아.</value>
+  </data>
+  <data name="Define when and how to perform social interactions." xml:space="preserve">
+    <value>사회적 상호작용을 수행할 시점과 방법을 설정하세요.</value>
+  </data>
+  <data name="Hold CTRL to delete" xml:space="preserve">
+    <value>삭제하려면 CTRL을 누르세요</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>범위</value>
+  </data>
+  <data name="Customize the glyphs shown in icon modes when HFH is enabled/disabled." xml:space="preserve">
+    <value>HFH 활성화/비활성화 시 아이콘 모드에 표시할 글리프를 설정하세요.</value>
+  </data>
+  <data name="(select)" xml:space="preserve">
+    <value>(선택)</value>
+  </data>
+  <data name="Clear Skies" xml:space="preserve">
+    <value>쾌청</value>
+  </data>
+  <data name="Fair Skies" xml:space="preserve">
+    <value>맑음</value>
+  </data>
+  <data name="Clouds" xml:space="preserve">
+    <value>흐림</value>
+  </data>
+  <data name="Fog" xml:space="preserve">
+    <value>안개</value>
+  </data>
+  <data name="Wind" xml:space="preserve">
+    <value>바람</value>
+  </data>
+  <data name="Gales" xml:space="preserve">
+    <value>폭풍</value>
+  </data>
+  <data name="Rain" xml:space="preserve">
+    <value>비</value>
+  </data>
+  <data name="Showers" xml:space="preserve">
+    <value>폭우</value>
+  </data>
+  <data name="Thunder" xml:space="preserve">
+    <value>번개</value>
+  </data>
+  <data name="Thunderstorms" xml:space="preserve">
+    <value>뇌우</value>
+  </data>
+  <data name="Dust Storms" xml:space="preserve">
+    <value>먼지바람</value>
+  </data>
+  <data name="Sandstorms" xml:space="preserve">
+    <value>모래폭풍</value>
+  </data>
+  <data name="Hot Spells" xml:space="preserve">
+    <value>열풍</value>
+  </data>
+  <data name="Heat Waves" xml:space="preserve">
+    <value>작열파</value>
+  </data>
+  <data name="Snow" xml:space="preserve">
+    <value>눈</value>
+  </data>
+  <data name="Blizzards" xml:space="preserve">
+    <value>눈보라</value>
+  </data>
+  <data name="Gloom" xml:space="preserve">
+    <value>요마의 안개</value>
+  </data>
+  <data name="Auroras" xml:space="preserve">
+    <value>오로라</value>
+  </data>
+  <data name="Darkness" xml:space="preserve">
+    <value>어둠</value>
+  </data>
+  <data name="Tension" xml:space="preserve">
+    <value>긴장</value>
+  </data>
+  <data name="Storm Clouds" xml:space="preserve">
+    <value>먹구름</value>
+  </data>
+  <data name="Rough Seas" xml:space="preserve">
+    <value>거친 바다</value>
+  </data>
+  <data name="Louring" xml:space="preserve">
+    <value>음산함</value>
+  </data>
+  <data name="Wait must be zero or more, and cooldown must be greater than zero." xml:space="preserve">
+    <value>대기는 0 이상, 재사용 대기시간은 0보다 커야 합니다.</value>
+  </data>
+  <data name="Window appearance" xml:space="preserve"><value>창 모양</value></data>
+  <data name="Compact visible on main window" xml:space="preserve"><value>메인 창에 간결 모드 전환 표시</value></data>
+  <data name="Language visible on main window" xml:space="preserve"><value>메인 창에 언어 선택 표시</value></data>
+  <data name="Transparency" xml:space="preserve"><value>투명도</value></data>
+  <data name="Opacity (%)" xml:space="preserve"><value>불투명도 (%)</value></data>
+  <data name="Auto-fade when unfocused" xml:space="preserve"><value>포커스를 잃으면 자동으로 흐리게 표시</value></data>
+  <data name="Unfocused opacity (%)" xml:space="preserve"><value>포커스가 없을 때 불투명도 (%)</value></data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve"><value>포커스를 잃은 후 대기 시간 (초)</value></data>
+</root>

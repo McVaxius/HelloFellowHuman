@@ -44,6 +44,14 @@ The wizard keeps its work in a draft. Back preserves the draft, while Cancel or 
 - `/hfh off` or `/hfh disable` — Disable reactions for the current account.
 - `/hfh preset <id>` — Switch the active preset by its displayed numeric ID.
 
+## Appearance and languages
+
+The main editor follows the approved regular and compact layouts, with peach-accented preset cards, separate rules, and a people mark. The header's **C** checkbox shares compact spacing with Configuration, Guided Setup and popups. Colour and language selectors are available in the header and Configuration. English, German, French, Spanish, Italian, Russian, Japanese, Korean, Simplified Chinese, Vietnamese, Brazilian Portuguese, Indonesian, Polish and Turkish are included; UI numbers use the selected language's formatting. Commands, player/preset names and stored weather values keep their original data.
+
+The colour selector offers teal, blue, pink and custom RGB. Backgrounds, panels, fields, borders and decorative text follow the selected colour through relative OKLCH roles. Active-preset green, invalid-rule red and deletion warnings retain their meanings. Preferences use the existing global configuration and save path; account rules remain in their existing per-account files.
+
+Segoe UI managed fonts merge host-provided CJK and symbol glyphs. Font files remain on the host. The plugin distribution includes AethertekUI.dll and fourteen keyed embedded resource sets. GitHub builds obtain the private library through the existing sibling checkout and AETHERTEKUI_DEPLOY_KEY workflow secret.
+
 ## Advanced editor
 
 The **Presets** tab keeps the existing table editor for users who want direct control. Select a preset to make it active, use **Add Blank Rule** for an empty row, or use **Add Rule with Wizard** to build a validated row for that preset.
@@ -59,8 +67,18 @@ Each rule can define:
 - target-before-command behavior; and
 - optional nameplate glow and color.
 
+All 13 rule columns remain available in the horizontally scrolling grid: Type, ALL, ToT, Name, Command, Wait, Repeat, Dist/Emote, Weather, Emote Range, Glow, Color and Remove. Names remain read-only when ALL or Krangle requires it. Preset names are a read-only display; select **New Preset** to create a named copy. Deleting a user preset requires holding Ctrl, and the built-in preset remains protected. Selecting a preset still activates it and resets its runtime cooldowns when the active preset changes.
+
 Invalid rows appear in red and are ignored by the runtime engine until corrected. The advanced editor also provides preset import/export and a reset action for `DEFAULT PRESET`.
 
 ## Safety and scope
 
 Hello Fellow Human runs configured reactions through the existing plugin rule engine. Local media commands open files on the same computer, so use only paths and preset imports you trust. Configuration is stored per account; guided Add Rule mode never changes account enablement.
+
+## Local verification
+
+The approved regular reference is 1505 × 1045, with a 1471 × 1010 window envelope, a 90 px header and 70 px tab row. Its preset pane is 285 × 800 and editor pane 1139 × 802, separated by 15 px. The compact reference is 1506 × 1045, with a 1450 × 563 envelope, a 78 px header, 68 px tab row and approximately 391 px panes. The reference accent is #FEB995; panel, field and border samples are #19232B, #242E37 and #303942. Title roles are 30/28 px, pane headings 22/20 px and body 16 px. These values are maintained in the consumer presentation constants.
+
+Native window chrome, saved window dimensions and real rule values govern the implemented layout. The source has numeric emote range rather than the reference's illustrative “Self” value, and no row reordering or preset search. The five-stage wizard retains its existing layout and draft workflow with shared fonts, colours, language and spacing.
+
+Local checks cover Debug and Release builds, resource values/placeholders/UTF-8, embedded resources and release ZIP contents. The current offline native editor check also covers all fourteen languages, regular/compact spacing, 100%/150% scales, narrow/reference widths, absent/selected accounts, native tab navigation, and complete tab/header/footer text with the six original font roles. The retained close controls, name-row K action and wrapped preset footer keep their native identities and readable bounds. Complete reference comparisons, remaining grid/popup/wizard interactions, actual managed-atlas readiness, custom/neutral theme appearance and in-game visual acceptance remain open. No clients were started or updated for these checks.

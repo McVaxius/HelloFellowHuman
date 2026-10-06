@@ -1,3 +1,39 @@
+2026-10-06 - Hindi UI text
+- Append Hindi after the fourteen existing language choices with all 200 catalog entries translated. Shape authored Devanagari across the complete window/font-status lifecycle through a consumer-owned text host while retaining native glyph checks for other scripts and the original font roles.
+- Route measurement, custom captions, tooltips and single-line editing through the shared text bridge; reserve natural Hindi height before the native tab bar and retained controls. Preserve native IDs, preset/account actions, opaque values and configuration/plugin versions. Keep authored DTR status/fallback text in native English for Hindi, retaining other locales and raw preset names; game, GPU and managed-host acceptance are separate.
+- Current-source Debug x64 compilation passes with two pre-existing warnings. The focused HelloFellowHuman/Krangler probe passes 2,751 assertions, verifying exact current library/resource bytes, native identities/actions, Hindi input height and upload-failure restoration. Game, GPU, managed-host and IME acceptance remain separate.
+
+2026-10-06 - Window appearance and transparency
+- Add the Window appearance settings section with retained colour, compact and language controls, independent main-window visibility preferences, and a main transparency switch. Save opacity/fade preferences through the existing configuration: 100% normal, automatic 50% after ten unfocused seconds by default; clamp opacity to 10 to 100% and delay to nonnegative values. Apply opacity once after native End and motion restoration for each window tree, including chrome, owned content and images. Build/configuration checks and game acceptance remain separate.
+
+
+2026-10-05
+- Adopt shared rounded chrome and native minimize in Config, Guided Setup and font status, preserving native IDs, constraints, saved geometry and actions. Native and game verification remain pending.
+- Budget the scrolling rule grid from the complete initial widths and translated minima so earlier columns cannot consume the final Remove column. Retain first-use sizing, existing native widths and all rule actions.
+- Measure the header's complete toolbar and preserve the approved colour, support, language, Guided Setup and compact-control order when it wraps.
+- Reserve translated tab widths, original native close-control geometry and full tab-row padding. Keep empty-label rule checkboxes within their existing cells and size the preset footer from its actual button rows and wrapped hint.
+- Keep selected-tab fills and captions consistent during focus and hover changes; reserve the retained name-row K action before sizing its editor.
+- Retain all native control/window IDs, account actions, configuration values and plugin versions.
+
+2026-10-04
+- Append Vietnamese, Brazilian Portuguese, Indonesian, Polish and Turkish to the existing UI language choices, with all 192 resource entries translated in each catalog. Keep the original language order and existing configuration save path.
+- Translate DTR On/Off and the missing-preset fallback through an explicit text scope outside UI drawing. Preserve English ON/OFF, raw preset names, configured glyphs, icon modes and enabled/hidden behavior.
+
+2026-10-03
+- Keep translated checkbox/radio hit areas and captions aligned, reflow complete buttons and fields with readable minima and horizontal access, and retain native widget IDs and editing defaults. Restore the approved support/tab/action artwork and place import/export alongside the preset heading when measured space permits.
+- Clip translated field-label ink and replace its English layout width while preserving native editor/wizard IDs. Keep explicit preset-name previews raw and check the captured managed-font generation before accepting glyph readiness.
+- Adopt the approved regular/compact editor with people branding, preset cards, primary actions and all 13 horizontally scrolling rule columns. Preserve native IDs, preset activation/cooldown reset, read-only names, Ctrl deletion, import/export and the wizard's draft-only save workflow.
+- Add shared global language, relative whole-theme RGB colour and compact preferences through the existing save path; manage body/heading/CJK/symbol fonts around the complete WindowSystem lifecycle. Keep plugin and configuration versions unchanged.
+- Complete the nine UI resource catalogs for the preset editor, guided setup, weather choices, and tooltips while retaining existing translations and command tokens.
+- Localize the configuration-window title, size fields from visible translated labels, and keep preset/color popups usable after their opening frame.
+
+## 2026-10-02 - Build and release repair
+
+- Pin GitHub builds to SDK 10.0.201 and pass the downloaded Dalamud library path. Restore and build plugin projects with matching configuration, platform and runtime; stop on restore failure.
+- Keep build tokens read-only and release writes in a separate job. Use packaged manifest versions for untagged releases.
+- Consolidate tag releases in build-release.yml and retain the read-only CI build.
+- Local launchers build the plugin directly in the pinned environment and return its exit status.
+
 2026-10-01
 - Build only the plugin project in GitHub Actions so test and regression projects do not block production artifacts.
 

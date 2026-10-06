@@ -5,6 +5,7 @@ using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using HelloFellowHuman.Models;
+using HelloFellowHuman.Ui;
 using HelloFellowHuman.Windows;
 using HelloFellowHuman.Services;
 using System;
@@ -58,6 +59,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
     [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
     [PluginService] internal static IDtrBar DtrBar { get; private set; } = null!;
+    [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
     [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
@@ -74,6 +76,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     public ConfigManager ConfigManager { get; init; }
     public readonly WindowSystem WindowSystem = new("HelloFellowHuman");
     
+    internal HfhAppearance Appearance { get; }
     private ConfigWindow ConfigWindow { get; init; }
     private SetupWizardWindow SetupWizardWindow { get; init; }
     private EmoteEngine EmoteEngine { get; init; }
@@ -111,6 +114,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         if (!string.IsNullOrEmpty(Configuration.LastAccountId))
             ConfigManager.CurrentAccountId = Configuration.LastAccountId;
         
+        Appearance = new HfhAppearance(this);
         ConfigWindow = new ConfigWindow(this);
         SetupWizardWindow = new SetupWizardWindow(this);
         WindowSystem.AddWindow(ConfigWindow);
@@ -192,11 +196,17 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 DtrEntry.Text = glyph;
                 break;
             default: // text-only
-                var status = isEnabled ? "ON" : "OFF";
+            {
+                using var languageScope = Appearance.EnterText();
+                var nativeEnglish = UiText.Current.Language is "en" or "hi";
+                var status = nativeEnglish
+                    ? (isEnabled ? "ON" : "OFF")
+                    : UiText.T(isEnabled ? "On" : "Off");
                 var activePreset = account?.GetActivePreset();
-                var presetName = activePreset?.Name ?? "None";
+                var presetName = activePreset?.Name ?? (nativeEnglish ? "None" : UiText.T("None"));
                 DtrEntry.Text = $"HFH: {status} [{presetName}]";
                 break;
+            }
         }
     }
 
@@ -266,6 +276,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         WindowSystem.RemoveAllWindows();
         ConfigWindow.Dispose();
         SetupWizardWindow.Dispose();
+        Appearance.Dispose();
         EmoteEngine.Dispose();
         EmoteDetectionService.Dispose();
         
@@ -341,7 +352,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         ToggleConfigUI();
     }
 
-    private void DrawUI() => WindowSystem.Draw();
+    private void DrawUI() => Appearance.Draw(WindowSystem);
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
 

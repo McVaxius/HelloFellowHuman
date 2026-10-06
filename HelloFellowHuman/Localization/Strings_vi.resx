@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Presets" xml:space="preserve">
+    <value>Mẫu</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>Cấu hình</value>
+  </data>
+  <data name="Support on Ko-fi" xml:space="preserve">
+    <value>Ủng hộ trên Ko-fi</value>
+  </data>
+  <data name="Support development on Ko-fi" xml:space="preserve">
+    <value>Ủng hộ phát triển trên Ko-fi</value>
+  </data>
+  <data name="Guided Setup" xml:space="preserve">
+    <value>Thiết lập có hướng dẫn</value>
+  </data>
+  <data name="Create a reaction with a plain-language guided wizard" xml:space="preserve">
+    <value>Tạo phản ứng bằng trình hướng dẫn dùng ngôn ngữ dễ hiểu</value>
+  </data>
+  <data name="Compact mode" xml:space="preserve">
+    <value>Chế độ gọn</value>
+  </data>
+  <data name="Log in and select an account before editing presets." xml:space="preserve">
+    <value>Đăng nhập và chọn tài khoản trước khi chỉnh sửa mẫu.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Đã bật</value>
+  </data>
+  <data name="Enable/disable the plugin's emote automation" xml:space="preserve">
+    <value>Bật/tắt tính năng tự động dùng biểu cảm của plugin</value>
+  </data>
+  <data name="DTR ON" xml:space="preserve">
+    <value>DTR BẬT</value>
+  </data>
+  <data name="Show/hide the DTR bar entry (server info bar)" xml:space="preserve">
+    <value>Hiện/ẩn mục trên thanh DTR (thanh thông tin máy chủ)</value>
+  </data>
+  <data name="Krangle" xml:space="preserve">
+    <value>Krangle</value>
+  </data>
+  <data name="Obfuscate player names with military/exercise words.&#xA;Useful for screenshots." xml:space="preserve">
+    <value>Ẩn tên người chơi bằng các từ quân sự/diễn tập.
+Hữu ích khi chụp ảnh màn hình.</value>
+  </data>
+  <data name="DTR Mode" xml:space="preserve">
+    <value>Chế độ DTR</value>
+  </data>
+  <data name="DTR bar display mode:&#xA;Text Only: 'HFH: ON/OFF [preset]'&#xA;Icon+Text: '⚫ HFH'&#xA;Icon Only: '⚫'" xml:space="preserve">
+    <value>Chế độ hiển thị thanh DTR:
+Chỉ chữ: 'HFH: BẬT/TẮT [mẫu]'
+Biểu tượng + chữ: '⚫ HFH'
+Chỉ biểu tượng: '⚫'</value>
+  </data>
+  <data name="DTR Icons (max 3 characters)" xml:space="preserve">
+    <value>Biểu tượng DTR (tối đa 3 ký tự)</value>
+  </data>
+  <data name="Copy Icon Guide Link" xml:space="preserve">
+    <value>Sao chép liên kết hướng dẫn biểu tượng</value>
+  </data>
+  <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
+    <value>Sao chép liên kết bài viết Lodestone có các ký tự gợi ý</value>
+  </data>
+  <data name="ACTIVE" xml:space="preserve">
+    <value>ĐANG DÙNG</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Mới</value>
+  </data>
+  <data name="+ New Preset" xml:space="preserve">
+    <value>+ Mẫu mới</value>
+  </data>
+  <data name="Enter preset name:" xml:space="preserve">
+    <value>Nhập tên mẫu:</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Tạo</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Preset Name" xml:space="preserve">
+    <value>Tên mẫu</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Xuất</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Nhập</value>
+  </data>
+  <data name="Reset Default" xml:space="preserve">
+    <value>Đặt lại mặc định</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>Quy tắc</value>
+  </data>
+  <data name="+ Add Blank Rule" xml:space="preserve">
+    <value>+ Thêm quy tắc trống</value>
+  </data>
+  <data name="Add Rule with Wizard" xml:space="preserve">
+    <value>Thêm quy tắc bằng trình hướng dẫn</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Loại</value>
+  </data>
+  <data name="Proximity = distance-based, Emote = responds to emotes directed at you" xml:space="preserve">
+    <value>Khoảng cách = dựa trên khoảng cách; Biểu cảm = đáp lại biểu cảm hướng đến bạn</value>
+  </data>
+  <data name="ALL" xml:space="preserve">
+    <value>TẤT CẢ</value>
+  </data>
+  <data name="Check to target all nearby players" xml:space="preserve">
+    <value>Chọn để nhắm đến mọi người chơi ở gần</value>
+  </data>
+  <data name="ToT" xml:space="preserve">
+    <value>ToT</value>
+  </data>
+  <data name="Target triggering player: if checked, /target the player before executing the slash command" xml:space="preserve">
+    <value>Nhắm đến người chơi kích hoạt: nếu chọn, dùng /target trước khi thực hiện lệnh</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="Target player name (without @server). For Emote type, leave blank to respond to anyone." xml:space="preserve">
+    <value>Tên người chơi mục tiêu (không có @server). Với loại Biểu cảm, để trống để đáp lại bất kỳ ai.</value>
+  </data>
+  <data name="Command" xml:space="preserve">
+    <value>Lệnh</value>
+  </data>
+  <data name="Slash command to execute. Try '/wave motion' to emote without text!" xml:space="preserve">
+    <value>Lệnh bắt đầu bằng dấu /. Thử '/wave motion' để dùng biểu cảm mà không có chữ!</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Chờ</value>
+  </data>
+  <data name="Seconds to wait after executing this emote" xml:space="preserve">
+    <value>Số giây chờ sau khi thực hiện biểu cảm này</value>
+  </data>
+  <data name="Repeat" xml:space="preserve">
+    <value>Lặp lại</value>
+  </data>
+  <data name="Seconds before this emote can trigger again (Proximity only)" xml:space="preserve">
+    <value>Số giây trước khi biểu cảm này có thể kích hoạt lại (chỉ loại Khoảng cách)</value>
+  </data>
+  <data name="Dist/Emote" xml:space="preserve">
+    <value>Khoảng cách/Biểu cảm</value>
+  </data>
+  <data name="Proximity: max distance (yalms). Emote: the trigger emote slash command.&#xA;COPYCAT: Responds with ANY emote received (copies the emote)." xml:space="preserve">
+    <value>Khoảng cách: khoảng cách tối đa (yalm). Biểu cảm: lệnh biểu cảm kích hoạt.
+COPYCAT: Đáp lại BẤT KỲ biểu cảm nhận được (sao chép biểu cảm đó).</value>
+  </data>
+  <data name="Weather" xml:space="preserve">
+    <value>Thời tiết</value>
+  </data>
+  <data name="Weather condition required for this line to trigger (ALL = any weather)" xml:space="preserve">
+    <value>Điều kiện thời tiết cần có để dòng này kích hoạt (TẤT CẢ = mọi thời tiết)</value>
+  </data>
+  <data name="Emote Range" xml:space="preserve">
+    <value>Phạm vi biểu cảm</value>
+  </data>
+  <data name="Range for emote triggers in yalms (default: 10). Only applies to Emote type lines." xml:space="preserve">
+    <value>Phạm vi kích hoạt biểu cảm tính bằng yalm (mặc định: 10). Chỉ áp dụng cho dòng loại Biểu cảm.</value>
+  </data>
+  <data name="Glow" xml:space="preserve">
+    <value>Phát sáng</value>
+  </data>
+  <data name="Enable glow animation with color effect" xml:space="preserve">
+    <value>Bật hiệu ứng phát sáng có màu</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Màu</value>
+  </data>
+  <data name="Glow color (RGB)" xml:space="preserve">
+    <value>Màu phát sáng (RGB)</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Gỡ bỏ</value>
+  </data>
+  <data name="Krangle this name (permanent obfuscation)" xml:space="preserve">
+    <value>Ẩn vĩnh viễn tên này bằng Krangle</value>
+  </data>
+  <data name="COPYCAT mode - fallback command when emote copying fails or the incoming emote is already looping.&#xA;Use media:, video:, audio:, or sound: to launch a local file." xml:space="preserve">
+    <value>Chế độ COPYCAT - lệnh dự phòng khi sao chép biểu cảm thất bại hoặc biểu cảm nhận được đang lặp lại.
+Dùng media:, video:, audio: hoặc sound: để mở tệp cục bộ.</value>
+  </data>
+  <data name="Slash command to execute.&#xA;Use media:, video:, audio:, or sound: to launch a local file relative to the plugin config folder or by full path." xml:space="preserve">
+    <value>Lệnh bắt đầu bằng dấu /.
+Dùng media:, video:, audio: hoặc sound: để mở tệp cục bộ từ thư mục cấu hình plugin hoặc bằng đường dẫn đầy đủ.</value>
+  </data>
+  <data name="The emote that triggers this response (e.g. /wave)" xml:space="preserve">
+    <value>Biểu cảm kích hoạt phản hồi này (ví dụ: /wave)</value>
+  </data>
+  <data name="Select weather condition for this line" xml:space="preserve">
+    <value>Chọn điều kiện thời tiết cho dòng này</value>
+  </data>
+  <data name="Range for emote triggers in yalms" xml:space="preserve">
+    <value>Phạm vi kích hoạt biểu cảm tính bằng yalm</value>
+  </data>
+  <data name="Emote range only applies to Emote type lines" xml:space="preserve">
+    <value>Phạm vi biểu cảm chỉ áp dụng cho dòng loại Biểu cảm</value>
+  </data>
+  <data name="Shown when HFH is {0}" xml:space="preserve">
+    <value>Hiển thị khi HFH {0}</value>
+  </data>
+  <data name="No Colour" xml:space="preserve">
+    <value>Không màu</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Clear selected colour" xml:space="preserve">
+    <value>Xóa màu đã chọn</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Xác nhận</value>
+  </data>
+  <data name="Log in and select an account before using guided setup." xml:space="preserve">
+    <value>Đăng nhập và chọn tài khoản trước khi dùng thiết lập có hướng dẫn.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="Choose the preset that will receive this rule. Nothing is saved until Finish." xml:space="preserve">
+    <value>Chọn mẫu sẽ nhận quy tắc này. Chưa lưu gì cho đến khi chọn Hoàn tất.</value>
+  </data>
+  <data name="Destination preset" xml:space="preserve">
+    <value>Mẫu đích</value>
+  </data>
+  <data name="Enable automatic reactions when I finish" xml:space="preserve">
+    <value>Bật phản ứng tự động khi tôi hoàn tất</value>
+  </data>
+  <data name="Clear this if you want to review the new rule in the advanced editor before enabling it." xml:space="preserve">
+    <value>Bỏ chọn nếu bạn muốn xem lại quy tắc mới trong trình chỉnh sửa nâng cao trước khi bật.</value>
+  </data>
+  <data name="This account is currently {0}. Add Rule mode will not change that setting." xml:space="preserve">
+    <value>Tài khoản này hiện {0}. Chế độ Thêm quy tắc sẽ không thay đổi thiết lập đó.</value>
+  </data>
+  <data name="Choose what starts the reaction." xml:space="preserve">
+    <value>Chọn điều kiện bắt đầu phản ứng.</value>
+  </data>
+  <data name="A player enters range" xml:space="preserve">
+    <value>Người chơi vào phạm vi</value>
+  </data>
+  <data name="A selected emote is performed" xml:space="preserve">
+    <value>Một biểu cảm đã chọn được thực hiện</value>
+  </data>
+  <data name="COPYCAT any incoming emote" xml:space="preserve">
+    <value>COPYCAT mọi biểu cảm nhận được</value>
+  </data>
+  <data name="Who can trigger it?" xml:space="preserve">
+    <value>Ai có thể kích hoạt?</value>
+  </data>
+  <data name="Any nearby player" xml:space="preserve">
+    <value>Bất kỳ người chơi nào ở gần</value>
+  </data>
+  <data name="One specific player" xml:space="preserve">
+    <value>Một người chơi cụ thể</value>
+  </data>
+  <data name="Player name (without @World)" xml:space="preserve">
+    <value>Tên người chơi (không có @World)</value>
+  </data>
+  <data name="Incoming emote" xml:space="preserve">
+    <value>Biểu cảm nhận được</value>
+  </data>
+  <data name="COPYCAT mirrors the incoming emote. You may add a fallback command for an emote that cannot be mirrored or is already looping." xml:space="preserve">
+    <value>COPYCAT bắt chước biểu cảm nhận được. Bạn có thể thêm lệnh dự phòng cho biểu cảm không thể bắt chước hoặc đang lặp lại.</value>
+  </data>
+  <data name="Optional fallback command" xml:space="preserve">
+    <value>Lệnh dự phòng tùy chọn</value>
+  </data>
+  <data name="Leave this blank for no fallback." xml:space="preserve">
+    <value>Để trống nếu không cần lệnh dự phòng.</value>
+  </data>
+  <data name="Enter the command to run when this rule triggers." xml:space="preserve">
+    <value>Nhập lệnh sẽ chạy khi quy tắc này kích hoạt.</value>
+  </data>
+  <data name="Response command" xml:space="preserve">
+    <value>Lệnh phản hồi</value>
+  </data>
+  <data name="Example: /wave motion" xml:space="preserve">
+    <value>Ví dụ: /wave motion</value>
+  </data>
+  <data name="These defaults are ready to use. Adjust only what you need." xml:space="preserve">
+    <value>Các giá trị mặc định này đã sẵn sàng dùng. Chỉ điều chỉnh những gì bạn cần.</value>
+  </data>
+  <data name="Wait after response (seconds)" xml:space="preserve">
+    <value>Chờ sau phản hồi (giây)</value>
+  </data>
+  <data name="Cooldown (seconds)" xml:space="preserve">
+    <value>Thời gian chờ giữa các lần (giây)</value>
+  </data>
+  <data name="Proximity range (yalms)" xml:space="preserve">
+    <value>Phạm vi khoảng cách (yalm)</value>
+  </data>
+  <data name="Incoming-emote range (yalms)" xml:space="preserve">
+    <value>Phạm vi biểu cảm nhận được (yalm)</value>
+  </data>
+  <data name="Required weather" xml:space="preserve">
+    <value>Thời tiết yêu cầu</value>
+  </data>
+  <data name="Target the triggering player before the command" xml:space="preserve">
+    <value>Nhắm đến người chơi kích hoạt trước khi chạy lệnh</value>
+  </data>
+  <data name="Show a temporary nameplate glow" xml:space="preserve">
+    <value>Hiện hiệu ứng phát sáng tạm thời trên bảng tên</value>
+  </data>
+  <data name="Glow color" xml:space="preserve">
+    <value>Màu phát sáng</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Không khả dụng</value>
+  </data>
+  <data name="Review the rule below. Finish applies it and saves once; Cancel or closing this window leaves configuration unchanged." xml:space="preserve">
+    <value>Xem lại quy tắc bên dưới. Hoàn tất áp dụng và lưu một lần; Hủy hoặc đóng cửa sổ giữ nguyên cấu hình.</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Không có</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Tiếp</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Hoàn tất</value>
+  </data>
+  <data name="The destination preset is no longer available. Reopen the wizard and try again." xml:space="preserve">
+    <value>Mẫu đích không còn khả dụng. Mở lại trình hướng dẫn rồi thử lại.</value>
+  </data>
+  <data name="The setup draft is unavailable." xml:space="preserve">
+    <value>Bản nháp thiết lập không khả dụng.</value>
+  </data>
+  <data name="Choose an available destination preset." xml:space="preserve">
+    <value>Chọn một mẫu đích khả dụng.</value>
+  </data>
+  <data name="Enter a player name or choose Any nearby player." xml:space="preserve">
+    <value>Nhập tên người chơi hoặc chọn Bất kỳ người chơi nào ở gần.</value>
+  </data>
+  <data name="Choose the incoming emote that should trigger this rule." xml:space="preserve">
+    <value>Chọn biểu cảm nhận được sẽ kích hoạt quy tắc này.</value>
+  </data>
+  <data name="Enter a response command." xml:space="preserve">
+    <value>Nhập lệnh phản hồi.</value>
+  </data>
+  <data name="Wait must be zero or more, and cooldown must be greater than zero." xml:space="preserve">
+    <value>Thời gian chờ phải từ 0 trở lên; thời gian giữa các lần phải lớn hơn 0.</value>
+  </data>
+  <data name="Proximity range must be greater than zero." xml:space="preserve">
+    <value>Phạm vi khoảng cách phải lớn hơn 0.</value>
+  </data>
+  <data name="Incoming-emote range must be greater than zero." xml:space="preserve">
+    <value>Phạm vi biểu cảm nhận được phải lớn hơn 0.</value>
+  </data>
+  <data name="Preset" xml:space="preserve">
+    <value>Mẫu</value>
+  </data>
+  <data name="Account after finish" xml:space="preserve">
+    <value>Tài khoản sau khi hoàn tất</value>
+  </data>
+  <data name="Trigger" xml:space="preserve">
+    <value>Điều kiện kích hoạt</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>Đối tượng</value>
+  </data>
+  <data name="Timing" xml:space="preserve">
+    <value>Thời gian</value>
+  </data>
+  <data name="Target first" xml:space="preserve">
+    <value>Nhắm mục tiêu trước</value>
+  </data>
+  <data name="Nameplate glow" xml:space="preserve">
+    <value>Phát sáng bảng tên</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
+  <data name="Teal" xml:space="preserve">
+    <value>Xanh ngọc</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Xanh dương</value>
+  </data>
+  <data name="Pink" xml:space="preserve">
+    <value>Hồng</value>
+  </data>
+  <data name="Custom RGB" xml:space="preserve">
+    <value>RGB tùy chỉnh</value>
+  </data>
+  <data name="Built-in preset" xml:space="preserve">
+    <value>Mẫu tích hợp</value>
+  </data>
+  <data name="User preset" xml:space="preserve">
+    <value>Mẫu người dùng</value>
+  </data>
+  <data name="Editing the built-in preset." xml:space="preserve">
+    <value>Đang chỉnh sửa mẫu tích hợp.</value>
+  </data>
+  <data name="Select an emote" xml:space="preserve">
+    <value>Chọn biểu cảm</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Đã tắt</value>
+  </data>
+  <data name="Text Only" xml:space="preserve">
+    <value>Chỉ chữ</value>
+  </data>
+  <data name="Icon+Text" xml:space="preserve">
+    <value>Biểu tượng + chữ</value>
+  </data>
+  <data name="Icon Only" xml:space="preserve">
+    <value>Chỉ biểu tượng</value>
+  </data>
+  <data name="Proximity" xml:space="preserve">
+    <value>Khoảng cách</value>
+  </data>
+  <data name="Emote" xml:space="preserve">
+    <value>Biểu cảm</value>
+  </data>
+  <data name="Glow is disabled for this rule." xml:space="preserve">
+    <value>Quy tắc này đã tắt phát sáng.</value>
+  </data>
+  <data name="Click to change color" xml:space="preserve">
+    <value>Nhấp để đổi màu</value>
+  </data>
+  <data name="Enabled Icon" xml:space="preserve">
+    <value>Biểu tượng khi bật</value>
+  </data>
+  <data name="Enabled Icon Code" xml:space="preserve">
+    <value>Mã biểu tượng khi bật</value>
+  </data>
+  <data name="Disabled Icon" xml:space="preserve">
+    <value>Biểu tượng khi tắt</value>
+  </data>
+  <data name="Disabled Icon Code" xml:space="preserve">
+    <value>Mã biểu tượng khi tắt</value>
+  </data>
+  <data name="Destination and enablement" xml:space="preserve">
+    <value>Đích và trạng thái bật</value>
+  </data>
+  <data name="Trigger and audience" xml:space="preserve">
+    <value>Điều kiện kích hoạt và đối tượng</value>
+  </data>
+  <data name="Response" xml:space="preserve">
+    <value>Phản hồi</value>
+  </data>
+  <data name="Optional tuning" xml:space="preserve">
+    <value>Điều chỉnh tùy chọn</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Xem lại</value>
+  </data>
+  <data name="Selected incoming emote" xml:space="preserve">
+    <value>Biểu cảm nhận được đã chọn</value>
+  </data>
+  <data name="COPYCAT incoming emotes" xml:space="preserve">
+    <value>COPYCAT biểu cảm nhận được</value>
+  </data>
+  <data name="Player enters range" xml:space="preserve">
+    <value>Người chơi vào phạm vi</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Có</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Không</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Bật</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Tắt</value>
+  </data>
+  <data name="Any weather" xml:space="preserve">
+    <value>Mọi thời tiết</value>
+  </data>
+  <data name="Fallback" xml:space="preserve">
+    <value>Dự phòng</value>
+  </data>
+  <data name="Wait {0:0.0}s; cooldown {1:0.0}s" xml:space="preserve">
+    <value>Chờ {0:0.0}s; thời gian giữa các lần {1:0.0}s</value>
+  </data>
+  <data name="{0:0.0} yalms" xml:space="preserve">
+    <value>{0:0.0} yalm</value>
+  </data>
+  <data name="- Step {0} of {1}" xml:space="preserve">
+    <value>- Bước {0} trên {1}</value>
+  </data>
+  <data name="Loading UI fonts..." xml:space="preserve">
+    <value>Đang tải phông chữ giao diện...</value>
+  </data>
+  <data name="UI fonts failed to load. See the plugin log." xml:space="preserve">
+    <value>Không tải được phông chữ giao diện. Xem nhật ký plugin.</value>
+  </data>
+  <data name="A friendlier Eorzea, one emote at a time." xml:space="preserve">
+    <value>Eorzea thân thiện hơn qua từng biểu cảm.</value>
+  </data>
+  <data name="Define when and how to perform social interactions." xml:space="preserve">
+    <value>Thiết lập thời điểm và cách tương tác xã hội.</value>
+  </data>
+  <data name="Hold CTRL to delete" xml:space="preserve">
+    <value>Giữ CTRL để xóa</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>Phạm vi</value>
+  </data>
+  <data name="Customize the glyphs shown in icon modes when HFH is enabled/disabled." xml:space="preserve">
+    <value>Tùy chỉnh các ký tự trong chế độ biểu tượng khi HFH bật/tắt.</value>
+  </data>
+  <data name="(select)" xml:space="preserve">
+    <value>(chọn)</value>
+  </data>
+  <data name="Clear Skies" xml:space="preserve">
+    <value>Trời quang</value>
+  </data>
+  <data name="Fair Skies" xml:space="preserve">
+    <value>Trời đẹp</value>
+  </data>
+  <data name="Clouds" xml:space="preserve">
+    <value>Mây</value>
+  </data>
+  <data name="Fog" xml:space="preserve">
+    <value>Sương mù</value>
+  </data>
+  <data name="Wind" xml:space="preserve">
+    <value>Gió</value>
+  </data>
+  <data name="Gales" xml:space="preserve">
+    <value>Gió mạnh</value>
+  </data>
+  <data name="Rain" xml:space="preserve">
+    <value>Mưa</value>
+  </data>
+  <data name="Showers" xml:space="preserve">
+    <value>Mưa rào</value>
+  </data>
+  <data name="Thunder" xml:space="preserve">
+    <value>Sấm</value>
+  </data>
+  <data name="Thunderstorms" xml:space="preserve">
+    <value>Giông</value>
+  </data>
+  <data name="Dust Storms" xml:space="preserve">
+    <value>Bão bụi</value>
+  </data>
+  <data name="Sandstorms" xml:space="preserve">
+    <value>Bão cát</value>
+  </data>
+  <data name="Hot Spells" xml:space="preserve">
+    <value>Đợt nóng</value>
+  </data>
+  <data name="Heat Waves" xml:space="preserve">
+    <value>Sóng nhiệt</value>
+  </data>
+  <data name="Snow" xml:space="preserve">
+    <value>Tuyết</value>
+  </data>
+  <data name="Blizzards" xml:space="preserve">
+    <value>Bão tuyết</value>
+  </data>
+  <data name="Gloom" xml:space="preserve">
+    <value>Âm u</value>
+  </data>
+  <data name="Auroras" xml:space="preserve">
+    <value>Cực quang</value>
+  </data>
+  <data name="Darkness" xml:space="preserve">
+    <value>Bóng tối</value>
+  </data>
+  <data name="Tension" xml:space="preserve">
+    <value>Căng thẳng</value>
+  </data>
+  <data name="Storm Clouds" xml:space="preserve">
+    <value>Mây giông</value>
+  </data>
+  <data name="Rough Seas" xml:space="preserve">
+    <value>Biển động</value>
+  </data>
+  <data name="Louring" xml:space="preserve">
+    <value>U ám</value>
+  </data>
+  <data name="Window appearance" xml:space="preserve"><value>Giao diện cửa sổ</value></data>
+  <data name="Compact visible on main window" xml:space="preserve"><value>Hiển thị chế độ gọn trên cửa sổ chính</value></data>
+  <data name="Language visible on main window" xml:space="preserve"><value>Hiển thị lựa chọn ngôn ngữ trên cửa sổ chính</value></data>
+  <data name="Transparency" xml:space="preserve"><value>Độ trong suốt</value></data>
+  <data name="Opacity (%)" xml:space="preserve"><value>Độ đục (%)</value></data>
+  <data name="Auto-fade when unfocused" xml:space="preserve"><value>Tự giảm độ đục khi mất tiêu điểm</value></data>
+  <data name="Unfocused opacity (%)" xml:space="preserve"><value>Độ đục khi mất tiêu điểm (%)</value></data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve"><value>Độ trễ khi mất tiêu điểm (giây)</value></data>
+</root>
