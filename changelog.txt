@@ -1,3 +1,6 @@
+2026-10-06 - GitHub Actions dependency alignment
+- Pin the existing AethertekUI Actions checkout to published revision `6c193cf06ac67f954c549cafc2033ac0efdd630a`, which includes the Hindi text host and renderer. This fixes missing-text-API compilation after a consumer is published before its library; local workflow validation and hosted build results are separate.
+
 2026-10-06 - Hindi UI text
 - Append Hindi after the fourteen existing language choices with all 200 catalog entries translated. Shape authored Devanagari across the complete window/font-status lifecycle through a consumer-owned text host while retaining native glyph checks for other scripts and the original font roles.
 - Route measurement, custom captions, tooltips and single-line editing through the shared text bridge; reserve natural Hindi height before the native tab bar and retained controls. Preserve native IDs, preset/account actions, opaque values and configuration/plugin versions. Keep authored DTR status/fallback text in native English for Hindi, retaining other locales and raw preset names; game, GPU and managed-host acceptance are separate.
