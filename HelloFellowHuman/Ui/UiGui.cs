@@ -5,6 +5,7 @@ using System.IO;
 using System.Numerics;
 using AethertekUI;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Windowing;
 
 namespace HelloFellowHuman.Ui;
 
@@ -338,6 +339,9 @@ internal static class UiGui
         return changed;
     }
     internal static void Title(string original,string translated)
+        => TitleWithButtons(original, translated, null);
+
+    internal static void TitleWithButtons(string original,string translated, Window? owner)
     {
         var s=ImGui.GetStyle(); var size=ImGui.GetFontSize();var height=ImGui.GetFrameHeight();
         var flags=ImGuiP.GetCurrentWindow().Flags;
@@ -356,7 +360,16 @@ internal static class UiGui
         }
         else translatedWidth = MaterialText.Measure(translated).X*size/ImGui.GetFontSize();
         var dl=ImGui.GetWindowDrawList();
-        dl.PushClipRect(ImGui.GetWindowPos(),ImGui.GetWindowPos()+new Vector2(ImGui.GetWindowSize().X-2*height,height),false);
+        var reserved = 2 * height;
+        if (owner is not null)
+        {
+            var count = owner.TitleBarButtons.Count(button => !owner.IsClickthrough || button.AvailableClickthrough);
+            if (owner.AllowPinning || owner.AllowClickthrough || owner.AllowBackgroundBlur) count++;
+            reserved = size + 2 * s.FramePadding.X + count * (size + s.ItemInnerSpacing.X);
+            if ((flags & ImGuiWindowFlags.NoCollapse) == 0 && s.WindowMenuButtonPosition == ImGuiDir.Right)
+                reserved += size + s.ItemInnerSpacing.X;
+        }
+        dl.PushClipRect(ImGui.GetWindowPos(),ImGui.GetWindowPos()+new Vector2(Math.Max(0,ImGui.GetWindowSize().X-reserved),height),false);
         try
         {
         var bg=s.Colors[(int)(ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows)?ImGuiCol.TitleBgActive:ImGuiCol.TitleBg)];

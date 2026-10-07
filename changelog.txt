@@ -1,3 +1,9 @@
+2026-10-07 - CJK atlas construction
+- Request a 4096 x 4096 managed atlas and merge one bundled Noto CJK face per font role for the selected language, including Simplified and Traditional Chinese aliases. Preserve existing font sizes, glyph ranges, Windows and symbol fonts, and font lifecycle.
+
+2026-10-07 - Native titlebar shortcuts
+- Add Configuration, Guided Setup and the current-account Enabled toggle to the existing window titlebar. Configuration expands its owner and selects the original tab; Setup and Enabled reuse current selection and save behavior. Retain every body control, native identity and titlebar hit area.
+
 2026-10-06 - GitHub Actions dependency alignment
 - Pin the existing AethertekUI Actions checkout to published revision `6c193cf06ac67f954c549cafc2033ac0efdd630a`, which includes the Hindi text host and renderer. This fixes missing-text-API compilation after a consumer is published before its library; local workflow validation and hosted build results are separate.
 

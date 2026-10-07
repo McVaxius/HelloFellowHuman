@@ -2,6 +2,7 @@ using Dalamud.Bindings.ImGui;
 using AethertekUI;
 using AethertekUI.Dalamud;
 using HelloFellowHuman.Ui;
+using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using HelloFellowHuman.Models;
 using HelloFellowHuman.Services;
@@ -27,6 +28,7 @@ public class ConfigWindow : Window, IDisposable
     private string importText = string.Empty;
     private readonly Dictionary<int, string> emoteSearchFilters = new();
     private bool hasLoggedWindowLoad = false;
+    private bool configurationTabRequested;
     
     // Color picker state management
     private readonly Dictionary<string, Vector3> editingColors = new();
@@ -41,6 +43,35 @@ public class ConfigWindow : Window, IDisposable
         SizeCondition = ImGuiCond.FirstUseEver;
         
         selectedPresetIndex = 0;
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.Cog, Priority = 0, IconOffset = new(2, 1),
+            Click = button =>
+            {
+                if (button != ImGuiMouseButton.Left) return;
+                configurationTabRequested = true;
+                ImGui.SetWindowCollapsed(WindowName, false);
+            },
+            ShowTooltip = () => UiGui.SetTooltip("Configuration"),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.Wrench, Priority = -10, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.OpenSetupWizard(SetupWizardMode.Setup, selectedPresetIndex); },
+            ShowTooltip = () => UiGui.SetTooltip("Create a reaction with a plain-language guided wizard"),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.PowerOff, Priority = -20, IconOffset = new(2, 1),
+            Click = button =>
+            {
+                if (button == ImGuiMouseButton.Left && plugin.ConfigManager.GetCurrentAccount() is { } account)
+                    SetAccountEnabled(account, !account.Enabled);
+            },
+            ShowTooltip = () => MaterialText.SetTooltip(plugin.ConfigManager.GetCurrentAccount() is { } account
+                ? UiText.T("Enabled") + ": " + UiText.T(account.Enabled ? "Yes" : "No")
+                : UiText.T("Log in and select an account before editing presets.")),
+        });
     }
     
     public override void PreDraw() => windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
@@ -51,7 +82,7 @@ public class ConfigWindow : Window, IDisposable
     {
         windowMotion.DrawChrome();
         var version = Assembly.GetExecutingAssembly().GetName().Version;
-        UiGui.Title($"Hello Fellow Human Config v{version}", "Hello Fellow Human — " + UiText.T("Configuration") + $" v{version}");
+        UiGui.TitleWithButtons($"Hello Fellow Human Config v{version}", "Hello Fellow Human — " + UiText.T("Configuration") + $" v{version}", this);
         // Log window load once
         if (!hasLoggedWindowLoad)
         {
@@ -80,7 +111,9 @@ public class ConfigWindow : Window, IDisposable
             }
             
             bool configOpen = true;
-            if (UiGui.BeginTabItem("Configuration", ref configOpen, ImGuiTabItemFlags.None))
+            var configurationFlags = configurationTabRequested ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+            configurationTabRequested = false;
+            if (UiGui.BeginTabItem("Configuration", ref configOpen, configurationFlags))
             {
                 DrawConfigurationTab();
                 ImGui.EndTabItem();
@@ -147,10 +180,7 @@ public class ConfigWindow : Window, IDisposable
         if (onTabs) ImGui.SetCursorScreenPos(new Vector2(rightEdge - total, statusRowOrigin.Y));
         var enabled = account.Enabled;
         if (UiGui.Checkbox("Enabled", ref enabled))
-        {
-            account.Enabled = enabled; plugin.ConfigManager.SaveCurrentAccount();
-            Plugin.Log.Info($"Hello Fellow Human {(enabled ? "enabled" : "disabled")}");
-        }
+            SetAccountEnabled(account, enabled);
         if (ImGui.IsItemHovered()) UiGui.SetTooltip("Enable/disable the plugin's emote automation");
         UiGui.SameLineIfFits(UiGui.CheckboxWidth("DTR ON"));
         var dtr = config.DtrBarEnabled;
@@ -163,6 +193,13 @@ public class ConfigWindow : Window, IDisposable
         if (onTabs) ImGui.SetCursorScreenPos(body);
         else ImGui.Spacing();
         return true;
+    }
+
+    private void SetAccountEnabled(AccountConfig account, bool enabled)
+    {
+        account.Enabled = enabled;
+        plugin.ConfigManager.SaveCurrentAccount();
+        Plugin.Log.Info($"Hello Fellow Human {(enabled ? "enabled" : "disabled")}");
     }
 
     private void DrawConfigurationTab()
