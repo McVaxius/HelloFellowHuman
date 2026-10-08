@@ -60,6 +60,10 @@ public sealed unsafe class Plugin : IDalamudPlugin
     [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
     [PluginService] internal static IDtrBar DtrBar { get; private set; } = null!;
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
+
+    internal Dalamud.Interface.Textures.TextureWraps.IDalamudTextureWrap OriginalIcon
+        => TextureProvider.GetFromFile(System.IO.Path.Combine(
+            PluginInterface.AssemblyLocation.DirectoryName ?? "", "icon.png")).GetWrapOrEmpty();
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
     [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;

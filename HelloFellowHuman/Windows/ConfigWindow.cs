@@ -76,13 +76,16 @@ public class ConfigWindow : Window, IDisposable
     
     public override void PreDraw() => windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
 
-    public override void PostDraw() => windowMotion.Restore(this);
+    public override void PostDraw()
+    {
+        windowMotion.Restore(this);
+        var version = Assembly.GetExecutingAssembly().GetName().Version;
+        UiGui.ImageTitle(this, "Hello Fellow Human — " + UiText.T("Configuration") + $" v{version}", plugin.OriginalIcon);
+    }
 
     public override void Draw()
     {
         windowMotion.DrawChrome();
-        var version = Assembly.GetExecutingAssembly().GetName().Version;
-        UiGui.TitleWithButtons($"Hello Fellow Human Config v{version}", "Hello Fellow Human — " + UiText.T("Configuration") + $" v{version}", this);
         // Log window load once
         if (!hasLoggedWindowLoad)
         {
@@ -130,7 +133,9 @@ public class ConfigWindow : Window, IDisposable
         var scale = MaterialTheme.Metrics.Scale;
         var compact = HfhPresentation.Compact;
         var start = ImGui.GetCursorScreenPos(); var width = ImGui.GetContentRegionAvail().X;
-        HfhPresentation.Brand(start, (compact ? 44 : 52) * scale);
+        var icon = plugin.OriginalIcon;
+        MaterialCanvas.DrawImage(ImGui.GetWindowDrawList(), icon.Handle, icon.Size,
+            start, start + new Vector2((compact ? 44 : 52) * scale));
         ImGui.SetCursorScreenPos(start + new Vector2(compact ? 62 : 76, 0) * scale);
         using (UiText.Font(compact ? UiFontRole.CompactTitle : UiFontRole.Title)) MaterialText.Text("Hello Fellow Human");
         var titleMax = ImGui.GetItemRectMax();

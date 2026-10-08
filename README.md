@@ -46,11 +46,17 @@ The wizard keeps its work in a draft. Back preserves the draft, while Cancel or 
 
 ## Appearance and languages
 
-The main editor follows the approved regular and compact layouts, with peach-accented preset cards, separate rules, and a people mark. The header's **C** checkbox shares compact spacing with Configuration, Guided Setup and popups. Colour and language selectors are available in the header and Configuration. English, German, French, Spanish, Italian, Russian, Japanese, Korean, Simplified Chinese, Vietnamese, Brazilian Portuguese, Indonesian, Polish and Turkish are included; UI numbers use the selected language's formatting. Commands, player/preset names and stored weather values keep their original data.
+**Transparency** applies to the complete plugin window, including its titlebar and popups. Configuration provides normal opacity, automatic focus fade, faded opacity and delay; defaults are 100%, fading to 50% after 10 seconds without focus and restoring on focus. Compact and language controls can be hidden independently on Main while remaining available in Configuration.
+
+The editor's titlebar opens Configuration or Guided Setup and toggles reactions for the current account. Configuration expands the editor and selects its existing tab; Setup keeps the selected preset workflow. The packaged plugin icon appears in editor branding and its titlebar, including when collapsed.
+
+The main editor follows the approved regular and compact layouts, with peach-accented preset cards, separate rules, and the packaged plugin icon. The header's **C** checkbox shares compact spacing with Configuration, Guided Setup and popups. Colour and language selectors are available in the header and Configuration. English, German, French, Spanish, Italian, Russian, Japanese, Korean, Simplified Chinese, Vietnamese, Brazilian Portuguese, Indonesian, Polish, Turkish and Hindi are included; UI numbers use the selected language's formatting. Commands, player/preset names and stored weather values keep their original data.
 
 The colour selector offers teal, blue, pink and custom RGB. Backgrounds, panels, fields, borders and decorative text follow the selected colour through relative OKLCH roles. Active-preset green, invalid-rule red and deletion warnings retain their meanings. Preferences use the existing global configuration and save path; account rules remain in their existing per-account files.
 
-Segoe UI managed fonts merge host-provided CJK and symbol glyphs. Font files remain on the host. The plugin distribution includes AethertekUI.dll and fourteen keyed embedded resource sets. GitHub builds obtain the private library through the existing sibling checkout and AETHERTEKUI_DEPLOY_KEY workflow secret.
+Segoe UI managed fonts merge host-provided CJK and symbol glyphs. Font files remain on the host. The plugin distribution includes AethertekUI.dll and fifteen keyed embedded catalogs. GitHub builds obtain the private library through the existing sibling checkout and AETHERTEKUI_DEPLOY_KEY workflow secret.
+
+Hindi is enabled only when the local font check passes. Otherwise the selector shows disabled **Hindi (unavailable)** while other languages remain usable. A saved Hindi choice that fails its required-font check shows an English status and **Use English**; that button explicitly saves English. Font failures never change the saved language automatically.
 
 ## Advanced editor
 
