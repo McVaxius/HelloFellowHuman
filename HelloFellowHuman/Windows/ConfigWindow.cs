@@ -101,7 +101,7 @@ public class ConfigWindow : Window, IDisposable
         var scale = MaterialTheme.Metrics.Scale;
         ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(48, HfhPresentation.Compact ? 10 : 14) * scale);
         bool tabsOpen;
-        using (MaterialText.PushLineHeight(UiText.T("Presets"), UiText.T("Configuration")))
+        using (MaterialText.PushLineHeight(UiText.T("Presets"), UiText.T("Configuration"), UiText.T("Window appearance")))
             tabsOpen = ImGui.BeginTabBar("HFHTabBar", ImGuiTabBarFlags.FittingPolicyScroll);
         ImGui.PopStyleVar();
         if (tabsOpen)
@@ -122,6 +122,22 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.EndTabItem();
             }
             
+            using (var appearance = MaterialTabs.Item(UiText.T("Window appearance") + "###WindowAppearance", ImGuiTabItemFlags.NoPushId))
+            {
+                if (appearance.Visible)
+                {
+                    ImGui.PushID("Configuration");
+                    try
+                    {
+                        ImGui.PushID("settings-appearance");
+                        try { plugin.Appearance.DrawSelector(); } finally { ImGui.PopID(); }
+                        var density = config.UiCompact;
+                        if (UiGui.Checkbox("Compact mode", ref density)) { config.UiCompact = density; plugin.SaveConfig(); }
+                        plugin.Appearance.DrawWindowSettings();
+                    }
+                    finally { ImGui.PopID(); }
+                }
+            }
             ImGui.EndTabBar();
         }
     }
@@ -210,15 +226,6 @@ public class ConfigWindow : Window, IDisposable
     private void DrawConfigurationTab()
     {
         if (!DrawStatusControls()) return;
-        UiGui.Text("Window appearance");
-        ImGui.Separator();
-        ImGui.PushID("settings-appearance");
-        plugin.Appearance.DrawSelector();
-        ImGui.PopID();
-        var density = config.UiCompact;
-        if (UiGui.Checkbox("Compact mode", ref density)) { config.UiCompact = density; plugin.SaveConfig(); }
-        plugin.Appearance.DrawWindowSettings();
-        ImGui.Separator();
         var dtrMode = config.DtrBarMode;
         var dtrModes = new[] { "Text Only", "Icon+Text", "Icon Only" };
         ImGui.SetNextItemWidth(120);
