@@ -19,6 +19,7 @@ namespace HelloFellowHuman.Windows;
 
 public class ConfigWindow : Window, IDisposable
 {
+    private readonly AethertekUI.Dalamud.MaterialSupportLog supportLog = new();
     private readonly MaterialWindowMotion windowMotion = new();
     private readonly Configuration config;
     private readonly Plugin plugin;
@@ -225,6 +226,8 @@ public class ConfigWindow : Window, IDisposable
 
     private void DrawConfigurationTab()
     {
+        supportLog.Draw(Plugin.PluginInterface, key => UiText.T(key),
+            path => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = path, UseShellExecute = true }), ex => Plugin.Log.Error(ex, "Dalamud log export failed."), Plugin.CommandManager);
         if (!DrawStatusControls()) return;
         var dtrMode = config.DtrBarMode;
         var dtrModes = new[] { "Text Only", "Icon+Text", "Icon Only" };

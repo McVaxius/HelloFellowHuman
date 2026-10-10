@@ -88,3 +88,9 @@ The approved regular reference is 1505 × 1045, with a 1471 × 1010 window envel
 Native window chrome, saved window dimensions and real rule values govern the implemented layout. The source has numeric emote range rather than the reference's illustrative “Self” value, and no row reordering or preset search. The five-stage wizard retains its existing layout and draft workflow with shared fonts, colours, language and spacing.
 
 Local checks cover Debug and Release builds, resource values/placeholders/UTF-8, embedded resources and release ZIP contents. The current offline native editor check also covers all fourteen languages, regular/compact spacing, 100%/150% scales, narrow/reference widths, absent/selected accounts, native tab navigation, and complete tab/header/footer text with the six original font roles. The retained close controls, name-row K action and wrapped preset footer keep their native identities and readable bounds. Complete reference comparisons, remaining grid/popup/wizard interactions, actual managed-atlas readiness, custom/neutral theme appearance and in-game visual acceptance remain open. No clients were started or updated for these checks.
+
+## Support logs
+
+Use **Copy / ZIP Dalamud log** in Configuration > Configuration to create a local ZIP and open its folder. At 100 MiB or above, the first click warns that logging may have stopped and recent activity may be missing; click **Export capped log anyway** only if you still want that snapshot. Share the ZIP manually and remove exports when no longer needed. **Open Export Folder** reopens the completed export’s folder.
+
+When XA Slave is loaded, **Open XA Slave log tools** opens its **Utility > XA Mods** panel, which contains Dalamud Log Cleaner. The existing **Copy / ZIP Dalamud log** action remains separate. Opening the panel does not run cleanup or change XA Slave settings.
