@@ -211,6 +211,9 @@ internal sealed class HfhAppearance : IDisposable
         var compactVisible = config.UiCompactVisibleOnMainWindow;
         if (UiGui.Checkbox("Compact visible on main window###window-compact-visible", ref compactVisible))
         { config.UiCompactVisibleOnMainWindow = compactVisible; changed = true; }
+        var transparencyVisible = config.UiTransparencyVisibleOnMainWindow;
+        if (UiGui.Checkbox("Transparency visible on main window###UiTransparencyVisibleOnMainWindowSettings", ref transparencyVisible))
+        { config.UiTransparencyVisibleOnMainWindow = transparencyVisible; changed = true; }
         var languageVisible = config.UiLanguageVisibleOnMainWindow;
         if (UiGui.Checkbox("Language visible on main window###window-language-visible", ref languageVisible))
         { config.UiLanguageVisibleOnMainWindow = languageVisible; changed = true; }

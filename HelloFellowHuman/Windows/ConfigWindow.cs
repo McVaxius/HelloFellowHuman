@@ -162,7 +162,7 @@ public class ConfigWindow : Window, IDisposable
         var supportWidth = UiGui.ButtonWidth("Support on Ko-fi", MaterialIcon.Heart);
         var setupWidth = UiGui.ButtonWidth("Guided Setup", MaterialIcon.Document);
         var toolsWidth = supportWidth + setupWidth + (config.UiLanguageVisibleOnMainWindow ? plugin.Appearance.LanguageWidth() : 0)
-            + (config.UiCompactVisibleOnMainWindow ? UiGui.CheckboxWidth("C") : 0) + UiGui.CheckboxWidth("Transparency") + 4 * ImGui.GetStyle().ItemSpacing.X;
+            + (config.UiCompactVisibleOnMainWindow ? UiGui.CheckboxWidth("C") : 0) + (config.UiTransparencyVisibleOnMainWindow ? UiGui.CheckboxWidth("Transparency") : 0) + (1 + (config.UiLanguageVisibleOnMainWindow ? 1 : 0) + (config.UiCompactVisibleOnMainWindow ? 1 : 0) + (config.UiTransparencyVisibleOnMainWindow ? 1 : 0)) * ImGui.GetStyle().ItemSpacing.X;
         var brandWidth = Math.Max(titleMax.X, subtitleMax.X) - start.X;
         var right = width >= toolsWidth + brandWidth + ImGui.GetStyle().ItemSpacing.X;
         ImGui.SetCursorScreenPos(right ? start + new Vector2(width - toolsWidth, 5 * scale)
@@ -183,8 +183,11 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.Checkbox("C", ref density)) { config.UiCompact = density; plugin.SaveConfig(); }
             if (ImGui.IsItemHovered()) UiGui.SetTooltip("Compact mode");
         }
-        UiGui.SameLineIfFits(UiGui.CheckboxWidth("Transparency"));
-        plugin.Appearance.DrawTransparencyToggle();
+        if (config.UiTransparencyVisibleOnMainWindow)
+        {
+            UiGui.SameLineIfFits(UiGui.CheckboxWidth("Transparency"));
+            plugin.Appearance.DrawTransparencyToggle();
+        }
         ImGui.EndGroup();
         var bottom = Math.Max(start.Y + (right ? HfhPresentation.HeaderHeight : compact ? 105 : 122) * scale, ImGui.GetItemRectMax().Y + HfhPresentation.Gap * scale);
         ImGui.SetCursorScreenPos(new Vector2(start.X, bottom));

@@ -113,6 +113,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         hadStoredPluginConfiguration = storedConfiguration != null;
         Configuration = storedConfiguration ?? new Configuration();
         Configuration.Initialize();
+        if (Configuration.ApplyCompactDefaults()) PluginInterface.SavePluginConfig(Configuration);
         
         ConfigManager = new ConfigManager(PluginInterface, Log);
         if (!string.IsNullOrEmpty(Configuration.LastAccountId))
