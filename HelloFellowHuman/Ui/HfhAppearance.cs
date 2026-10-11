@@ -209,6 +209,12 @@ internal sealed class HfhAppearance : IDisposable
 
     internal void DrawWindowSettings()
     {
+        var showTitlebarStatus = plugin.Configuration.UiShowTitlebarStatus;
+        if (UiGui.Checkbox(UiText.T("Show titlebar status") + "###UiShowTitlebarStatus", ref showTitlebarStatus))
+        { plugin.Configuration.UiShowTitlebarStatus = showTitlebarStatus; plugin.SaveConfig(); }
+        var detailedTitlebarStatus = plugin.Configuration.UiDetailedTitlebarStatus;
+        if (UiGui.Checkbox(UiText.T("Detailed titlebar status") + "###UiDetailedTitlebarStatus", ref detailedTitlebarStatus))
+        { plugin.Configuration.UiDetailedTitlebarStatus = detailedTitlebarStatus; plugin.SaveConfig(); }
         var config = plugin.Configuration;
         var changed = false;
         var compactVisible = config.UiCompactVisibleOnMainWindow;

@@ -76,6 +76,19 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     private const string CommandName = "/hfh";
     
+    internal AethertekUI.MaterialTitlebarStatus? TitlebarStatus
+    {
+        get
+        {
+            if (!Configuration.UiShowTitlebarStatus) return null;
+            var account = ConfigManager.GetCurrentAccount();
+            var state = UiText.T(account?.Enabled == true ? "On" : "Off");
+            var preset = account?.GetActivePreset();
+            var details = state + " \u00b7 " + (preset is null ? UiText.T("None") : UiText.T(preset.Name));
+            return new(Configuration.UiDetailedTitlebarStatus ? details : state, state, details);
+        }
+    }
+
     public Configuration Configuration { get; init; }
     public ConfigManager ConfigManager { get; init; }
     public readonly WindowSystem WindowSystem = new("HelloFellowHuman");

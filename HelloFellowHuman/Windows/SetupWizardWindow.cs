@@ -91,7 +91,11 @@ internal sealed class SetupWizardWindow : Window, IDisposable
 
     public override void PreDraw() => windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
 
-    public override void PostDraw() => windowMotion.Restore(this);
+    public override void PostDraw()
+    {
+        windowMotion.Restore(this);
+        UiGui.ImageTitleWithStatus(this, "Hello Fellow Human \u2014 " + UiText.T("Guided Setup"), plugin.OriginalIcon, status: plugin.TitlebarStatus);
+    }
 
     public override void Draw()
     {

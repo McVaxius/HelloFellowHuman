@@ -81,7 +81,7 @@ public class ConfigWindow : Window, IDisposable
     {
         windowMotion.Restore(this);
         var version = Assembly.GetExecutingAssembly().GetName().Version;
-        UiGui.ImageTitle(this, "Hello Fellow Human — " + UiText.T("Configuration") + $" v{version}", plugin.OriginalIcon);
+        UiGui.ImageTitleWithStatus(this, "Hello Fellow Human — " + UiText.T("Configuration") + $" v{version}", plugin.OriginalIcon, status: plugin.TitlebarStatus);
     }
 
     public override void Draw()
