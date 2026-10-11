@@ -1,3 +1,7 @@
+2026-10-11 - Culture-independent commands (I538)
+
+- Match command keywords independently of the system locale so uppercase setup and disable commands work consistently, including Turkish systems.
+
 2026-10-11 - Native titlebar status (I536)
 
 - Show the current account enablement and active preset in native settings and guided-setup titles. Keep concise state and available numeric progress when detailed wording is off; hover retains full details.
