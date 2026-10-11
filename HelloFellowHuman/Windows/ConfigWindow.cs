@@ -161,8 +161,7 @@ public class ConfigWindow : Window, IDisposable
         var subtitleMax = ImGui.GetItemRectMax();
         var supportWidth = UiGui.ButtonWidth("Support on Ko-fi", MaterialIcon.Heart);
         var setupWidth = UiGui.ButtonWidth("Guided Setup", MaterialIcon.Document);
-        var toolsWidth = supportWidth + setupWidth + (config.UiLanguageVisibleOnMainWindow ? plugin.Appearance.LanguageWidth() : 0)
-            + (config.UiCompactVisibleOnMainWindow ? UiGui.CheckboxWidth("C") : 0) + (config.UiTransparencyVisibleOnMainWindow ? UiGui.CheckboxWidth("Transparency") : 0) + (1 + (config.UiLanguageVisibleOnMainWindow ? 1 : 0) + (config.UiCompactVisibleOnMainWindow ? 1 : 0) + (config.UiTransparencyVisibleOnMainWindow ? 1 : 0)) * ImGui.GetStyle().ItemSpacing.X;
+        var toolsWidth = supportWidth + setupWidth + ImGui.GetStyle().ItemSpacing.X;
         var brandWidth = Math.Max(titleMax.X, subtitleMax.X) - start.X;
         var right = width >= toolsWidth + brandWidth + ImGui.GetStyle().ItemSpacing.X;
         ImGui.SetCursorScreenPos(right ? start + new Vector2(width - toolsWidth, 5 * scale)
@@ -171,23 +170,9 @@ public class ConfigWindow : Window, IDisposable
         if (UiGui.Button("\u2661 Ko-fi \u2661", UiText.T("Support on Ko-fi"), MaterialIcon.Heart))
             Process.Start(new ProcessStartInfo { FileName = "https://ko-fi.com/mcvaxius", UseShellExecute = true });
         if (ImGui.IsItemHovered()) UiGui.SetTooltip("Support development on Ko-fi");
-        if (config.UiLanguageVisibleOnMainWindow)
-        { UiGui.SameLineIfFits(plugin.Appearance.LanguageWidth()); plugin.Appearance.DrawLanguage(); }
         UiGui.SameLineIfFits(setupWidth);
         if (UiGui.Button("Guided Setup", icon: MaterialIcon.Document)) plugin.OpenSetupWizard(SetupWizardMode.Setup, selectedPresetIndex);
         if (ImGui.IsItemHovered()) UiGui.SetTooltip("Create a reaction with a plain-language guided wizard");
-        if (config.UiCompactVisibleOnMainWindow)
-        {
-            UiGui.SameLineIfFits(UiGui.CheckboxWidth("C"));
-            var density = config.UiCompact;
-            if (ImGui.Checkbox("C", ref density)) { config.UiCompact = density; plugin.SaveConfig(); }
-            if (ImGui.IsItemHovered()) UiGui.SetTooltip("Compact mode");
-        }
-        if (config.UiTransparencyVisibleOnMainWindow)
-        {
-            UiGui.SameLineIfFits(UiGui.CheckboxWidth("Transparency"));
-            plugin.Appearance.DrawTransparencyToggle();
-        }
         ImGui.EndGroup();
         var bottom = Math.Max(start.Y + (right ? HfhPresentation.HeaderHeight : compact ? 105 : 122) * scale, ImGui.GetItemRectMax().Y + HfhPresentation.Gap * scale);
         ImGui.SetCursorScreenPos(new Vector2(start.X, bottom));

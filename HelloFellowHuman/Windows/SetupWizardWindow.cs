@@ -96,7 +96,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
     public override void Draw()
     {
         windowMotion.DrawChrome();
-        UiGui.Title("Hello Fellow Human Guided Setup", "Hello Fellow Human — " + UiText.T("Guided Setup"));
+        UiGui.TitleWithButtons("Hello Fellow Human Guided Setup", "Hello Fellow Human — " + UiText.T("Guided Setup"), this);
         var account = plugin.ConfigManager.GetCurrentAccount();
         if (draft == null || account == null || account.Presets.Count == 0)
         {
