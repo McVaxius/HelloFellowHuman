@@ -222,6 +222,7 @@ public class EmoteEngine : IDisposable
     
     private void OnFrameworkUpdate(IFramework framework)
     {
+        plugin.WeatherService.SampleCurrentWeather();
         // Cleanup expired animations periodically
         CleanupExpiredAnimations();
         

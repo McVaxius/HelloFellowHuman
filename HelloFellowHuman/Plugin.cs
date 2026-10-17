@@ -147,8 +147,8 @@ public sealed unsafe class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
         
         EmoteDetectionService = new EmoteDetectionService(GameInterop, ObjectTable, DataManager, Log);
-        EmoteEngine = new EmoteEngine(this);
         WeatherService = new WeatherService(DataManager);
+        EmoteEngine = new EmoteEngine(this);
         
         // Initialize nameplate hook for pulse animation
         GameInterop.InitializeFromAttributes(this);

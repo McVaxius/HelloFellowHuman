@@ -1,3 +1,7 @@
+2026-10-17 - Observed weather filters
+
+- Read actual active weather through the existing framework update. Both weather-filter paths share a settled character/territory-bound observation; unavailable, stale or transitioning observations remain Unknown. Preserve saved weather names and ALL rules.
+
 2026-10-11 - Culture-independent commands (I538)
 
 - Match command keywords independently of the system locale so uppercase setup and disable commands work consistently, including Turkish systems.
