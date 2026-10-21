@@ -1,3 +1,7 @@
+2026-10-20 - Independent UI colours
+
+- Add Auto (default) and Picker in Colour and Settings, with independent Background, Controls and Text choices. Preserve the automatic palette, saved manual choices, native editor identities and global save owner. Translate the editor in all fifteen supported languages.
+
 2026-10-17 - Observed weather filters
 
 - Read actual active weather through the existing framework update. Both weather-filter paths share a settled character/territory-bound observation; unavailable, stale or transitioning observations remain Unknown. Preserve saved weather names and ALL rules.

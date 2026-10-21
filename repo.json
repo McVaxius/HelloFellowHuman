@@ -15,10 +15,10 @@
       "roleplay"
     ],
     "RepoUrl": "https://github.com/McVaxius/HelloFellowHuman",
-    "AssemblyVersion": "2.0.0.11",
+    "AssemblyVersion": "2.0.0.12",
     "DalamudApiLevel": 15,
-    "DownloadLinkInstall": "https://github.com/McVaxius/HelloFellowHuman/releases/download/v2.0.0.11/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/McVaxius/HelloFellowHuman/releases/download/v2.0.0.11/latest.zip",
+    "DownloadLinkInstall": "https://github.com/McVaxius/HelloFellowHuman/releases/download/v2.0.0.12/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/McVaxius/HelloFellowHuman/releases/download/v2.0.0.12/latest.zip",
     "DownloadLinkTesting": "https://github.com/McVaxius/HelloFellowHuman/releases/latest/download/latest.zip",
     "IsHide": false,
     "IsTestingExclusive": false,
