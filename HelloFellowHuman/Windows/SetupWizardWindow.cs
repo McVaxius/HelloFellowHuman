@@ -101,6 +101,7 @@ internal sealed class SetupWizardWindow : Window, IDisposable
     {
         windowMotion.DrawChrome();
         UiGui.TitleWithButtons("Hello Fellow Human Guided Setup", "Hello Fellow Human — " + UiText.T("Guided Setup"), this);
+        if (MaterialTheme.Current.IsLcars) MaterialLcars.Header(UiText.T("Guided Setup"));
         var account = plugin.ConfigManager.GetCurrentAccount();
         if (draft == null || account == null || account.Presets.Count == 0)
         {
@@ -110,7 +111,10 @@ internal sealed class SetupWizardWindow : Window, IDisposable
             return;
         }
 
-        UiGui.Text(mode == SetupWizardMode.Setup ? "Guided Setup" : "Add Rule with Wizard");
+        if (MaterialTheme.Current.IsLcars)
+            MaterialLcars.PanelHeading(UiText.T(mode == SetupWizardMode.Setup ? "Guided Setup" : "Add Rule with Wizard"), 1);
+        else UiGui.Text(mode == SetupWizardMode.Setup ? "Guided Setup" : "Add Rule with Wizard");
+        if (!MaterialTheme.Current.IsLcars)
         ImGui.SameLine();
         UiGui.TextDisabled(UiText.Interpolated($"- Step {stage + 1} of {StageCount}"));
         ImGui.ProgressBar((stage + 1) / (float)StageCount, new Vector2(-1, 0), UiText.T(StageTitle(stage)));

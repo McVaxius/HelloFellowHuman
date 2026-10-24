@@ -147,6 +147,18 @@ public class ConfigWindow : Window, IDisposable
 
     private void DrawHeader()
     {
+        if (MaterialTheme.Current.IsLcars)
+        {
+            MaterialLcars.Header("Hello Fellow Human");
+            if (UiGui.Button("\u2661 Ko-fi \u2661", UiText.T("Support on Ko-fi"), MaterialIcon.Heart))
+                Process.Start(new ProcessStartInfo { FileName = "https://ko-fi.com/mcvaxius", UseShellExecute = true });
+            if (ImGui.IsItemHovered()) UiGui.SetTooltip("Support development on Ko-fi");
+            UiGui.SameLineIfFits(UiGui.ButtonWidth("Guided Setup", MaterialIcon.Document));
+            if (UiGui.Button("Guided Setup", icon: MaterialIcon.Document)) plugin.OpenSetupWizard(SetupWizardMode.Setup, selectedPresetIndex);
+            if (ImGui.IsItemHovered()) UiGui.SetTooltip("Create a reaction with a plain-language guided wizard");
+            ImGui.Spacing();
+            return;
+        }
         var scale = MaterialTheme.Metrics.Scale;
         var compact = HfhPresentation.Compact;
         var start = ImGui.GetCursorScreenPos(); var width = ImGui.GetContentRegionAvail().X;
@@ -270,7 +282,7 @@ public class ConfigWindow : Window, IDisposable
         var origin = ImGui.GetCursorScreenPos();
         HfhPresentation.Surface(origin, origin + leftSize);
         ImGui.PushStyleColor(ImGuiCol.ChildBg, Vector4.Zero);
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(HfhPresentation.Compact ? 10 : 14) * scale);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(MaterialTheme.Current.IsLcars ? 18 : HfhPresentation.Compact ? 10 : 14) * scale);
         if (ImGui.BeginChild("PresetList", leftSize, true, ImGuiWindowFlags.HorizontalScrollbar)) DrawPresetList();
         ImGui.EndChild();
         ImGui.PopStyleVar();
@@ -280,14 +292,18 @@ public class ConfigWindow : Window, IDisposable
         origin = ImGui.GetCursorScreenPos();
         HfhPresentation.Surface(origin, origin + editorSize);
         ImGui.PushStyleColor(ImGuiCol.ChildBg, Vector4.Zero);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(MaterialTheme.Current.IsLcars ? 18 : HfhPresentation.Compact ? 14 : 17) * scale);
         if (ImGui.BeginChild("PresetEditor", editorSize, true, ImGuiWindowFlags.HorizontalScrollbar)) DrawPresetEditor();
         ImGui.EndChild();
+        ImGui.PopStyleVar();
         ImGui.PopStyleColor();
     }
 
     private void DrawPresetList()
     {
-        using (UiText.Font(HfhPresentation.Compact ? UiFontRole.CompactPaneHeading : UiFontRole.PaneHeading)) UiGui.Text("Presets");
+        using (UiText.Font(HfhPresentation.Compact ? UiFontRole.CompactPaneHeading : UiFontRole.PaneHeading))
+            if (MaterialTheme.Current.IsLcars) MaterialLcars.PanelHeading(UiText.T("Presets"), 1);
+            else UiGui.Text("Presets");
         ImGui.Separator();
         
         var acctList = plugin.ConfigManager.GetOrCreateCurrentAccount();
@@ -432,6 +448,8 @@ public class ConfigWindow : Window, IDisposable
         var preset = account.Presets[selectedPresetIndex];
         
         var editingName = config.KrangleEnabled ? KrangleService.KrangleName(preset.Name) : preset.Name;
+        if (MaterialTheme.Current.IsLcars)
+            MaterialLcars.PanelHeading(UiText.T("Presets") + ": " + editingName, 1);
         var headerOrigin = ImGui.GetCursorScreenPos();
         var headerWidth = ImGui.GetContentRegionAvail().X;
         var actionsWidth = UiGui.ButtonWidth("Export", MaterialIcon.ExternalLink) + UiGui.ButtonWidth("Import", MaterialIcon.Download) + ImGui.GetStyle().ItemSpacing.X;

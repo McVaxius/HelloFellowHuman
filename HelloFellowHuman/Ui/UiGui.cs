@@ -51,14 +51,16 @@ internal static class UiGui
             + ImGui.GetFontSize() + style.ItemInnerSpacing.X));
         ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, padding);
         var colors = MaterialTheme.Current.Colors;
-        var hoverColor = MaterialColor.Layer(colors.Primary, colors.OnPrimary, .08f);
-        ImGui.PushStyleColor(ImGuiCol.TabActive, colors.Primary);
-        ImGui.PushStyleColor(ImGuiCol.TabUnfocusedActive, colors.Primary);
+        var accent = MaterialTheme.Current.IsLcars ? MaterialLcars.Lilac : colors.Primary;
+        var hoverColor = MaterialColor.Layer(accent, colors.OnPrimary, .08f);
+        ImGui.PushStyleColor(ImGuiCol.TabActive, accent);
+        ImGui.PushStyleColor(ImGuiCol.TabUnfocusedActive, accent);
         ImGui.PushStyleColor(ImGuiCol.TabHovered, hoverColor);
         var selected = ImGui.BeginTabItem(label, ref open, flags); ImGui.PopStyleVar();
         ImGui.PopStyleColor(3);
+        MaterialLcars.Feedback(ImGui.IsItemActivated());
         var hovered = ImGui.IsItemHovered();
-        var color = hovered ? hoverColor : selected ? colors.Primary : style.Colors[(int)ImGuiCol.Tab];
+        var color = hovered ? hoverColor : selected ? accent : style.Colors[(int)ImGuiCol.Tab];
         var foreground = selected || hovered ? colors.OnPrimary : style.Colors[(int)ImGuiCol.Text];
         try
         {
@@ -127,6 +129,7 @@ internal static class UiGui
         dl.PushClipRect(min, max, true);
         try { MaterialText.AddText(dl,min, MaterialCanvas.Color(ImGui.GetStyle().Colors[(int)ImGuiCol.Text]), translated); }
         finally { dl.PopClipRect(); }
+        MaterialLcars.Feedback(clicked);
         return clicked;
     }
     private static float FitField(string label, float? minimumPixels = null)
@@ -196,6 +199,7 @@ internal static class UiGui
         ImGui.PopStyleColor();
         ImGui.PopStyleVar();
         MaterialText.AddText(ImGui.GetWindowDrawList(),ImGui.GetItemRectMin()+new Vector2(ImGui.GetFrameHeight()+gap.X,ImGui.GetStyle().FramePadding.Y),MaterialCanvas.Color(ImGui.GetStyle().Colors[(int)ImGuiCol.Text]),translated);
+        MaterialLcars.Feedback(changed, MaterialUiSoundCue.Toggle);
         return changed;
     }
     internal static bool Combo(string label,ref int index,string[] options,int count,string[]? displays=null)
@@ -252,6 +256,7 @@ internal static class UiGui
         using var controls = ImGui.GetStyle().FramePadding.Y == 0 || MaterialControls.Context == MaterialControlContext.Dense
             ? default(MaterialControls.ControlScope) : MaterialControls.Push(MaterialControlContext.Toolbar);
         using var height = MaterialText.PushLineHeight(translated);
+        using var lcars = MaterialLcars.NativeButtonStyle();
         var iconWidth=icon==MaterialIcon.None?0:28*MaterialTheme.Metrics.Scale;
         var width=MaterialLayout.FitNextItemWidth(0,MaterialText.Measure(translated).X+2*ImGui.GetStyle().FramePadding.X+iconWidth);
         var foreground=ImGui.GetStyle().Colors[(int)ImGuiCol.Text];
@@ -269,6 +274,7 @@ internal static class UiGui
         MaterialText.AddText(ImGui.GetWindowDrawList(),origin+new Vector2(iconWidth,0),ImGui.ColorConvertFloat4ToU32(foreground),translated);
         }
         finally { ImGui.GetWindowDrawList().PopClipRect(); }
+        MaterialLcars.Feedback(clicked);
         return clicked;
     }
     internal static bool Button(string label, Vector2 pixels)
@@ -277,6 +283,7 @@ internal static class UiGui
         using var controls = ImGui.GetStyle().FramePadding.Y == 0 || MaterialControls.Context == MaterialControlContext.Dense
             ? default(MaterialControls.ControlScope) : MaterialControls.Push(MaterialControlContext.Toolbar);
         using var height = MaterialText.PushLineHeight(translated);
+        using var lcars = MaterialLcars.NativeButtonStyle();
         if (MaterialText.RequiresShaping(translated) && pixels.Y > 0)
             pixels.Y = Math.Max(pixels.Y, MaterialText.Measure(translated).Y + ImGui.GetStyle().FramePadding.Y * 2);
         var minimum = MaterialText.Measure(translated).X + 2 * ImGui.GetStyle().FramePadding.X;
@@ -290,6 +297,7 @@ internal static class UiGui
         dl.PushClipRect(min, max, true);
         try { MaterialText.AddText(dl,min + (max - min - MaterialText.Measure(translated)) * .5f, MaterialCanvas.Color(color), translated); }
         finally { dl.PopClipRect(); }
+        MaterialLcars.Feedback(clicked);
         return clicked;
     }
     internal static bool SmallButton(string label,string? display=null)
@@ -318,6 +326,7 @@ internal static class UiGui
         var p=ImGui.GetItemRectMin()+new Vector2(ImGui.GetFrameHeight()+gap.X,ImGui.GetStyle().FramePadding.Y);
         foreground.W*=ImGui.GetStyle().Alpha;
         MaterialText.AddText(ImGui.GetWindowDrawList(),p,ImGui.ColorConvertFloat4ToU32(foreground),translated);
+        MaterialLcars.Feedback(changed, MaterialUiSoundCue.Toggle);
         return changed;
     }
     private static bool DrawToolbarSwitch(string label, ref bool value)
@@ -333,13 +342,14 @@ internal static class UiGui
         var min = ImGui.GetItemRectMin(); var max = ImGui.GetItemRectMax();
         var colors = MaterialTheme.Current.Colors; var dl = ImGui.GetWindowDrawList();
         dl.AddRectFilled(min, max, MaterialCanvas.Color(ImGui.IsItemHovered() ? colors.SurfaceContainerHighest : colors.SurfaceContainer), 4 * scale);
-        dl.AddRect(min, max, MaterialCanvas.Color(ImGui.IsItemFocused() ? colors.Primary : colors.OutlineVariant), 4 * scale);
+        dl.AddRect(min, max, MaterialCanvas.Color(MaterialTheme.Current.IsLcars ? MaterialLcars.Lilac : ImGui.IsItemFocused() ? colors.Primary : colors.OutlineVariant), 4 * scale);
         var text = UiText.T(label);
         MaterialText.AddText(dl,new Vector2(min.X + 10 * scale, min.Y + (max.Y - min.Y - MaterialText.Measure(text).Y) * .5f), MaterialCanvas.Color(colors.OnSurface), text);
         var trackMin = new Vector2(max.X - 51 * scale, min.Y + (max.Y - min.Y - 22 * scale) * .5f);
         var trackMax = trackMin + new Vector2(41, 22) * scale;
-        dl.AddRectFilled(trackMin, trackMax, MaterialCanvas.Color(value ? colors.Primary : colors.SurfaceVariant), 11 * scale);
+        dl.AddRectFilled(trackMin, trackMax, MaterialCanvas.Color(value ? MaterialTheme.Current.IsLcars ? MaterialLcars.ControlBlue : colors.Primary : colors.SurfaceVariant), 11 * scale);
         dl.AddCircleFilled(new Vector2(value ? trackMax.X - 11 * scale : trackMin.X + 11 * scale, trackMin.Y + 11 * scale), 8.5f * scale, MaterialCanvas.Color(colors.OnSurface), 20);
+        MaterialLcars.Feedback(changed, MaterialUiSoundCue.Toggle);
         return changed;
     }
     internal static void Title(string original,string translated)

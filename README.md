@@ -52,7 +52,9 @@ The editor's titlebar opens Configuration or Guided Setup and toggles reactions 
 
 The main editor follows the approved regular and compact layouts, with peach-accented preset cards, separate rules, and the packaged plugin icon. Native titlebars expose language, compact spacing, transparency and colour shortcuts, including while collapsed. Configuration retains the full editors and saved main-control visibility choices. English, German, French, Spanish, Italian, Russian, Japanese, Korean, Simplified Chinese, Vietnamese, Brazilian Portuguese, Indonesian, Polish, Turkish and Hindi are included; UI numbers use the selected language's formatting. Commands, player/preset names and stored weather values keep their original data.
 
-The colour selector offers teal, blue, pink and custom RGB. Backgrounds, panels, fields, borders and decorative text follow the selected colour through relative OKLCH roles. Active-preset green, invalid-rule red and deletion warnings retain their meanings. Preferences use the existing global configuration and save path; account rules remain in their existing per-account files.
+The colour selector offers Auto, Picker and LCARS. Auto follows the teal, blue, pink or custom RGB accent; Picker retains independent background, control and text colours. LCARS adds segmented rails, framed preset panels and outlined controls to the editor and guided setup. Active-preset green, invalid-rule red and deletion warnings retain their meanings. Preferences use the existing global configuration and save path; account rules remain in their existing per-account files.
+
+LCARS UI sounds start muted. Window appearance and the titlebar speaker share the saved preference; Preview sound plays one sample when enabled. Switching themes or muting stops this UI player's output. These tones do not change reaction commands or timing.
 
 Segoe UI managed fonts merge host-provided CJK and symbol glyphs. Font files remain on the host. The plugin distribution includes AethertekUI.dll and fifteen keyed embedded catalogs. GitHub builds obtain the private library through the existing sibling checkout and AETHERTEKUI_DEPLOY_KEY workflow secret.
 

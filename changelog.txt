@@ -1,3 +1,9 @@
+2026-10-23 - LCARS appearance (unreleased)
+
+- Add LCARS as the third colour option with segmented headers, framed preset panes, outlined native actions and blue switches. Retain native editor identities, reaction rules, account scope and guided-setup gates in both densities.
+- Add default-muted UI tones shared by Window appearance and the titlebar speaker, with one preview cue and owned playback cleanup. Keep saved Picker values and existing appearance choices; translate the new controls in all fifteen catalogs.
+- Pin consumer workflows to the published AethertekUI baseline. Keep the current plugin version unchanged.
+
 2026-10-20 - Independent UI colours
 
 - Add Auto (default) and Picker in Colour and Settings, with independent Background, Controls and Text choices. Preserve the automatic palette, saved manual choices, native editor identities and global save owner. Translate the editor in all fifteen supported languages.
