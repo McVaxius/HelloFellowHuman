@@ -86,6 +86,7 @@ public class ConfigWindow : Window, IDisposable
 
     public override void Draw()
     {
+        MaterialSkin.Backdrop();
         windowMotion.DrawChrome();
         // Log window load once
         if (!hasLoggedWindowLoad)
@@ -382,8 +383,12 @@ public class ConfigWindow : Window, IDisposable
         }
         
         ImGui.SetNextWindowSize(new Vector2(360 * MaterialTheme.Metrics.Scale, 0));
-        if (ImGui.BeginPopup("NewPresetPopup"))
+        bool newPresetOpen;
+        using (MaterialSkin.BackdropStyle(popup: true))
+            newPresetOpen = ImGui.BeginPopup("NewPresetPopup");
+        if (newPresetOpen)
         {
+            MaterialSkin.Backdrop();
             UiGui.Text("Enter preset name:");
             ImGui.SetNextItemWidth(-1);
             UiGui.InputText("##newpreset", ref newPresetName, 100);
@@ -909,7 +914,7 @@ public class ConfigWindow : Window, IDisposable
         var widths = labels.Select(label => MaterialText.Measure(UiText.T(label)).X + 2 * style.ItemSpacing.X).ToArray();
         float ComboWidth(IEnumerable<string> options) => options.Max(option => MaterialText.Measure(UiText.T(option)).X) + ImGui.GetFrameHeight() + 2 * style.FramePadding.X + 2 * style.ItemSpacing.X;
         var field = MathF.Ceiling(Math.Max(80 * scale, MaterialText.Measure("-00000.0").X + 2 * style.FramePadding.X)) + 2 * style.ItemSpacing.X;
-        widths[0] = Math.Max(widths[0], ComboWidth(new[] { "Proximity", "Emote" }));
+        widths[0] = Math.Max(widths[0], ComboWidth(new[] { "Proximity", "Emote", "Countdown" }));
         widths[1] = Math.Max(widths[1], ImGui.GetFrameHeight() + 2 * style.ItemSpacing.X);
         widths[2] = Math.Max(widths[2], ImGui.GetFrameHeight() + 2 * style.ItemSpacing.X);
         widths[3] = Math.Max(widths[3], 80 * scale + UiGui.ButtonWidth("K") + 3 * style.ItemSpacing.X);
@@ -1054,8 +1059,12 @@ public class ConfigWindow : Window, IDisposable
         var popupWidth = Math.Max(360 * scale, UiGui.ButtonWidth("Clear") + 240 * scale
             + ImGui.GetStyle().ItemSpacing.X + 2 * ImGui.GetStyle().WindowPadding.X);
         ImGui.SetNextWindowSize(new Vector2(popupWidth, 0));
-        if (ImGui.BeginPopup($"##{id}_popup"))
+        bool glowPopupOpen;
+        using (MaterialSkin.BackdropStyle(popup: true))
+            glowPopupOpen = ImGui.BeginPopup($"##{id}_popup");
+        if (glowPopupOpen)
         {
+            MaterialSkin.Backdrop();
             // Use the maintained editing color
             if (!editingColors.ContainsKey(id))
                 editingColors[id] = color ?? new Vector3(1, 1, 1);

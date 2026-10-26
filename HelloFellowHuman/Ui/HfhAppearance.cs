@@ -116,8 +116,12 @@ internal sealed class HfhAppearance : IDisposable
             fontStatusMotion.PreDraw("Hello Fellow Human##FontStatus", null, null, reducedMotion: false, prepareDecorations: fontStatusDecorations.Prepare);
             try
             {
-                if (ImGui.Begin("Hello Fellow Human##FontStatus", ImGuiWindowFlags.AlwaysAutoResize))
+                bool visible;
+                using (MaterialSkin.BackdropStyle())
+                    visible = ImGui.Begin("Hello Fellow Human##FontStatus", ImGuiWindowFlags.AlwaysAutoResize);
+                if (visible)
                 {
+                    MaterialSkin.Backdrop();
                     fontStatusDecorations.Paint();
                     var loading = fonts.LoadException is null && !fontIssueLogged;
                     if (appliedLanguage == "hi")
@@ -154,7 +158,8 @@ internal sealed class HfhAppearance : IDisposable
             style.Color(ImGuiCol.SliderGrabActive, MaterialLcars.ControlBlue);
         }
         PrepareAppearanceTitleBars(windows);
-        windows.Draw();
+        using (MaterialSkin.BackdropStyle())
+            windows.Draw();
         foreach (var titlebar in appearanceTitleBars.Values) titlebar.DrawPopups();
         foreach (var window in windows.Windows)
         {
@@ -172,7 +177,16 @@ internal sealed class HfhAppearance : IDisposable
                 UiText.T("Theme colour"), UiText.T("Choose each colour independently."), UiText.T("Background"), UiText.T("Controls"),
                 UiText.T("Text"), UiText.T("Aa  Preview text"), UiText.T("Control"),
                 UiText.T("Switch to Picker to set each colour yourself."), UiText.T("Switch back to Auto to use the automatic theme."))
-                { Lcars = UiText.T("LCARS"), LcarsHelp = UiText.T("LCARS panels, bars and controls") },
+                {
+                    Lcars = UiText.T("LCARS"), LcarsHelp = UiText.T("LCARS panels, bars and controls"),
+                    LcarsBar1 = UiText.T("LCARS bar 1"), LcarsBar2 = UiText.T("LCARS bar 2"), LcarsBar3 = UiText.T("LCARS bar 3"),
+                    Glassmorphism = UiText.T("Glassmorphism"), Spatial = UiText.T("Spatial"), Cyberpunk = UiText.T("Cyberpunk"),
+                    Reset = UiText.T("Reset"), ResetColors = UiText.T("Reset colours"),
+                    Animation = UiText.T("Animation"), AnimationSpeed = UiText.T("Animation speed (0.1–10x; default 1x)"),
+                    WaveColors = UiText.T("Wave colours"), GlassWave1 = UiText.T("Wave colour 1"),
+                    GlassWave2 = UiText.T("Wave colour 2"), GlassWave3 = UiText.T("Wave colour 3"), ResetWaveColors = UiText.T("Reset wave colours"),
+                },
+            new MaterialColorSettings(), MaterialColorSettings.Rgb(HfhPresentation.ReferenceAccent),
             plugin.Configuration.UiCompact ? 298 : 316);
         if (!changed) return false;
         plugin.Configuration.UiColors = colorDraft;

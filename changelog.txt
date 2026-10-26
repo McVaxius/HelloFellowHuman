@@ -1,3 +1,9 @@
+2026-10-26 - 2.0.0.15 - Shared material appearance
+
+- Add Glassmorphism, Spatial and Cyberpunk alongside Auto, Picker and LCARS across the editor, guided setup and appearance popups, retaining the original font roles and native actions.
+- Add independent material palettes, per-colour/current-palette resets, four LCARS colour choices and three editable Glass wave colours with default-on animation and adjustable speed. Translate the shared controls in all fifteen catalogs.
+- Preserve the existing reaction rules, account saves, wizard drafts and configuration behavior. Include the existing Countdown choice in the rules grid's Type-column width budget.
+
 2026-10-25 - 2.0.0.14 - Party countdown rules (I655)
 
 - Add Countdown to advanced rule triggers. Run the first eligible rule once at the native party countdown's zero event; cancellation and disabled completion do not replay a command.

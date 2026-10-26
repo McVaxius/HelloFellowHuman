@@ -99,8 +99,10 @@ internal sealed class SetupWizardWindow : Window, IDisposable
 
     public override void Draw()
     {
+        MaterialSkin.Backdrop();
         windowMotion.DrawChrome();
-        UiGui.TitleWithButtons("Hello Fellow Human Guided Setup", "Hello Fellow Human — " + UiText.T("Guided Setup"), this);
+        if (!HfhPresentation.HasMaterial)
+            UiGui.TitleWithButtons("Hello Fellow Human Guided Setup", "Hello Fellow Human — " + UiText.T("Guided Setup"), this);
         if (MaterialTheme.Current.IsLcars) MaterialLcars.Header(UiText.T("Guided Setup"));
         var account = plugin.ConfigManager.GetCurrentAccount();
         if (draft == null || account == null || account.Presets.Count == 0)

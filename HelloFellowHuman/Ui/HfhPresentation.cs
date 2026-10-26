@@ -22,6 +22,7 @@ internal static class HfhPresentation
     internal static readonly string[] FontFiles = ["segoeui.ttf", "seguisb.ttf", "seguisb.ttf", "seguisb.ttf", "seguisb.ttf", "seguisb.ttf"];
     internal static float AtlasHeight(UiFontRole role) => FontSizes[(int)role] * 4 / 3;
     internal static bool Compact => MaterialTheme.Current.Density == MaterialDensity.Compact;
+    internal static bool HasMaterial => MaterialTheme.Current.IsGlassmorphism || MaterialTheme.Current.IsSpatial || MaterialTheme.Current.IsCyberpunk;
     internal static float HeaderHeight => Compact ? 68 : 82;
     internal static float Gap => Compact ? 10 : 15;
     internal static float ControlHeight => Compact ? 32 : 40;
@@ -76,6 +77,30 @@ internal static class HfhPresentation
 
     internal static void Surface(Vector2 min, Vector2 max)
     {
+        if (HasMaterial)
+        {
+            MaterialSkin.PanelFrame(min, max);
+            if (MaterialTheme.Current.IsCyberpunk)
+            {
+                var dl = ImGui.GetWindowDrawList();
+                var colors = MaterialTheme.Current.Colors;
+                var scale = MaterialTheme.Metrics.Scale;
+                var cut = Math.Min(10 * scale, Math.Min(max.X - min.X, max.Y - min.Y) * .25f);
+                dl.PathClear();
+                dl.PathLineTo(min + new Vector2(cut, 0));
+                dl.PathLineTo(new(max.X - cut, min.Y));
+                dl.PathLineTo(new(max.X, min.Y + cut));
+                dl.PathLineTo(max - new Vector2(0, cut));
+                dl.PathLineTo(max - new Vector2(cut, 0));
+                dl.PathLineTo(new(min.X + cut, max.Y));
+                dl.PathLineTo(new(min.X, max.Y - cut));
+                dl.PathLineTo(min + new Vector2(0, cut));
+                dl.PathStroke(MaterialCanvas.Color(colors.OutlineVariant), ImDrawFlags.Closed, scale);
+                dl.AddLine(min + new Vector2(0, cut), min + new Vector2(cut, 0), MaterialCanvas.Color(colors.Primary), 2 * scale);
+                dl.AddLine(max - new Vector2(cut, 0), max - new Vector2(0, cut), MaterialCanvas.Color(colors.Secondary), 2 * scale);
+            }
+            return;
+        }
         if (MaterialTheme.Current.IsLcars)
         {
             MaterialLcars.PanelFrame(min, max);
