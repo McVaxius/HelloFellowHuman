@@ -670,4 +670,10 @@ COPYCAT: प्राप्त किसी भी इमोट का जवा
   <data name="Audio output is unavailable." xml:space="preserve"><value>ऑडियो आउटपुट उपलब्ध नहीं है।</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>इंटरफ़ेस ध्वनियाँ मूक हैं</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>इंटरफ़ेस ध्वनियाँ चालू हैं</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>उलटी गिनती</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>पार्टी की उलटी गिनती शून्य पर पहुँचने पर एक बार चलता है। रद्द की गई उलटी गिनती इस नियम को नहीं चलाती।</value>
+  </data>
 </root>

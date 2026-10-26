@@ -654,4 +654,10 @@ Usa media:, video:, audio: o sound: para abrir un archivo local con una ruta abs
   <data name="Audio output is unavailable." xml:space="preserve"><value>La salida de audio no está disponible.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Sonidos de interfaz silenciados</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Sonidos de interfaz activados</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Cuenta atrás</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Se ejecuta una vez cuando la cuenta atrás del grupo llega a cero. Las cuentas atrás canceladas no activan esta regla.</value>
+  </data>
 </root>

@@ -654,4 +654,10 @@ Gunakan media:, video:, audio:, atau sound: untuk membuka berkas lokal relatif t
   <data name="Audio output is unavailable." xml:space="preserve"><value>Keluaran audio tidak tersedia.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Suara antarmuka dibisukan</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Suara antarmuka aktif</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Hitung mundur</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Dijalankan sekali saat hitung mundur party mencapai nol. Hitung mundur yang dibatalkan tidak menjalankan aturan ini.</value>
+  </data>
 </root>

@@ -654,4 +654,10 @@ media:、video:、audio:、sound: で、絶対パスまたはプラグイン設�
   <data name="Audio output is unavailable." xml:space="preserve"><value>音声出力を利用できません。</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>操作音はミュート中</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>操作音はオン</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>カウントダウン</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>パーティのカウントダウンがゼロになると一度だけ実行します。中止された場合、このルールは実行しません。</value>
+  </data>
 </root>

@@ -654,4 +654,10 @@ Mit media:, video:, audio: oder sound: eine lokale Datei per vollständigem Pfad
   <data name="Audio output is unavailable." xml:space="preserve"><value>Die Audioausgabe ist nicht verfügbar.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Oberflächentöne stumm</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Oberflächentöne an</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Countdown</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Wird einmal ausgeführt, wenn der Gruppen-Countdown null erreicht. Abgebrochene Countdowns lösen diese Regel nicht aus.</value>
+  </data>
 </root>

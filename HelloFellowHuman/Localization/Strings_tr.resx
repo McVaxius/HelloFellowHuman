@@ -654,4 +654,10 @@ Eklenti yapılandırma klasörüne göre ya da tam yolla yerel dosya açmak içi
   <data name="Audio output is unavailable." xml:space="preserve"><value>Ses çıkışı kullanılamıyor.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Arayüz sesleri kapalı</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Arayüz sesleri açık</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Geri sayım</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Grup geri sayımı sıfıra ulaştığında bir kez çalışır. İptal edilen geri sayımlar bu kuralı çalıştırmaz.</value>
+  </data>
 </root>

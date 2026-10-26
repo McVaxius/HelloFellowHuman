@@ -654,4 +654,10 @@ Use media:, video:, audio: ou sound: para abrir um arquivo local relativo à pas
   <data name="Audio output is unavailable." xml:space="preserve"><value>A saída de áudio está indisponível.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Sons da interface silenciados</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Sons da interface ativados</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Contagem regressiva</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Executa uma vez quando a contagem regressiva do grupo chega a zero. Contagens canceladas não ativam esta regra.</value>
+  </data>
 </root>

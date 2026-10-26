@@ -15,7 +15,7 @@ public class EmoteLine
     public float DistanceThreshold { get; set; } = 5.0f;
     public float EmoteRange { get; set; } = 10.0f; // Range for emote triggers (default: 10 yalms)
     public string WeatherFilter { get; set; } = "ALL"; // Weather filter (default: ALL)
-    public int TriggerType { get; set; } = 0; // 0=Proximity, 1=Emote
+    public int TriggerType { get; set; } = 0; // 0=Proximity, 1=Emote, 2=Party countdown zero
     public string TriggerEmote { get; set; } = string.Empty; // e.g. "/wave" - the emote that triggers this response
     public bool TargetBeforeCommand { get; set; } = true; // If true, /target the player before executing the command
     
@@ -44,6 +44,9 @@ public class EmoteLine
         
         if (string.IsNullOrWhiteSpace(SlashCommand)) return false;
         if (WaitTimeAfter < 0) return false;
+
+        if (TriggerType == 2) // Party countdown: no nearby player or emote is required.
+            return RepeatInterval >= 0;
         
         if (TriggerType == 1) // Emote
         {

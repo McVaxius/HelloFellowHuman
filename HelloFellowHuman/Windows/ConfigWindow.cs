@@ -633,11 +633,13 @@ public class ConfigWindow : Window, IDisposable
             // Type dropdown column
             var triggerType = line.TriggerType;
             ImGui.SetNextItemWidth(-1);
-            if (UiGui.Combo($"##type{i}", ref triggerType, "Proximity\0Emote\0"))
+            if (UiGui.Combo($"##type{i}", ref triggerType, "Proximity\0Emote\0Countdown\0"))
             {
                 line.TriggerType = triggerType;
                 plugin.ConfigManager.SaveCurrentAccount();
             }
+            if (ImGui.IsItemHovered() && line.TriggerType == 2)
+                UiGui.SetTooltip("Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule.");
             ImGui.NextColumn();
             
             // ALL checkbox column - now editable for all types
@@ -789,6 +791,10 @@ public class ConfigWindow : Window, IDisposable
                 }
                 if (ImGui.IsItemHovered())
                     UiGui.SetTooltip("The emote that triggers this response (e.g. /wave)");
+            }
+            else if (line.TriggerType == 2)
+            {
+                UiGui.TextDisabled("--");
             }
             else
             {

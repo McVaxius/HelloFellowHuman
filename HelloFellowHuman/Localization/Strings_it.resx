@@ -654,4 +654,10 @@ Usa media:, video:, audio: o sound: per aprire un file locale con percorso compl
   <data name="Audio output is unavailable." xml:space="preserve"><value>L’uscita audio non è disponibile.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Suoni dell’interfaccia disattivati</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Suoni dell’interfaccia attivi</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Conto alla rovescia</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Si esegue una volta quando il conto alla rovescia del gruppo raggiunge zero. I conti alla rovescia annullati non attivano questa regola.</value>
+  </data>
 </root>

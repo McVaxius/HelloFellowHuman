@@ -66,7 +66,7 @@ The **Presets** tab keeps the existing table editor for users who want direct co
 
 Each rule can define:
 
-- proximity or incoming-emote trigger type;
+- proximity, incoming-emote or party-countdown trigger type;
 - any-player or specific-player audience;
 - response command and, for `COPYCAT`, an optional fallback;
 - wait time and cooldown;
@@ -78,6 +78,8 @@ Each rule can define:
 All 13 rule columns remain available in the horizontally scrolling grid: Type, ALL, ToT, Name, Command, Wait, Repeat, Dist/Emote, Weather, Emote Range, Glow, Color and Remove. Names remain read-only when ALL or Krangle requires it. Preset names are a read-only display; select **New Preset** to create a named copy. Deleting a user preset requires holding Ctrl, and the built-in preset remains protected. Selecting a preset still activates it and resets its runtime cooldowns when the active preset changes.
 
 Invalid rows appear in red and are ignored by the runtime engine until corrected. The advanced editor also provides preset import/export and a reset action for `DEFAULT PRESET`.
+
+**Countdown** rules run once when an active party countdown reaches zero. A cancelled countdown does not run a rule, and a completion observed while the account is disabled is not replayed later. Each client runs its own first eligible rule through the existing command, weather and cooldown checks. Configure these rules in the advanced editor; they do not require a nearby player or incoming emote.
 
 ## Safety and scope
 

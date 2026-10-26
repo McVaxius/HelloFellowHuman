@@ -654,4 +654,10 @@ COPYCAT：复制任何收到的情感动作。</value>
   <data name="Audio output is unavailable." xml:space="preserve"><value>音频输出不可用。</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>界面音效已静音</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>界面音效已开启</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>倒计时</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>队伍倒计时归零时执行一次。取消倒计时不会触发此规则。</value>
+  </data>
 </root>

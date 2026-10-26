@@ -654,4 +654,10 @@ Dùng media:, video:, audio: hoặc sound: để mở tệp cục bộ từ thư
   <data name="Audio output is unavailable." xml:space="preserve"><value>Không có đầu ra âm thanh.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Âm thanh giao diện đã tắt</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Âm thanh giao diện đang bật</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Đếm ngược</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Chạy một lần khi đếm ngược của tổ đội về không. Đếm ngược bị hủy sẽ không kích hoạt quy tắc này.</value>
+  </data>
 </root>

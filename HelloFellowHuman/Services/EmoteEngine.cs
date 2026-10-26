@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Text;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 namespace HelloFellowHuman.Services;
 
@@ -37,6 +38,7 @@ public class EmoteEngine : IDisposable
     private DateTime currentWaitUntil = DateTime.MinValue;
     private DateTime lastPresetLog = DateTime.MinValue;
     private bool hasLoggedWaitStart = false;
+    private bool countdownArmed;
     private const float CheckInterval = 1.0f;
     private const double LoopingEmoteWindowSeconds = 4.0;
     
@@ -220,20 +222,45 @@ public class EmoteEngine : IDisposable
         }
     }
     
-    private void OnFrameworkUpdate(IFramework framework)
+    private unsafe void OnFrameworkUpdate(IFramework framework)
     {
         plugin.WeatherService.SampleCurrentWeather();
         // Cleanup expired animations periodically
         CleanupExpiredAnimations();
         
         var account = plugin.ConfigManager.GetCurrentAccount();
-        if (account == null || !account.Enabled) return;
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        var countdown = AgentCountDownSettingDialog.Instance();
+        var countdownCompleted = UpdateCountdownState(
+            countdown != null && countdown->Active,
+            countdown != null ? countdown->TimeRemaining : 0,
+            account?.Enabled == true && localPlayer != null);
+        if (account == null || !account.Enabled || localPlayer == null) return;
         var currentAccount = account;
         
-        var localPlayer = Plugin.ObjectTable.LocalPlayer;
-        if (localPlayer == null) return;
-        
         var now = DateTime.UtcNow;
+
+        // Countdown zero is a frame event, so observe and consume it before WAIT or proximity throttling.
+        if (countdownCompleted)
+        {
+            var countdownPreset = currentAccount.GetActivePreset();
+            if (countdownPreset != null)
+            {
+                foreach (var line in countdownPreset.Lines)
+                {
+                    if (line.TriggerType != 2 || !line.IsValid()) continue;
+                    if (!plugin.WeatherService.IsWeatherMatch(line.WeatherFilter, plugin.WeatherService.GetCurrentWeather())) continue;
+                    if (line.LastExecuted > now) line.LastExecuted = DateTime.MinValue;
+                    if (line.RepeatInterval > 0 && (now - line.LastExecuted).TotalSeconds < line.RepeatInterval) continue;
+
+                    line.ResolvedTargetName = null;
+                    ExecuteLine(line);
+                    line.LastExecuted = now;
+                    currentWaitUntil = now.AddSeconds(line.WaitTimeAfter);
+                    return;
+                }
+            }
+        }
         
         // Global WAIT blocking - if any line is in wait mode, block everything
         if (now < currentWaitUntil)
@@ -410,8 +437,8 @@ public class EmoteEngine : IDisposable
         
         foreach (var line in activePreset.Lines)
         {
-            // Skip emote-type lines in proximity scan
-            if (line.TriggerType == 1) continue;
+            // Event-triggered rules must never run from the proximity scan.
+            if (line.TriggerType == 1 || line.TriggerType == 2) continue;
             
             if (!line.IsValid())
             {
@@ -509,6 +536,26 @@ public class EmoteEngine : IDisposable
             Plugin.Log.Info($"[HFH] Wait until {currentWaitUntil:HH:mm:ss} ({line.WaitTimeAfter}s)");
             break;
         }
+    }
+
+    internal bool UpdateCountdownState(bool active, float timeRemaining, bool enabled)
+    {
+        // Inactive means cancelled/finished, never a zero event. Use only the native active timer.
+        if (!active || !float.IsFinite(timeRemaining))
+        {
+            countdownArmed = false;
+            return false;
+        }
+
+        if (timeRemaining > 0)
+        {
+            countdownArmed = true;
+            return false;
+        }
+
+        var completed = countdownArmed;
+        countdownArmed = false;
+        return completed && enabled;
     }
     
     private IGameObject? FindPlayerByName(string name)

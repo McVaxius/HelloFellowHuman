@@ -654,4 +654,10 @@ media:, video:, audio:, sound:로 플러그인 설정 폴더 기준 상대 경�
   <data name="Audio output is unavailable." xml:space="preserve"><value>오디오 출력을 사용할 수 없습니다.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>UI 소리 음소거됨</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>UI 소리 켜짐</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>카운트다운</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>파티 카운트다운이 0에 도달하면 한 번 실행합니다. 취소된 카운트다운은 이 규칙을 실행하지 않습니다.</value>
+  </data>
 </root>

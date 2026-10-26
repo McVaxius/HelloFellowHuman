@@ -654,4 +654,10 @@ Utilisez media:, video:, audio: ou sound: pour ouvrir un fichier local avec un c
   <data name="Audio output is unavailable." xml:space="preserve"><value>La sortie audio est indisponible.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Sons de l’interface coupés</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Sons de l’interface activés</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Compte à rebours</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>S’exécute une fois lorsque le compte à rebours de l’équipe atteint zéro. Les comptes à rebours annulés ne déclenchent pas cette règle.</value>
+  </data>
 </root>

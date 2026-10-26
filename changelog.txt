@@ -1,3 +1,8 @@
+2026-10-25 - 2.0.0.14 - Party countdown rules (I655)
+
+- Add Countdown to advanced rule triggers. Run the first eligible rule once at the native party countdown's zero event; cancellation and disabled completion do not replay a command.
+- Preserve existing master enablement, weather, command execution, cooldown and targeting paths. Existing proximity and emote rules keep their saved trigger values.
+
 2026-10-23 - LCARS appearance (unreleased)
 
 - Add LCARS as the third colour option with segmented headers, framed preset panes, outlined native actions and blue switches. Retain native editor identities, reaction rules, account scope and guided-setup gates in both densities.

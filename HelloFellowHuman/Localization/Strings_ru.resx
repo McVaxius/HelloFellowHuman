@@ -654,4 +654,10 @@ COPYCAT: копирует ЛЮБУЮ полученную эмоцию.</value>
   <data name="Audio output is unavailable." xml:space="preserve"><value>Аудиовыход недоступен.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>Звуки интерфейса отключены</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>Звуки интерфейса включены</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Обратный отсчёт</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Выполняется один раз, когда групповой обратный отсчёт достигает нуля. Отменённый отсчёт не запускает это правило.</value>
+  </data>
 </root>

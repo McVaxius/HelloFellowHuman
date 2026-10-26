@@ -654,4 +654,10 @@ Use media:, video:, audio:, or sound: to launch a local file relative to the plu
   <data name="Audio output is unavailable." xml:space="preserve"><value>Audio output is unavailable.</value></data>
   <data name="UI sounds muted" xml:space="preserve"><value>UI sounds muted</value></data>
   <data name="UI sounds on" xml:space="preserve"><value>UI sounds on</value></data>
+  <data name="Countdown" xml:space="preserve">
+    <value>Countdown</value>
+  </data>
+  <data name="Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule." xml:space="preserve">
+    <value>Runs once when the party countdown reaches zero. Cancelled countdowns do not run this rule.</value>
+  </data>
 </root>
