@@ -1,6 +1,6 @@
 2026-10-29 - 2.0.0.16 - Background glass and window controls
 
-- Add saved styled/native UI and movement/resize lock controls in Settings, the titlebar and commands while preserving reaction rules, account saves and wizard drafts.
+- Add saved styled/native UI and movement/resize lock controls in Settings, the titlebar and commands while preserving reaction rules, account saves and wizard drafts. Existing ui, ui on and ui off arguments keep their window open/toggle routing.
 - Add Background-only Glasswork blur with independent tint and Frost, Waves, all three Lights effects, image backgrounds and Browse. Preserve foreground fills and complete-window opacity.
 - Add explicit screenshot pause to Colour and Transparency, defaulting off, and translate the new controls in all fifteen catalogs.
 
