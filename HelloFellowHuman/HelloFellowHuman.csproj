@@ -4,9 +4,9 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Version>2.0.0.15</Version>
-    <FileVersion>2.0.0.15</FileVersion>
-    <AssemblyVersion>2.0.0.15</AssemblyVersion>
+    <Version>2.0.0.16</Version>
+    <FileVersion>2.0.0.16</FileVersion>
+    <AssemblyVersion>2.0.0.16</AssemblyVersion>
     <PackageProjectUrl>https://github.com/McVaxius/HelloFellowHuman</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
@@ -27,4 +27,11 @@
     <DalamudPackagerFile Include="images\icon.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="TerraFX.Interop.Windows">
+      <HintPath>$(DalamudLibPath)/TerraFX.Interop.Windows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <None Update="Notices\Glasswork.MIT.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -100,3 +100,5 @@ Use **Copy / ZIP Dalamud log** in Configuration > Configuration to create a loca
 When XA Slave is loaded, **Open XA Slave log tools** opens its **Utility > XA Mods** panel, which contains Dalamud Log Cleaner. The existing **Copy / ZIP Dalamud log** action remains separate. Opening the panel does not run cleanup or change XA Slave settings.
 
 Compact mode defaults on. The main Compact and Transparency controls start hidden; Appearance settings keeps density, transparency and independent main-control visibility choices. The one-time migration preserves opacity and unrelated preferences, and later loads retain your choices.
+
+The existing Colour and Transparency controls support actual glass backgrounds, separate Waves/Lights/Image choices, image browsing and runtime screenshot pause. Settings and native titlebars expose styling and movement/resize locks. Use /hfh style, style on, style off, lock or unlock; setup, emote and account commands keep their meanings.

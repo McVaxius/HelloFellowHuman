@@ -308,6 +308,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     private void OnCommand(string command, string args)
     {
+        if (Appearance.TryApplyCommand(args)) return;
         var argLower = args.Trim().ToLowerInvariant();
         
         if (string.IsNullOrEmpty(argLower))

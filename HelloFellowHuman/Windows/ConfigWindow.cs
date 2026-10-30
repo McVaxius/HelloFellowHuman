@@ -21,6 +21,7 @@ public class ConfigWindow : Window, IDisposable
 {
     private readonly AethertekUI.Dalamud.MaterialSupportLog supportLog = new();
     private readonly MaterialWindowMotion windowMotion = new();
+    private readonly MaterialWindowLock movementLock = new();
     private readonly Configuration config;
     private readonly Plugin plugin;
     
@@ -75,10 +76,15 @@ public class ConfigWindow : Window, IDisposable
         });
     }
     
-    public override void PreDraw() => windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+    public override void PreDraw()
+    {
+        windowMotion.Prepare(this, reducedMotion: !plugin.Configuration.UiStylingEnabled, roundedCorners: plugin.Configuration.UiStylingEnabled);
+        movementLock.Apply(this, plugin.Configuration.UiWindowsLocked);
+    }
 
     public override void PostDraw()
     {
+        movementLock.Restore(this);
         windowMotion.Restore(this);
         var version = Assembly.GetExecutingAssembly().GetName().Version;
         UiGui.ImageTitleWithStatus(this, "Hello Fellow Human — " + UiText.T("Configuration") + $" v{version}", plugin.OriginalIcon, status: plugin.TitlebarStatus);
@@ -86,7 +92,9 @@ public class ConfigWindow : Window, IDisposable
 
     public override void Draw()
     {
+        plugin.Appearance.PrepareBackgroundOpacity(this, ImGui.IsWindowAppearing());
         MaterialSkin.Backdrop();
+        using var structuralBackgrounds = MaterialSkin.StructuralBackgroundStyle();
         windowMotion.DrawChrome();
         // Log window load once
         if (!hasLoggedWindowLoad)

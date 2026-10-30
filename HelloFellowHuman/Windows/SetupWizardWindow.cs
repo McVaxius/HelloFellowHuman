@@ -46,6 +46,7 @@ internal sealed class SetupWizardDraft
 internal sealed class SetupWizardWindow : Window, IDisposable
 {
     private readonly MaterialWindowMotion windowMotion = new();
+    private readonly MaterialWindowLock movementLock = new();
     private const int StageCount = 5;
 
     private readonly Plugin plugin;
@@ -89,17 +90,24 @@ internal sealed class SetupWizardWindow : Window, IDisposable
         IsOpen = true;
     }
 
-    public override void PreDraw() => windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+    public override void PreDraw()
+    {
+        windowMotion.Prepare(this, reducedMotion: !plugin.Configuration.UiStylingEnabled, roundedCorners: plugin.Configuration.UiStylingEnabled);
+        movementLock.Apply(this, plugin.Configuration.UiWindowsLocked);
+    }
 
     public override void PostDraw()
     {
+        movementLock.Restore(this);
         windowMotion.Restore(this);
         UiGui.ImageTitleWithStatus(this, "Hello Fellow Human \u2014 " + UiText.T("Guided Setup"), plugin.OriginalIcon, status: plugin.TitlebarStatus);
     }
 
     public override void Draw()
     {
+        plugin.Appearance.PrepareBackgroundOpacity(this, ImGui.IsWindowAppearing());
         MaterialSkin.Backdrop();
+        using var structuralBackgrounds = MaterialSkin.StructuralBackgroundStyle();
         windowMotion.DrawChrome();
         if (!HfhPresentation.HasMaterial)
             UiGui.TitleWithButtons("Hello Fellow Human Guided Setup", "Hello Fellow Human — " + UiText.T("Guided Setup"), this);
