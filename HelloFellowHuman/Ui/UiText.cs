@@ -16,7 +16,7 @@ internal sealed class UiText : IDisposable
     internal static readonly (string Code, string Name)[] Languages = [("en", "English"), ("de", "Deutsch"), ("fr", "Français"),
         ("es", "Español"), ("it", "Italiano"), ("ru", "Русский"), ("ja", "日本語"), ("ko", "한국어"), ("zh-Hans", "简体中文"),
         ("vi", "Tiếng Việt"), ("pt-BR", "Português (Brasil)"), ("id", "Bahasa Indonesia"), ("pl", "Polski"), ("tr", "Türkçe"), ("hi", "हिन्दी")];
-    internal const string NativeSymbols = "♡⚫—…·+?";
+    internal const string NativeSymbols = "♡●—…·+?";
     internal static IEnumerable<string> CjkLanguages(string selected) => new[] { "ja", "ko", "zh-Hans" }.OrderBy(code => code == selected ? 0 : 1);
     private readonly ResourceManager manager;
     internal ResourceSet Resources { get; }

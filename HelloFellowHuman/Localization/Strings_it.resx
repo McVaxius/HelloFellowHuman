@@ -145,11 +145,11 @@
     <value>Nasconde i nomi con termini militari o sportivi.
 Utile per gli screenshot.</value>
   </data>
-  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '● HFH'&#10;Icon Only: '●'" xml:space="preserve">
     <value>Modalità DTR:
 Solo testo: 'HFH: ON/OFF [preset]'
-Icona+testo: '⚫ HFH'
-Solo icona: '⚫'</value>
+Icona+testo: '● HFH'
+Solo icona: '●'</value>
   </data>
   <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
     <value>Copia il collegamento al blog Lodestone con glifi suggeriti</value>

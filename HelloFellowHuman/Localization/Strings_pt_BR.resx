@@ -58,11 +58,11 @@
   <data name="DTR Mode" xml:space="preserve">
     <value>Modo DTR</value>
   </data>
-  <data name="DTR bar display mode:&#xA;Text Only: 'HFH: ON/OFF [preset]'&#xA;Icon+Text: '⚫ HFH'&#xA;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#xA;Text Only: 'HFH: ON/OFF [preset]'&#xA;Icon+Text: '● HFH'&#xA;Icon Only: '●'" xml:space="preserve">
     <value>Modo de exibição da barra DTR:
 Somente texto: 'HFH: ATIVADO/DESATIVADO [predefinição]'
-Ícone + texto: '⚫ HFH'
-Somente ícone: '⚫'</value>
+Ícone + texto: '● HFH'
+Somente ícone: '●'</value>
   </data>
   <data name="DTR Icons (max 3 characters)" xml:space="preserve">
     <value>Ícones DTR (máximo de 3 caracteres)</value>

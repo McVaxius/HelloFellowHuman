@@ -247,7 +247,7 @@ public class ConfigWindow : Window, IDisposable
             plugin.SaveConfig();
         }
         if (ImGui.IsItemHovered())
-            UiGui.SetTooltip("DTR bar display mode:\nText Only: 'HFH: ON/OFF [preset]'\nIcon+Text: '⚫ HFH'\nIcon Only: '⚫'");
+            UiGui.SetTooltip("DTR bar display mode:\nText Only: 'HFH: ON/OFF [preset]'\nIcon+Text: '● HFH'\nIcon Only: '●'");
         
         ImGui.Spacing();
         UiGui.Text("DTR Icons (max 3 characters)");

@@ -145,11 +145,11 @@
     <value>プレイヤー名を軍事・運動関連の単語で隠します。
 スクリーンショットに便利です。</value>
   </data>
-  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '● HFH'&#10;Icon Only: '●'" xml:space="preserve">
     <value>DTR表示モード：
 テキストのみ：'HFH: ON/OFF [preset]'
-アイコン＋テキスト：'⚫ HFH'
-アイコンのみ：'⚫'</value>
+アイコン＋テキスト：'● HFH'
+アイコンのみ：'●'</value>
   </data>
   <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
     <value>推奨グリフを紹介するLodestoneブログへのリンクをコピーします</value>

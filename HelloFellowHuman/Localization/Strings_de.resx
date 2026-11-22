@@ -145,11 +145,11 @@
     <value>Spielernamen durch Militär-/Sportbegriffe verschleiern.
 Nützlich für Screenshots.</value>
   </data>
-  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '● HFH'&#10;Icon Only: '●'" xml:space="preserve">
     <value>DTR-Anzeigemodus:
 Nur Text: 'HFH: ON/OFF [preset]'
-Symbol+Text: '⚫ HFH'
-Nur Symbol: '⚫'</value>
+Symbol+Text: '● HFH'
+Nur Symbol: '●'</value>
   </data>
   <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
     <value>Kopiert den Lodestone-Bloglink mit vorgeschlagenen Symbolen</value>

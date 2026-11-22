@@ -58,11 +58,11 @@ Przydatne do zrzutów ekranu.</value>
   <data name="DTR Mode" xml:space="preserve">
     <value>Tryb DTR</value>
   </data>
-  <data name="DTR bar display mode:&#xA;Text Only: 'HFH: ON/OFF [preset]'&#xA;Icon+Text: '⚫ HFH'&#xA;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#xA;Text Only: 'HFH: ON/OFF [preset]'&#xA;Icon+Text: '● HFH'&#xA;Icon Only: '●'" xml:space="preserve">
     <value>Tryb wyświetlania paska DTR:
 Tylko tekst: 'HFH: WŁ./WYŁ. [zestaw]'
-Ikona + tekst: '⚫ HFH'
-Tylko ikona: '⚫'</value>
+Ikona + tekst: '● HFH'
+Tylko ikona: '●'</value>
   </data>
   <data name="DTR Icons (max 3 characters)" xml:space="preserve">
     <value>Ikony DTR (maks. 3 znaki)</value>

@@ -58,11 +58,11 @@ Useful for screenshots.</value>
   <data name="DTR Mode" xml:space="preserve">
     <value>DTR Mode</value>
   </data>
-  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '● HFH'&#10;Icon Only: '●'" xml:space="preserve">
     <value>DTR bar display mode:
 Text Only: 'HFH: ON/OFF [preset]'
-Icon+Text: '⚫ HFH'
-Icon Only: '⚫'</value>
+Icon+Text: '● HFH'
+Icon Only: '●'</value>
   </data>
   <data name="DTR Icons (max 3 characters)" xml:space="preserve">
     <value>DTR Icons (max 3 characters)</value>

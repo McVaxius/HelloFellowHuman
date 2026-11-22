@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Numerics;
 using AethertekUI;
+using AethertekUI.Dalamud;
 using Dalamud.Bindings.ImGui;
 
 namespace HelloFellowHuman.Ui;
@@ -19,7 +20,11 @@ internal static class HfhPresentation
     // Title30/28 semibold, subtitle16, pane headings22/20; native chrome is host-owned.
     internal const uint ReferenceAccent = 0xFEB995;
     internal static readonly float[] FontSizes = [16, 16, 30, 22, 28, 20];
-    internal static readonly string[] FontFiles = ["segoeui.ttf", "seguisb.ttf", "seguisb.ttf", "seguisb.ttf", "seguisb.ttf", "seguisb.ttf"];
+    internal static readonly MaterialFontWeight[] FontWeights =
+    [
+        MaterialFontWeight.Regular, MaterialFontWeight.Semibold, MaterialFontWeight.Semibold,
+        MaterialFontWeight.Semibold, MaterialFontWeight.Semibold, MaterialFontWeight.Semibold,
+    ];
     internal static float AtlasHeight(UiFontRole role) => FontSizes[(int)role] * 4 / 3;
     internal static bool Compact => MaterialTheme.Current.Density == MaterialDensity.Compact;
     internal static bool HasMaterial => MaterialTheme.Current.IsGlassmorphism || MaterialTheme.Current.IsSpatial || MaterialTheme.Current.IsCyberpunk;

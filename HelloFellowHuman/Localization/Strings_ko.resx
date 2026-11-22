@@ -145,11 +145,11 @@
     <value>군사/운동 용어로 이름을 가립니다.
 스크린샷에 유용합니다.</value>
   </data>
-  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '● HFH'&#10;Icon Only: '●'" xml:space="preserve">
     <value>DTR 표시 모드:
 텍스트만: 'HFH: ON/OFF [preset]'
-아이콘+텍스트: '⚫ HFH'
-아이콘만: '⚫'</value>
+아이콘+텍스트: '● HFH'
+아이콘만: '●'</value>
   </data>
   <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
     <value>권장 글리프가 있는 Lodestone 블로그 링크 복사</value>

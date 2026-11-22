@@ -145,11 +145,11 @@
     <value>Скрывать имена за военными и спортивными терминами.
 Удобно для снимков экрана.</value>
   </data>
-  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '⚫ HFH'&#10;Icon Only: '⚫'" xml:space="preserve">
+  <data name="DTR bar display mode:&#10;Text Only: 'HFH: ON/OFF [preset]'&#10;Icon+Text: '● HFH'&#10;Icon Only: '●'" xml:space="preserve">
     <value>Режим DTR:
 Только текст: 'HFH: ON/OFF [preset]'
-Значок и текст: '⚫ HFH'
-Только значок: '⚫'</value>
+Значок и текст: '● HFH'
+Только значок: '●'</value>
   </data>
   <data name="Copies the Lodestone blog link with suggested glyphs" xml:space="preserve">
     <value>Копирует ссылку на блог Lodestone с подходящими символами</value>
