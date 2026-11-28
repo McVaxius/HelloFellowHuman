@@ -1,3 +1,4 @@
+using Dalamud.Interface.ManagedFontAtlas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,15 +19,17 @@ internal sealed class HfhAppearance : IDisposable
     private readonly System.Collections.Generic.Dictionary<Dalamud.Interface.Windowing.IWindow, AethertekUI.MaterialWindowOpacity> windowOpacities = new();
     private readonly AethertekUI.MaterialWindowOpacity fontStatusOpacity = new();
     private readonly Plugin plugin;
-    private readonly MaterialTextHost shapedText;
+    private MaterialTextHost shapedText = null!;
     private UiText text;
-    private HfhFonts fonts;
+    private HfhFonts fonts = null!;
+    private (bool Config, bool Compact) loadedFontViews;
     private MaterialTheme theme;
     private readonly Dictionary<Dalamud.Interface.Windowing.Window, AethertekUI.Dalamud.MaterialAppearanceTitleBar> appearanceTitleBars = new();
     private readonly MaterialWindowFold fontStatusMotion = new();
     private readonly MaterialWindowDecorations fontStatusDecorations = new();
     private readonly MaterialOptions<string> languages = new(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code, l.Name)).ToArray());
     private string appliedLanguage = "";
+    private string loadedFontLanguage = "";
     private uint appliedAccent;
     private Vector3 accentDraft;
     private MaterialColorSettings colorDraft = new();
@@ -36,25 +39,47 @@ internal sealed class HfhAppearance : IDisposable
     private int checkedHindiGeneration = -1;
     private bool fontIssueLogged;
     private MaterialUiSoundPlayer? uiSoundPlayer;
-    private bool appliedSoundsMuted = true;
     private readonly Dictionary<Window, TitleBarButton> soundTitleButtons = new();
 
     private readonly FileDialogManager imagePicker = new();
+    private bool backgroundImagePickerOpen;
     private MaterialGlassRenderer? backgroundGlass;
+    private bool backgroundWasBlurred;
     internal bool BackgroundEnabled => plugin.Configuration.UiStylingEnabled &&
         (colorDraft.HasBackgroundBlur(colorDraft.Mode) || colorDraft.Mode == MaterialColorMode.Glassmorphism && colorDraft.GlassBackground == MaterialGlassBackground.Image);
 
-    private void Apply()
+    private void RefreshUiText()
     {
         var language = UiText.Languages.Any(l => l.Code == plugin.Configuration.UiLanguage) ? plugin.Configuration.UiLanguage : "en";
-        if (language != appliedLanguage)
+        if (language == appliedLanguage) return;
+        text.Dispose();
+        text = new(language, PushFont);
+        appliedLanguage = language;
+    }
+
+    private void Apply(bool configOpen)
+    {
+        var views = (Config: configOpen, Compact: configOpen && plugin.Configuration.UiCompact);
+        if (fonts is null || loadedFontLanguage != appliedLanguage || loadedFontViews != views)
         {
             fonts?.Dispose();
-            text?.Dispose();
-            text = new(language, PushFont);
-            fonts = new(Plugin.PluginInterface.UiBuilder.FontAtlas, text.GlyphRanges(), language,
-                Plugin.PluginInterface.AssemblyLocation.DirectoryName!);
-            appliedLanguage = language;
+            fonts = null!;
+            if (loadedFontLanguage != appliedLanguage)
+            {
+                shapedText?.Dispose();
+                shapedText = null!;
+            }
+            shapedText ??= new(Plugin.TextureProvider);
+            var ranges = text.GlyphRanges();
+            var roles = views.Config
+                ? views.Compact
+                    ? new[] { UiFontRole.Body, UiFontRole.BodyStrong, UiFontRole.CompactTitle, UiFontRole.CompactPaneHeading }
+                    : new[] { UiFontRole.Body, UiFontRole.BodyStrong, UiFontRole.Title, UiFontRole.PaneHeading }
+                : [UiFontRole.Body];
+            var atlas = Plugin.PluginInterface.UiBuilder.CreateFontAtlas(FontAtlasAutoRebuildMode.OnNewFrame, true, "Hello Fellow Human UI");
+            fonts = new(atlas, ranges, appliedLanguage, Plugin.PluginInterface.AssemblyLocation.DirectoryName!, roles);
+            loadedFontLanguage = appliedLanguage;
+            loadedFontViews = views;
             checkedGeneration = -1;
             checkedHindiGeneration = -1;
             fontIssueLogged = false;
@@ -71,17 +96,12 @@ internal sealed class HfhAppearance : IDisposable
             appliedColors = colorDraft;
             theme = HfhPresentation.Theme(appliedAccent, colorDraft);
             theme.Feedback = PlayLcarsSound;
-            if (!theme.IsLcars) uiSoundPlayer?.Stop();
             var rgb = HfhPresentation.Rgb(appliedAccent);
             accentDraft = new(rgb.X, rgb.Y, rgb.Z);
         }
         theme.HighlightContrastPercent = plugin.Configuration.UiHighlightContrastPercent;
         theme.Density = plugin.Configuration.UiCompact ? MaterialDensity.Compact : MaterialDensity.Standard;
-        if (appliedSoundsMuted != plugin.Configuration.UiLcarsSoundsMuted)
-        {
-            appliedSoundsMuted = plugin.Configuration.UiLcarsSoundsMuted;
-            if (appliedSoundsMuted) uiSoundPlayer?.Stop();
-        }
+        if (!LcarsActive || plugin.Configuration.UiLcarsSoundsMuted) ReleaseUiSounds();
     }
 
     internal void Draw(WindowSystem windows)
@@ -92,29 +112,22 @@ internal sealed class HfhAppearance : IDisposable
 
     private void DrawCore(WindowSystem windows)
     {
-        Apply();
-        if (!windows.Windows.Any(window => window.IsOpen))
+        RefreshUiText();
+        var hasWindows = windows.Windows.Any(window => window.IsOpen);
+        if (!hasWindows && !backgroundImagePickerOpen)
         {
-            backgroundGlass?.EndFrame(false);
-            if (fonts.Ready && checkedGeneration == fonts.Generation)
-            {
-                using var pickerText = text.Enter();
-                using var pickerShaping = shapedText.Push();
-                using var pickerTheme = MaterialTheme.Push(theme, ImGuiHelpers.GlobalScale,
-                    plugin.Configuration.UiStylingEnabled ? MaterialStyleMode.ColorsOnly : MaterialStyleMode.Native);
-                using var pickerBody = fonts.Push(UiFontRole.Body);
-                using var pickerBackground = MaterialSkin.PushBackgroundRenderer(null, false, 0);
-                imagePicker.Draw();
-            }
+            if (fonts is not null) ReleaseWindowResources();
             return;
         }
+
+        Apply(windows.Windows.Any(window => window.IsOpen && window is Windows.ConfigWindow));
         using var resources = text.Enter();
         using var shaping = shapedText.Push();
         if (fonts.Ready && checkedHindiGeneration != fonts.Generation)
         {
             var generation = fonts.Generation;
             var hindiAvailable = true;
-            foreach (var size in HfhPresentation.FontSizes)
+            foreach (var size in fonts.Roles.Select(role => HfhPresentation.FontSizes[(int)role]).Distinct())
                 hindiAvailable &= shapedText.Renderer.TryCheckGlyphs(["हिन्दी"], size * ImGuiHelpers.GlobalScale, out _);
             languages.Replace(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code,
                 l.Code == "hi" && !hindiAvailable ? "Hindi (unavailable)" : l.Name, l.Code == "hi" && !hindiAvailable)).ToArray());
@@ -125,7 +138,7 @@ internal sealed class HfhAppearance : IDisposable
             try
             {
                 var generation = fonts.Generation;
-                foreach (var size in HfhPresentation.FontSizes)
+                foreach (var size in fonts.Roles.Select(role => HfhPresentation.FontSizes[(int)role]).Distinct())
                     shapedText.Renderer.CheckGlyphs(text.RequiredText, size * ImGuiHelpers.GlobalScale);
                 fonts.CheckGlyphs(text.RequiredText);
                 checkedGeneration = generation;
@@ -173,12 +186,31 @@ internal sealed class HfhAppearance : IDisposable
             }
             return;
         }
+        if (!hasWindows)
+        {
+            DisposeBackgroundGlass();
+            ReleaseUiSounds();
+            using var pickerBody = fonts.Push(UiFontRole.Body);
+            using var pickerBackground = MaterialSkin.PushBackgroundRenderer(null, false, 0);
+            imagePicker.Draw();
+            return;
+        }
+
         var blur = plugin.Configuration.UiStylingEnabled && colorDraft.HasBackgroundBlur(colorDraft.Mode);
         var image = plugin.Configuration.UiStylingEnabled && colorDraft.Mode == MaterialColorMode.Glassmorphism &&
             colorDraft.GlassBackground == MaterialGlassBackground.Image;
-        if (blur || image) backgroundGlass ??= new(Plugin.PluginInterface, Plugin.Log);
-        backgroundGlass?.ConfigureImage(Plugin.TextureProvider, image, plugin.Configuration.UiColors?.GlassImagePath);
-        backgroundGlass?.BeginFrame();
+        if (blur || image)
+        {
+            backgroundGlass ??= new(Plugin.PluginInterface, Plugin.Log);
+            if (backgroundWasBlurred && !blur) backgroundGlass.ReleaseResources();
+            backgroundGlass.BeginFrame(blur, image);
+            backgroundGlass.ConfigureImage(Plugin.TextureProvider, image, plugin.Configuration.UiColors?.GlassImagePath);
+            backgroundWasBlurred = blur;
+        }
+        else
+        {
+            DisposeBackgroundGlass();
+        }
         var restoreBackground = blur || image
             ? windows.Windows.Where(window => (window.Flags & ImGuiWindowFlags.NoBackground) == 0).ToArray()
             : Array.Empty<Window>();
@@ -230,7 +262,8 @@ internal sealed class HfhAppearance : IDisposable
                 backgroundGlass?.EndFrame((blur || image) && completed);
             }
         }
-        using (fonts.Push(UiFontRole.Body)) imagePicker.Draw();
+        if (backgroundImagePickerOpen)
+            using (fonts.Push(UiFontRole.Body)) imagePicker.Draw();
     }
 
     private bool DrawColourEditor(string id)
@@ -320,22 +353,42 @@ internal sealed class HfhAppearance : IDisposable
     internal HfhAppearance(Plugin plugin)
     {
         this.plugin = plugin;
-        shapedText = new(Plugin.TextureProvider);
         appliedLanguage = UiText.Languages.Any(l => l.Code == plugin.Configuration.UiLanguage) ? plugin.Configuration.UiLanguage : "en";
         text = new(appliedLanguage, PushFont);
-        fonts = new(Plugin.PluginInterface.UiBuilder.FontAtlas, text.GlyphRanges(), appliedLanguage,
-            Plugin.PluginInterface.AssemblyLocation.DirectoryName!);
         appliedAccent = plugin.Configuration.UiAccentRgb & 0xFFFFFF;
         colorDraft = plugin.Configuration.UiColors ?? new MaterialColorSettings();
         appliedSavedColors = appliedColors = colorDraft;
         theme = HfhPresentation.Theme(appliedAccent, colorDraft);
         theme.Feedback = PlayLcarsSound;
-        if (!theme.IsLcars) uiSoundPlayer?.Stop();
         var rgb = HfhPresentation.Rgb(appliedAccent);
         accentDraft = new(rgb.X, rgb.Y, rgb.Z);
         Plugin.PluginInterface.UiBuilder.ResizeBuffers += ReleaseBackgroundResources;
     }
     private IDisposable PushFont(UiFontRole role) => fonts.Push(role);
+
+    private void DisposeBackgroundGlass()
+    {
+        backgroundGlass?.Dispose();
+        backgroundGlass = null;
+        backgroundWasBlurred = false;
+    }
+
+    private void ReleaseUiSounds()
+    {
+        uiSoundPlayer?.Dispose();
+        uiSoundPlayer = null;
+    }
+
+    private void ReleaseWindowResources()
+    {
+        DisposeBackgroundGlass();
+        ReleaseUiSounds();
+        fonts?.Dispose();
+        fonts = null!;
+        shapedText?.Dispose();
+        shapedText = null!;
+        theme = null!;
+    }
 
     private void ReleaseBackgroundResources() => backgroundGlass?.ReleaseResources();
 
@@ -359,7 +412,7 @@ internal sealed class HfhAppearance : IDisposable
     private void SetStyling(bool enabled)
     {
         plugin.Configuration.UiStylingEnabled = enabled;
-        if (!enabled) uiSoundPlayer?.Stop();
+        if (!enabled) ReleaseUiSounds();
         plugin.SaveConfig();
     }
 
@@ -374,7 +427,7 @@ internal sealed class HfhAppearance : IDisposable
     internal void SetLcarsSounds(bool enabled)
     {
         plugin.Configuration.UiLcarsSoundsMuted = !enabled;
-        if (!enabled) uiSoundPlayer?.Stop();
+        if (!enabled) ReleaseUiSounds();
         plugin.SaveConfig();
     }
 
@@ -409,8 +462,8 @@ internal sealed class HfhAppearance : IDisposable
     {
         Plugin.PluginInterface.UiBuilder.ResizeBuffers -= ReleaseBackgroundResources;
         imagePicker.Reset();
-        backgroundGlass?.Dispose();
-        uiSoundPlayer?.Dispose(); fonts?.Dispose(); text?.Dispose(); shapedText.Dispose();
+        ReleaseWindowResources();
+        text.Dispose();
     }
 
     internal void PrepareBackgroundOpacity(Window window, bool appearing = false)
@@ -520,14 +573,18 @@ internal sealed class HfhAppearance : IDisposable
     }
 
     private void BrowseImage()
-        => imagePicker.OpenFileDialog(UiText.T("Choose background image") + "###HelloFellowHumanBackgroundImagePicker",
-            UiText.T("Images") + "{.png,.jpg,.jpeg,.bmp,.gif,.webp,.tif,.tiff,.dds,.tga},.*", (accepted, path) =>
-            {
-                if (!accepted) return;
-                var previous = plugin.Configuration.UiColors?.GlassImagePath;
-                plugin.Configuration.UiColors = colorDraft = colorDraft with { GlassImagePath = path };
-                if (path != previous) plugin.SaveConfig();
-            });
+    {
+        imagePicker.OpenFileDialog(UiText.T("Choose background image") + "###HelloFellowHumanBackgroundImagePicker",
+    UiText.T("Images") + "{.png,.jpg,.jpeg,.bmp,.gif,.webp,.tif,.tiff,.dds,.tga},.*", (accepted, path) =>
+    {
+        backgroundImagePickerOpen = false;
+        if (!accepted) return;
+        var previous = plugin.Configuration.UiColors?.GlassImagePath;
+        plugin.Configuration.UiColors = colorDraft = colorDraft with { GlassImagePath = path };
+        if (path != previous) plugin.SaveConfig();
+    });
+        backgroundImagePickerOpen = true;
+    }
 
     private void DrawScreenshotPause(string id)
     {
